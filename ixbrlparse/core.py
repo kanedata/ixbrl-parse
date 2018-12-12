@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 
-class XBRL():
+class IXBRL():
 
     def __init__(self, f):
         self.soup = BeautifulSoup(f.read(), "html.parser")
@@ -10,7 +10,7 @@ class XBRL():
         self._get_numeric()
 
     def _get_contexts(self):
-        self.contexts = {s['id']: xbrlContext(**{
+        self.contexts = {s['id']: ixbrlContext(**{
             "_id": s['id'],
             "entity": s.find('xbrli:identifier').text if s.find('xbrli:identifier') else None,
             "segment": s.find('xbrli:segment').text.strip() if s.find('xbrli:segment') else None,
@@ -27,7 +27,7 @@ class XBRL():
         }
 
     def _get_nonnumeric(self):
-        self.nonnumeric = [xbrlNonNumeric(**{
+        self.nonnumeric = [ixbrlNonNumeric(**{
             "context": self.contexts.get(s['contextref'], s['contextref']),
             "name": s['name'],
             "format_": s.get('format'),
@@ -35,7 +35,7 @@ class XBRL():
         }) for s in self.soup.find_all({'ix:nonnumeric'})]
 
     def _get_numeric(self):
-        self.numeric = [xbrlNumeric({
+        self.numeric = [ixbrlNumeric({
             "text": s.text,
             "context": self.contexts.get(s['contextref'], s['contextref']),
             "unit": self.units.get(s['unitref'], s['unitref']),
@@ -43,7 +43,7 @@ class XBRL():
         }) for s in self.soup.find_all({'ix:nonfraction'})]
 
 
-class xbrlContext:
+class ixbrlContext:
 
     def __init__(self, _id, entity, segment, dimension, instant, startdate, enddate):
         self._id = _id
@@ -60,9 +60,9 @@ class xbrlContext:
             datestr = "{} to {}".format(self.startdate, self.enddate)
         else:
             datestr = str(self.instant)
-        return "<XBRLContext {} [{}]>".format(self._id, datestr)
+        return "<IXBRLContext {} [{}]>".format(self._id, datestr)
 
-class xbrlNonNumeric:
+class ixbrlNonNumeric:
 
     def __init__(self, context, name, format_, value):
 
@@ -78,7 +78,7 @@ class xbrlNonNumeric:
         self.format = format_
         self.value = value
 
-class xbrlNumeric:
+class ixbrlNumeric:
 
     # contextref
     # decimals

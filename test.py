@@ -1,4 +1,4 @@
-from xbrlparse.core import XBRL
+from ixbrlparse import IXBRL
 
 filenames = [
     'test_accounts/GB-COH-07175596-2017-03-31.html',
@@ -12,7 +12,7 @@ for filename in filenames:
     print()
 
     with open(filename) as a:
-        x = XBRL(a)
+        x = IXBRL(a)
 
         print("contexts")
         print("========")

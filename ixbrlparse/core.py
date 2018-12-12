@@ -10,21 +10,36 @@ class IXBRL():
         self._get_numeric()
 
     def _get_contexts(self):
-        self.contexts = {s['id']: ixbrlContext(**{
-            "_id": s['id'],
-            "entity": s.find('xbrli:identifier').text if s.find('xbrli:identifier') else None,
-            "segment": s.find('xbrli:segment').text.strip() if s.find('xbrli:segment') else None,
-            "dimension": s.find({'xbrldi:explicitmember'}).get('dimension') if s.find({'xbrldi:explicitmember'}) else None,
-            "instant": s.find('xbrli:instant').text if s.find('xbrli:instant') else None,
-            "startdate": s.find('xbrli:startdate').text if s.find('xbrli:startdate') else None,
-            "enddate": s.find('xbrli:enddate').text if s.find('xbrli:enddate') else None,
-        }) for s in self.soup.find_all({'xbrli:context'})}
+        self.contexts = {}
+        resources = self.soup.find('ix:resources')
+        for s in resources.find_all({'xbrli:context'}):
+            self.contexts[s['id']] = ixbrlContext(**{
+                "_id": s['id'],
+                "entity": s.find('xbrli:identifier').text if s.find('xbrli:identifier') else None,
+                "segment": s.find('xbrli:segment').text.strip() if s.find('xbrli:segment') else None,
+                "dimension": s.find({'xbrldi:explicitmember'}).get('dimension') if s.find({'xbrldi:explicitmember'}) else None,
+                "instant": s.find('xbrli:instant').text if s.find('xbrli:instant') else None,
+                "startdate": s.find('xbrli:startdate').text if s.find('xbrli:startdate') else None,
+                "enddate": s.find('xbrli:enddate').text if s.find('xbrli:enddate') else None,
+            })
+        for s in resources.find_all({'context'}):
+            self.contexts[s['id']] = ixbrlContext(**{
+                "_id": s['id'],
+                "entity": s.find('identifier').text if s.find('identifier') else None,
+                "segment": s.find('segment').text.strip() if s.find('segment') else None,
+                "dimension": s.find({'explicitmember'}).get('dimension') if s.find({'explicitmember'}) else None,
+                "instant": s.find('instant').text if s.find('instant') else None,
+                "startdate": s.find('startdate').text if s.find('startdate') else None,
+                "enddate": s.find('enddate').text if s.find('enddate') else None,
+            })
 
     def _get_units(self):
-        self.units = {
-            s['id']: s.find('xbrli:measure').text if s.find('xbrli:measure') else None
-            for s in self.soup.find_all({'xbrli:unit'})
-        }
+        self.units = {}
+        resources = self.soup.find('ix:resources')
+        for s in resources.find_all({'xbrli:unit'}):
+            self.units[s['id']] = s.find('xbrli:measure').text if s.find('xbrli:measure') else None
+        for s in resources.find_all({'unit'}):
+            self.units[s['id']] = s.find('measure').text if s.find('measure') else None
 
     def _get_nonnumeric(self):
         self.nonnumeric = [ixbrlNonNumeric(**{

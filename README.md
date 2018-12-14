@@ -67,6 +67,6 @@ The `ixbrlNumeric.value` object contains the value as a parsed python number
 The `.name` and `.schema` values give the key of this value, according to
 the applied schema.
 
-Non-numeric facts are stored in `ixbrlNonnumeric`, with similar `.value`, 
-`.context`, `.name` and `.schema` values. The value of `.value` will be 
-a string for non-numeric facts.
+Non-numeric facts are stored in `x.nonnumeric` as a list of `ixbrlNonnumeric`
+objects, with similar `.value`, `.context`, `.name` and `.schema` values. 
+The value of `.value` will be a string for non-numeric facts.

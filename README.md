@@ -12,7 +12,7 @@ The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSou
 
 An example of usage is shown in [`test.py`](test.py).
 
-### Import the `XBRL` class which parses the file.
+### Import the `IXBRL` class which parses the file.
 
 ```python
 from ixbrlparse import IXBRL

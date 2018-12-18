@@ -119,8 +119,8 @@ class ixbrlNumeric:
         self.unit = attrs.get('unit')
         self.format = {
             "format": attrs.get('format'),
-            "decimals": attrs.get('decimals'),
-            "scale": attrs.get('scale', 0),
+            "decimals": int(attrs.get('decimals')),
+            "scale": int(attrs.get('scale', 0)),
             "sign": attrs.get('sign', ""),
         }
         self._parse_value()
@@ -139,3 +139,6 @@ class ixbrlNumeric:
 
         if self.format['sign'] == "-":
             self.value = self.value * -1
+
+        if self.format['scale'] != 0:
+            self.value = self.value * (10 ^ self.format['scale'])

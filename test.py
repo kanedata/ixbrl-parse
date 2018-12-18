@@ -1,3 +1,4 @@
+import json
 from ixbrlparse import IXBRL
 
 filenames = [
@@ -9,31 +10,36 @@ filenames = [
 
 for filename in filenames:
     print(filename)
+    print("=" * len(filename))
     print()
 
     with open(filename) as a:
         x = IXBRL(a)
 
+        print(x.schema)
+        print(json.dumps(x.namespaces, indent=4))
+        print()
+
         print("contexts")
-        print("========")
+        print("--------")
         for i in x.contexts:
             print(i, x.contexts[i].__dict__)
         print()
 
         print("units")
-        print("=====")
+        print("-----")
         for i in x.units:
             print(i, x.units[i])
         print()
 
         print("nonnumeric")
-        print("==========")
+        print("----------")
         for i in x.nonnumeric:
             print(i.__dict__)
         print()
 
         print("numeric")
-        print("=======")
+        print("-------")
         for i in x.numeric:
             print(i.__dict__)
         print()

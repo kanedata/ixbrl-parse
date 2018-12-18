@@ -4,10 +4,18 @@ class IXBRL():
 
     def __init__(self, f):
         self.soup = BeautifulSoup(f.read(), "html.parser")
+        self._get_schema()
         self._get_contexts()
         self._get_units()
         self._get_nonnumeric()
         self._get_numeric()
+
+    def _get_schema(self):
+        self.schema = self.soup.find('link:schemaref').get('xlink:href')
+        self.namespaces = {}
+        for k in self.soup.find('html').attrs:
+            if k.startswith("xmlns") or ":" in k:
+                self.namespaces[k] = self.soup.find('html')[k].split(" ")
 
     def _get_contexts(self):
         self.contexts = {}

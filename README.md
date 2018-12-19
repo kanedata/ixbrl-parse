@@ -70,3 +70,12 @@ the applied schema.
 Non-numeric facts are stored in `x.nonnumeric` as a list of `ixbrlNonnumeric`
 objects, with similar `.value`, `.context`, `.name` and `.schema` values. 
 The value of `.value` will be a string for non-numeric facts.
+
+## Run tests
+
+Tests can be run with `pytest`:
+
+```bash
+pip install -e . # install the package
+pytest
+```

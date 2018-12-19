@@ -2,10 +2,10 @@ import json
 from ixbrlparse import IXBRL
 
 filenames = [
-    'test_accounts/GB-COH-07175596-2017-03-31.html',
-    "test_accounts/GB-COH-07713141-2016-09-30.html",
-    "test_accounts/GB-COH-05969206-2017-10-31.html",
-    "test_accounts/GB-COH-10087608-2018-03-31.html",
+    'tests/test_accounts/account_1.html',
+    "tests/test_accounts/account_2.html",
+    "tests/test_accounts/account_3.html",
+    "tests/test_accounts/account_4.html",
 ]
 
 for filename in filenames:

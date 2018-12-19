@@ -1,3 +1,4 @@
+import datetime
 from bs4 import BeautifulSoup
 
 class IXBRL():
@@ -79,9 +80,12 @@ class ixbrlContext:
         self.segment = segment
         self.dimension = dimension
         # @TODO: parse dates here
-        self.instant = instant
-        self.startdate = startdate
-        self.enddate = enddate
+        self.instant = datetime.datetime.strptime(
+            instant, "%Y-%m-%d").date() if instant else None
+        self.startdate = datetime.datetime.strptime(
+            startdate, "%Y-%m-%d").date() if startdate else None
+        self.enddate = datetime.datetime.strptime(
+            enddate, "%Y-%m-%d").date() if enddate else None
 
     def __repr__(self):
         if self.startdate and self.enddate:

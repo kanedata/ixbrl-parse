@@ -122,7 +122,7 @@ class ixbrlNumeric:
     # unitref
     # xmlns:ix
     def __init__(self, attrs):
-        name = attrs.get('name').split(":", maxsplit=1)
+        name = attrs.get('name', "").split(":", maxsplit=1)
         if len(name) == 2:
             self.schema = name[0]
             self.name = name[1]
@@ -136,7 +136,7 @@ class ixbrlNumeric:
         self.unit = attrs.get('unit')
         self.format = {
             "format": attrs.get('format'),
-            "decimals": int(attrs.get('decimals')),
+            "decimals": int(attrs.get('decimals', 0)),
             "scale": int(attrs.get('scale', 0)),
             "sign": attrs.get('sign', ""),
         }

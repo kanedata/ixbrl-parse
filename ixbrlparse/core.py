@@ -158,4 +158,4 @@ class ixbrlNumeric:
             self.value = self.value * -1
 
         if self.format['scale'] != 0:
-            self.value = self.value * (10 ^ self.format['scale'])
+            self.value = self.value * (10 ** self.format['scale'])

@@ -10,6 +10,11 @@ class IXBRL():
         self._get_nonnumeric()
         self._get_numeric()
 
+    @classmethod
+    def open(cls, filename):
+        with open(filename) as a:
+            return cls(a)
+
     def _get_schema(self):
         self.schema = self.soup.find('link:schemaref').get('xlink:href')
         self.namespaces = {}

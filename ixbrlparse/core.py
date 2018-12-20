@@ -71,6 +71,38 @@ class IXBRL():
             **s.attrs
         }) for s in self.soup.find_all({'ix:nonfraction'})]
 
+    def to_json(self):
+        return {
+            "schema": self.schema,
+            "namespaces": self.namespaces,
+            "contexts": {c: ct.to_json() for c, ct in self.contexts.items()},
+            "units": self.units,
+            "nonnumeric": [a.to_json() for a in self.nonnumeric],
+            "numeric": [a.to_json() for a in self.numeric],
+        }
+
+    def to_table(self, fields="numeric"):
+        if fields == 'nonnumeric':
+            values = self.nonnumeric
+        elif fields == "numeric":
+            values = self.numeric
+        else:
+            values = self.nonnumeric + self.numeric
+        return [
+            {
+                "schema": " ".join(self.namespaces.get("xmlns:{}".format(v.schema), [v.schema])),
+                "name": v.name,
+                "value": v.value,
+                "unit": v.unit if hasattr(v, 'unit') else None,
+                "instant": str(v.context.instant) if v.context.instant else None,
+                "startdate": str(v.context.startdate) if v.context.startdate else None,
+                "enddate": str(v.context.enddate) if v.context.enddate else None,
+                "segment": v.context.segment,
+                "dimension": v.context.dimension,
+            } for v in values
+        ]
+
+
 
 class ixbrlContext:
 
@@ -94,6 +126,13 @@ class ixbrlContext:
             datestr = str(self.instant)
         return "<IXBRLContext {} [{}]>".format(self._id, datestr)
 
+    def to_json(self):
+        values = self.__dict__
+        for i in ['startdate', 'enddate', 'instant']:
+            if isinstance(values[i], datetime.date):
+                values[i] = str(values[i])
+        return values
+
 class ixbrlNonNumeric:
 
     def __init__(self, context, name, format_, value):
@@ -109,6 +148,11 @@ class ixbrlNonNumeric:
         self.context = context
         self.format = format_
         self.value = value
+
+    def to_json(self):
+        values = self.__dict__
+        values['context'] = self.context.to_json()
+        return values
 
 class ixbrlNumeric:
 
@@ -159,3 +203,8 @@ class ixbrlNumeric:
 
         if self.format['scale'] != 0:
             self.value = self.value * (10 ** self.format['scale'])
+
+    def to_json(self):
+        values = self.__dict__
+        values['context'] = self.context.to_json()
+        return values

@@ -10,15 +10,38 @@ The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSou
 
 ## How to use
 
+### Run the python module
+
+You can run the module directly to extract data from an IXBRL file.
+
+```bash
+python -m ixbrlparse example_file.html
+```
+
+The various options for using this can be found through:
+
+```bash
+python -m ixbrlparse -h
+# optional arguments:
+#   -h, --help            show this help message and exit
+#   --outfile OUTFILE     Where to output the file
+#   --format {csv,json,jsonlines,jsonl}
+#                         format of the output
+#   --fields {numeric,nonnumeric,all}
+#                         Which fields to output
+```
+
+### Use as a python module
+
 An example of usage is shown in [`test.py`](test.py).
 
-### Import the `IXBRL` class which parses the file.
+#### Import the `IXBRL` class which parses the file.
 
 ```python
 from ixbrlparse import IXBRL
 ```
 
-### Initialise an object and parse the file
+#### Initialise an object and parse the file
 
 You need to pass a file handle or other object with a `.read()` method.
 
@@ -27,7 +50,7 @@ with open('sample_ixbrl.html') as a:
   x = IXBRL(a)
 ```
 
-### Get the contexts and units used in the data
+#### Get the contexts and units used in the data
 
 These are held in the object. The contexts are stored as a dictionary with the context
 id as the key, and a `ixbrlContext` object as the value.
@@ -57,7 +80,7 @@ print(x.units)
 # }
 ```
 
-### Get financial facts
+#### Get financial facts
 
 Numeric facts are stored in `x.numeric` as a list of `ixbrlNumeric` objects.
 The `ixbrlNumeric.value` object contains the value as a parsed python number

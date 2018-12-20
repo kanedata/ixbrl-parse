@@ -2,7 +2,9 @@
 
 A python module for getting useful data out of ixbrl files. Currently in develop for a project with 
 [Power to Change](https://www.powertochange.org.uk/) looking at how to extract data from 
-financial documents of community businesses. The library is at an early stage
+financial documents of community businesses. The library is at an early stage.
+
+Tests: [![CircleCI](https://circleci.com/gh/drkane/ixbrl-parse.svg?style=svg)](https://circleci.com/gh/drkane/ixbrl-parse)
 
 ## Requirements
 

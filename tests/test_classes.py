@@ -6,8 +6,7 @@ def test_context():
     assert isinstance(ixbrlContext(**{
         "_id": "123456",
         "entity": None,
-        "segment": None,
-        "dimension": None,
+        "segments": None,
         "instant": "2011-01-01",
         "startdate": None,
         "enddate": None,
@@ -16,8 +15,7 @@ def test_context():
     interval = ixbrlContext(**{
         "_id": "123456",
         "entity": None,
-        "segment": None,
-        "dimension": None,
+        "segments": None,
         "instant": None,
         "startdate": "2011-01-01",
         "enddate": "2011-12-31",
@@ -29,6 +27,23 @@ def test_context():
 
     # @TODO: Validation of values - eg startdate before enddate
 
+def test_context_segments():
+
+    i = ixbrlContext(**{
+        "_id": "123456",
+        "entity": None,
+        "segments": [{
+            "tag": "1",
+            "value": "2",
+            "dimension": "3"
+        }],
+        "instant": None,
+        "startdate": "2011-01-01",
+        "enddate": "2011-12-31",
+    })
+    assert len(i.segments) == 1
+    assert i.segments[0]["value"] == "2"
+
 def test_nonnumeric():
 
     a = {"context": "", "format_": "", "value": ""}
@@ -38,7 +53,7 @@ def test_nonnumeric():
     assert x.name == "value"
 
 def test_nonnumeric_schema():
-    
+
     a = {"context": "", "format_": "", "value": ""}
 
     x = ixbrlNonNumeric(name="schema:value", **a)

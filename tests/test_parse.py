@@ -43,21 +43,50 @@ def test_contexts():
     # test an expected key is in the contexts
     assert "dcur6" in x.contexts
 
+
+def test_contexts_values():
+    x = IXBRL.open(TEST_ACCOUNTS[0])
+
     # test values have been correctly parsed
     assert x.contexts["icur1"].instant == date(2017, 10, 31)
     assert x.contexts["dcur1"].startdate == date(2016, 11, 1)
     assert x.contexts["dcur1"].enddate == date(2017, 10, 31)
-    assert x.contexts["dcur1"].entity == "05969206"
+    assert x.contexts["dcur1"].entity['identifier'] == "05969206"
+    assert x.contexts["dcur1"].entity['scheme'] == "http://www.companieshouse.gov.uk/"
 
-    # @TODO: I think a context can have multiple dimensions/segments
-    assert x.contexts["dcur1"].dimension == "uk-bus:EntityOfficersDimension"
-    assert x.contexts["dcur1"].segment == "uk-bus:Director1"
+
+def test_contexts_segments():
+    x = IXBRL.open(TEST_ACCOUNTS[0])
+
+    assert len(x.contexts["dcur6"].segments) == 1
+    assert x.contexts["dcur6"].segments[0]["tag"] == "xbrldi:explicitmember"
+    assert x.contexts["dcur6"].segments[0]["value"] == "uk-bus:FullAccounts"
+    assert x.contexts["dcur6"].segments[0].get(
+        "dimension") == "uk-bus:AccountsTypeDimension"
+
+
+def test_contexts_no_prefix():
+    # check an account with <context> elements (without prefix)
+    x = IXBRL.open(TEST_ACCOUNTS[1])
+
+    # test values have been correctly parsed
+    assert x.contexts["current-period-director2"].startdate == date(2016, 4, 1)
+    assert x.contexts["current-period-director2"].enddate == date(2017, 3, 31)
+    assert x.contexts["current-period-director2"].entity['identifier'] == "07175596"
+    assert x.contexts["current-period-director2"].entity['scheme'] == "http://www.companieshouse.gov.uk/"
 
 def test_units():
+    x = IXBRL.open(TEST_ACCOUNTS[0])
+
+    assert len(x.units) == 1
+    assert x.units["GBP"] == "iso4217:GBP"
+
+def test_units_no_prefix():
     x = IXBRL.open(TEST_ACCOUNTS[1])
 
     assert len(x.units) == 2
     assert x.units["currencyUnit"] == "iso4217:GBP"
+    assert x.units["shares"] == "shares"
 
 def test_nonnumeric():
     x = IXBRL.open(TEST_ACCOUNTS[2])
@@ -77,7 +106,7 @@ def test_numeric():
     for n in x.numeric:
         assert isinstance(n, ixbrlNumeric)
 
-        if n.name == "NetCurrentAssetsLiabilities" and n.context._id == "cfwd_31_03_2017":
+        if n.name == "NetCurrentAssetsLiabilities" and n.context.id == "cfwd_31_03_2017":
             assert n.format["sign"] == "-"
             assert n.value == -17957
 

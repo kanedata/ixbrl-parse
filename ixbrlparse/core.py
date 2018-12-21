@@ -26,34 +26,29 @@ class IXBRL():
     def _get_contexts(self):
         self.contexts = {}
         resources = self.soup.find('ix:resources')
-        for s in resources.find_all({'xbrli:context'}):
+        for s in resources.find_all(['xbrli:context', 'context']):
             self.contexts[s['id']] = ixbrlContext(**{
                 "_id": s['id'],
-                "entity": s.find('xbrli:identifier').text if s.find('xbrli:identifier') else None,
-                "segment": s.find('xbrli:segment').text.strip() if s.find('xbrli:segment') else None,
-                "dimension": s.find({'xbrldi:explicitmember'}).get('dimension') if s.find({'xbrldi:explicitmember'}) else None,
-                "instant": s.find('xbrli:instant').text if s.find('xbrli:instant') else None,
-                "startdate": s.find('xbrli:startdate').text if s.find('xbrli:startdate') else None,
-                "enddate": s.find('xbrli:enddate').text if s.find('xbrli:enddate') else None,
-            })
-        for s in resources.find_all({'context'}):
-            self.contexts[s['id']] = ixbrlContext(**{
-                "_id": s['id'],
-                "entity": s.find('identifier').text if s.find('identifier') else None,
-                "segment": s.find('segment').text.strip() if s.find('segment') else None,
-                "dimension": s.find({'explicitmember'}).get('dimension') if s.find({'explicitmember'}) else None,
-                "instant": s.find('instant').text if s.find('instant') else None,
-                "startdate": s.find('startdate').text if s.find('startdate') else None,
-                "enddate": s.find('enddate').text if s.find('enddate') else None,
+                "entity": {
+                    "scheme": s.find(['xbrli:identifier', 'identifier'])['scheme'] if s.find(['xbrli:identifier', 'identifier']) else None,
+                    "identifier": s.find(['xbrli:identifier', 'identifier']).text if s.find(['xbrli:identifier', 'identifier']) else None,
+                },
+                "segments": [{
+                    "tag": x.name,
+                    "value": x.text.strip(),
+                    **x.attrs
+                } for x in s.find(['xbrli:segment', 'segment']).findChildren()] if s.find(['xbrli:segment', 'segment']) else None,
+                "instant": s.find(['xbrli:instant', 'instant']).text if s.find(['xbrli:instant', 'instant']) else None,
+                "startdate": s.find(['xbrli:startdate', 'startdate']).text if s.find(['xbrli:startdate', 'startdate']) else None,
+                "enddate": s.find(['xbrli:enddate', 'enddate']).text if s.find(['xbrli:enddate', 'enddate']) else None,
             })
 
     def _get_units(self):
         self.units = {}
         resources = self.soup.find('ix:resources')
-        for s in resources.find_all({'xbrli:unit'}):
-            self.units[s['id']] = s.find('xbrli:measure').text if s.find('xbrli:measure') else None
-        for s in resources.find_all({'unit'}):
-            self.units[s['id']] = s.find('measure').text if s.find('measure') else None
+        for s in resources.find_all(['xbrli:unit', 'unit']):
+            self.units[s['id']] = s.find(['xbrli:measure', 'measure']).text if s.find([
+                'xbrli:measure', 'measure']) else None
 
     def _get_nonnumeric(self):
         self.nonnumeric = [ixbrlNonNumeric(**{
@@ -106,11 +101,10 @@ class IXBRL():
 
 class ixbrlContext:
 
-    def __init__(self, _id, entity, segment, dimension, instant, startdate, enddate):
-        self._id = _id
+    def __init__(self, _id, entity, segments, instant, startdate, enddate):
+        self.id = _id
         self.entity = entity
-        self.segment = segment
-        self.dimension = dimension
+        self.segments = segments
         # @TODO: parse dates here
         self.instant = datetime.datetime.strptime(
             instant, "%Y-%m-%d").date() if instant else None
@@ -124,7 +118,7 @@ class ixbrlContext:
             datestr = "{} to {}".format(self.startdate, self.enddate)
         else:
             datestr = str(self.instant)
-        return "<IXBRLContext {} [{}]>".format(self._id, datestr)
+        return "<IXBRLContext {} [{}]>".format(self.id, datestr)
 
     def to_json(self):
         values = self.__dict__

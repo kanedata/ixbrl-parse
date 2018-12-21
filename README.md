@@ -61,10 +61,9 @@ id as the key, and a `ixbrlContext` object as the value.
 print(x.contexts)
 # {
 #    "cfwd_2018_03_31": ixbrlContext(
-#       _id="cfwd_2018_03_31",
+#       id="cfwd_2018_03_31",
 #       entity="0123456", # company number
-#       segment=None, # used for hypercubes
-#       dimension=None, # used for hypercubes
+#       segments=[], # used for hypercubes
 #       instant="2018-03-31",
 #       startdate=None, # used for periods
 #       enddate=None, # used for periods

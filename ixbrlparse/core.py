@@ -83,8 +83,19 @@ class IXBRL():
             values = self.numeric
         else:
             values = self.nonnumeric + self.numeric
-        return [
-            {
+
+        ret = []
+        for v in values:
+            if v.context.segments:
+                segments = {
+                    "segment:{}".format(i): "{} {} {}".format(
+                        s.get("tag", ""), s.get("dimension"), s.get("value")
+                    ).strip() for i, s in enumerate(v.context.segments)
+                }
+            else:
+                segments = {"segment:0": ""}
+
+            ret.append({
                 "schema": " ".join(self.namespaces.get("xmlns:{}".format(v.schema), [v.schema])),
                 "name": v.name,
                 "value": v.value,
@@ -92,10 +103,9 @@ class IXBRL():
                 "instant": str(v.context.instant) if v.context.instant else None,
                 "startdate": str(v.context.startdate) if v.context.startdate else None,
                 "enddate": str(v.context.enddate) if v.context.enddate else None,
-                "segment": v.context.segment,
-                "dimension": v.context.dimension,
-            } for v in values
-        ]
+                **segments
+            })
+        return ret
 
 
 
@@ -118,7 +128,10 @@ class ixbrlContext:
             datestr = "{} to {}".format(self.startdate, self.enddate)
         else:
             datestr = str(self.instant)
-        return "<IXBRLContext {} [{}]>".format(self.id, datestr)
+
+        segmentstr = " (with segments)" if self.segments else ""
+
+        return "<IXBRLContext {} [{}]{}>".format(self.id, datestr, segmentstr)
 
     def to_json(self):
         values = self.__dict__

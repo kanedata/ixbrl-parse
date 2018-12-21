@@ -43,6 +43,7 @@ def test_context_segments():
     })
     assert len(i.segments) == 1
     assert i.segments[0]["value"] == "2"
+    assert "with segment" in str(i)
 
 def test_nonnumeric():
 

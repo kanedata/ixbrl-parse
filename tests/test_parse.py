@@ -10,6 +10,10 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_4.html",
 ]
 
+EXPECTED_TABLE_KEYS = [
+    "schema", "name", "value", "unit", "instant", "startdate", "enddate"
+]
+
 def test_open():
     with open(TEST_ACCOUNTS[0]) as a:
         x = IXBRL(a)
@@ -117,3 +121,54 @@ def test_numeric():
     assert x.numeric[0].value == 52982
     assert x.numeric[0].name == "PropertyPlantEquipment"
     assert x.numeric[0].schema == "ns5"
+
+def test_table_output():
+    x = IXBRL.open(TEST_ACCOUNTS[1])
+    table = x.to_table("all")
+
+    assert len(table) == 27
+
+    for row in table[0:5]:
+        for col, value in row.items():
+            # output is two dimensional
+            assert not isinstance(value, (list, dict, tuple))
+
+            # column is expected
+            assert col in EXPECTED_TABLE_KEYS or col.startswith("segment")
+
+        # needs either an instant or start & end dates
+        assert row['instant'] or (row["startdate"] and row["enddate"])
+
+def test_table_output_numeric():
+    x = IXBRL.open(TEST_ACCOUNTS[2])
+    table = x.to_table("numeric")
+
+    assert len(table) == 18
+
+    for row in table[0:5]:
+        for col, value in row.items():
+            # output is two dimensional
+            assert not isinstance(value, (list, dict, tuple))
+
+            # column is expected
+            assert col in EXPECTED_TABLE_KEYS or col.startswith("segment")
+
+        # value is numeric
+        assert isinstance(row['value'], (int, float))
+
+def test_table_output_nonnumeric():
+    x = IXBRL.open(TEST_ACCOUNTS[3])
+    table = x.to_table("nonnumeric")
+
+    assert len(table) == 59
+
+    for row in table[0:5]:
+        for col, value in row.items():
+            # output is two dimensional
+            assert not isinstance(value, (list, dict, tuple))
+
+            # column is expected
+            assert col in EXPECTED_TABLE_KEYS or col.startswith("segment")
+
+        # value is a string
+        assert isinstance(row['value'], (str, type(None)))

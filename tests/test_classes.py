@@ -92,3 +92,8 @@ def test_numeric_scale_sign():
 
     assert ixbrlNumeric({"value": "1,234", "scale": "3", "sign": "-"}).value == -1234000
     assert ixbrlNumeric({"text": "1,234", "scale": "3", "sign": "-"}).value == -1234000
+
+
+def test_numeric_inf_format():
+
+    assert ixbrlNumeric({"text": "1234", "decimals": "INF"}).value == 1234

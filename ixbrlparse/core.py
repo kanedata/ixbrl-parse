@@ -181,13 +181,19 @@ class ixbrlNumeric:
             self.schema = 'unknown'
             self.name = name[0]
 
+        decimals = attrs.get('decimals', "0")
+        if decimals.lower() == "inf":
+            decimals = None
+        else:
+            decimals = int(decimals)
+
         self.text = attrs.get('text')
         self.value = attrs.get('value')
         self.context = attrs.get('context')
         self.unit = attrs.get('unit')
         self.format = {
             "format": attrs.get('format'),
-            "decimals": int(attrs.get('decimals', 0)),
+            "decimals": decimals,
             "scale": int(attrs.get('scale', 0)),
             "sign": attrs.get('sign', ""),
         }

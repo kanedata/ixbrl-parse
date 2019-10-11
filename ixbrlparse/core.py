@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 class IXBRL():
 
     def __init__(self, f):
-        self.soup = BeautifulSoup(f.read(), "html.parser")
+        self.soup = BeautifulSoup(f.read(), "xml")
         self._get_schema()
         self._get_contexts()
         self._get_units()
@@ -17,7 +17,7 @@ class IXBRL():
             return cls(a)
 
     def _get_schema(self):
-        self.schema = self.soup.find('link:schemaref').get('xlink:href')
+        self.schema = self.soup.find(['link:schemaRef', 'schemaRef']).get('xlink:href')
         self.namespaces = {}
         for k in self.soup.find('html').attrs:
             if k.startswith("xmlns") or ":" in k:
@@ -25,7 +25,7 @@ class IXBRL():
 
     def _get_contexts(self):
         self.contexts = {}
-        resources = self.soup.find('ix:resources')
+        resources = self.soup.find(['ix:resources', 'resources'])
         for s in resources.find_all(['xbrli:context', 'context']):
             self.contexts[s['id']] = ixbrlContext(**{
                 "_id": s['id'],
@@ -39,32 +39,32 @@ class IXBRL():
                     **x.attrs
                 } for x in s.find(['xbrli:segment', 'segment']).findChildren()] if s.find(['xbrli:segment', 'segment']) else None,
                 "instant": s.find(['xbrli:instant', 'instant']).text if s.find(['xbrli:instant', 'instant']) else None,
-                "startdate": s.find(['xbrli:startdate', 'startdate']).text if s.find(['xbrli:startdate', 'startdate']) else None,
-                "enddate": s.find(['xbrli:enddate', 'enddate']).text if s.find(['xbrli:enddate', 'enddate']) else None,
+                "startdate": s.find(['xbrli:startDate', 'startDate']).text if s.find(['xbrli:startDate', 'startDate']) else None,
+                "enddate": s.find(['xbrli:endDate', 'endDate']).text if s.find(['xbrli:endDate', 'endDate']) else None,
             })
 
     def _get_units(self):
         self.units = {}
-        resources = self.soup.find('ix:resources')
+        resources = self.soup.find(['ix:resources', 'resources'])
         for s in resources.find_all(['xbrli:unit', 'unit']):
             self.units[s['id']] = s.find(['xbrli:measure', 'measure']).text if s.find([
                 'xbrli:measure', 'measure']) else None
 
     def _get_nonnumeric(self):
         self.nonnumeric = [ixbrlNonNumeric(**{
-            "context": self.contexts.get(s['contextref'], s['contextref']),
+            "context": self.contexts.get(s['contextRef'], s['contextRef']),
             "name": s['name'],
             "format_": s.get('format'),
             "value": s.text.strip().replace("\n", "")
-        }) for s in self.soup.find_all({'ix:nonnumeric'})]
+        }) for s in self.soup.find_all({'nonNumeric'})]
 
     def _get_numeric(self):
         self.numeric = [ixbrlNumeric({
             "text": s.text,
-            "context": self.contexts.get(s['contextref'], s['contextref']),
-            "unit": self.units.get(s['unitref'], s['unitref']),
+            "context": self.contexts.get(s['contextRef'], s['contextRef']),
+            "unit": self.units.get(s['unitRef'], s['unitRef']),
             **s.attrs
-        }) for s in self.soup.find_all({'ix:nonfraction'})]
+        }) for s in self.soup.find_all({'nonFraction'})]
 
     def to_json(self):
         return {

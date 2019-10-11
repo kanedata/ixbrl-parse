@@ -29,10 +29,11 @@ def test_schema():
         ("http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd", 12),
         ("http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd", 12),
         ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 38),
-        ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 38),
+        ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 19),
     ]
 
     for k, a in enumerate(TEST_ACCOUNTS):
+        print(a)
         x = IXBRL.open(a)
         assert x.schema == account_schema[k][0]
         assert len(x.namespaces) == account_schema[k][1]
@@ -65,7 +66,7 @@ def test_contexts_segments():
     x = IXBRL.open(TEST_ACCOUNTS[0])
 
     assert len(x.contexts["dcur6"].segments) == 1
-    assert x.contexts["dcur6"].segments[0]["tag"] == "xbrldi:explicitmember"
+    assert x.contexts["dcur6"].segments[0]["tag"] in "xbrldi:explicitMember"
     assert x.contexts["dcur6"].segments[0]["value"] == "uk-bus:FullAccounts"
     assert x.contexts["dcur6"].segments[0].get(
         "dimension") == "uk-bus:AccountsTypeDimension"

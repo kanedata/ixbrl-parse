@@ -6,6 +6,7 @@ filenames = [
     "tests/test_accounts/account_2.html",
     "tests/test_accounts/account_3.html",
     "tests/test_accounts/account_4.html",
+    "tests/test_accounts/account_5.html",
 ]
 
 for filename in filenames:

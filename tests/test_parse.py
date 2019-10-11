@@ -8,6 +8,7 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_2.html",
     "tests/test_accounts/account_3.html",
     "tests/test_accounts/account_4.html",
+    "tests/test_accounts/account_5.html",
 ]
 
 EXPECTED_TABLE_KEYS = [
@@ -27,6 +28,7 @@ def test_schema():
         ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 11),
         ("http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd", 12),
         ("http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd", 12),
+        ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 38),
         ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 38),
     ]
 

@@ -48,7 +48,7 @@ from ixbrlparse import IXBRL
 You need to pass a file handle or other object with a `.read()` method.
 
 ```python
-with open('sample_ixbrl.html') as a:
+with open('sample_ixbrl.html', encoding="utf8") as a:
   x = IXBRL(a)
 ```
 

@@ -1,4 +1,5 @@
 from datetime import date
+import io
 from bs4 import BeautifulSoup
 from ixbrlparse import IXBRL
 from ixbrlparse.core import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
@@ -22,6 +23,13 @@ def test_open():
 
     x = IXBRL.open(TEST_ACCOUNTS[1])
     assert isinstance(x.soup, BeautifulSoup)
+    
+    
+def test_open_str():
+    with open(TEST_ACCOUNTS[0]) as a:
+        content = a.read()
+        x = IXBRL(io.StringIO(content))
+        assert isinstance(x.soup, BeautifulSoup)
 
 def test_schema():
     account_schema = [

@@ -16,6 +16,7 @@ EXPECTED_TABLE_KEYS = [
     "schema", "name", "value", "unit", "instant", "startdate", "enddate"
 ]
 
+
 def test_open():
     with open(TEST_ACCOUNTS[0]) as a:
         x = IXBRL(a)
@@ -23,13 +24,14 @@ def test_open():
 
     x = IXBRL.open(TEST_ACCOUNTS[1])
     assert isinstance(x.soup, BeautifulSoup)
-    
-    
+
+
 def test_open_str():
     with open(TEST_ACCOUNTS[0]) as a:
         content = a.read()
         x = IXBRL(io.StringIO(content))
         assert isinstance(x.soup, BeautifulSoup)
+
 
 def test_schema():
     account_schema = [
@@ -45,6 +47,7 @@ def test_schema():
         x = IXBRL.open(a)
         assert x.schema == account_schema[k][0]
         assert len(x.namespaces) == account_schema[k][1]
+
 
 def test_contexts():
     x = IXBRL.open(TEST_ACCOUNTS[0])
@@ -90,11 +93,13 @@ def test_contexts_no_prefix():
     assert x.contexts["current-period-director2"].entity['identifier'] == "07175596"
     assert x.contexts["current-period-director2"].entity['scheme'] == "http://www.companieshouse.gov.uk/"
 
+
 def test_units():
     x = IXBRL.open(TEST_ACCOUNTS[0])
 
     assert len(x.units) == 1
     assert x.units["GBP"] == "iso4217:GBP"
+
 
 def test_units_no_prefix():
     x = IXBRL.open(TEST_ACCOUNTS[1])
@@ -102,6 +107,7 @@ def test_units_no_prefix():
     assert len(x.units) == 2
     assert x.units["currencyUnit"] == "iso4217:GBP"
     assert x.units["shares"] == "shares"
+
 
 def test_nonnumeric():
     x = IXBRL.open(TEST_ACCOUNTS[2])
@@ -113,6 +119,7 @@ def test_nonnumeric():
         if n.schema == "uk-gaap-cd-bus" and n.name == "UKCompaniesHouseRegisteredNumber":
             assert n.value == "07713141"
             assert isinstance(n.context, ixbrlContext)
+
 
 def test_numeric():
     x = IXBRL.open(TEST_ACCOUNTS[3])
@@ -133,6 +140,7 @@ def test_numeric():
     assert x.numeric[0].name == "PropertyPlantEquipment"
     assert x.numeric[0].schema == "ns5"
 
+
 def test_table_output():
     x = IXBRL.open(TEST_ACCOUNTS[1])
     table = x.to_table("all")
@@ -150,6 +158,7 @@ def test_table_output():
         # needs either an instant or start & end dates
         assert row['instant'] or (row["startdate"] and row["enddate"])
 
+
 def test_table_output_numeric():
     x = IXBRL.open(TEST_ACCOUNTS[2])
     table = x.to_table("numeric")
@@ -166,6 +175,7 @@ def test_table_output_numeric():
 
         # value is numeric
         assert isinstance(row['value'], (int, float))
+
 
 def test_table_output_nonnumeric():
     x = IXBRL.open(TEST_ACCOUNTS[3])

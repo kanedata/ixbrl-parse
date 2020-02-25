@@ -6,11 +6,11 @@ class ixbrlFormat:
             self.decimals = None
         else:
             self.decimals = int(decimals)
-        
+
         self.format = None
         if format_:
             format_ = format_.split(":")
-            if len(format_)>1:
+            if len(format_) > 1:
                 self.format = ":".join(format_[1:])
                 self.namespace = format_[0]
             else:
@@ -37,7 +37,7 @@ class ixbrlFormat:
 
         if self.scale != 0:
             value = value * (10 ** self.scale)
-        
+
         return value
 
 
@@ -65,18 +65,18 @@ def get_format(format_):
 
     if format_ is None:
         return ixbrlFormat
-        
+
     format_ = format_.split(":")
-    if len(format_)>1:
+    if len(format_) > 1:
         namespace = format_[0]
         format_ = ":".join(format_[1:])
     else:
         namespace = None
         format_ = ":".join(format_)
-    
+
     if format_ in ('zerodash', 'numdash'):
         return ixtZeroDash
-    
+
     if format_ == 'nocontent':
         return ixtNoContent
 

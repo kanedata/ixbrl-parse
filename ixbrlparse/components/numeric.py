@@ -1,5 +1,6 @@
 from .transform import get_format
 
+
 class ixbrlNumeric:
 
     # contextref

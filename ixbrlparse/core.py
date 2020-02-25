@@ -1,4 +1,3 @@
-import datetime
 from bs4 import BeautifulSoup
 
 from ixbrlparse.components import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric

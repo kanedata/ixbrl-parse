@@ -1,5 +1,6 @@
 import datetime
 
+
 class ixbrlContext:
 
     def __init__(self, _id, entity, segments, instant, startdate, enddate):

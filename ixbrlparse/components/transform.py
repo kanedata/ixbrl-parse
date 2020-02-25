@@ -1,0 +1,94 @@
+class ixbrlFormat:
+
+    def __init__(self, format_, decimals, scale, sign):
+
+        if decimals.lower() == "inf":
+            self.decimals = None
+        else:
+            self.decimals = int(decimals)
+        
+        self.format = None
+        if format_:
+            format_ = format_.split(":")
+            if len(format_)>1:
+                self.format = ":".join(format_[1:])
+                self.namespace = format_[0]
+            else:
+                self.format = ":".join(format_)
+                self.namespace = None
+
+        self.scale = int(scale)
+        self.sign = sign
+
+    def parse_value(self, value):
+
+        if isinstance(value, (int, float)):
+            return value
+
+        if value in ('-', ''):
+            return 0
+
+        value = value.replace(' ', '')
+        value = value.replace(',', '')
+        value = float(value)
+
+        if self.sign == "-":
+            value = value * -1
+
+        if self.scale != 0:
+            value = value * (10 ** self.scale)
+        
+        return value
+
+
+class ixtZeroDash(ixbrlFormat):
+
+    def parse_value(self, value):
+        return 0
+
+
+class ixtNoContent(ixbrlFormat):
+
+    def parse_value(self, value):
+        return 0
+
+
+class ixtNumComma(ixbrlFormat):
+
+    def parse_value(self, value):
+        value = value.replace('.', '')
+        value = value.replace(',', '.')
+        return super().parse_value(value)
+
+
+def get_format(format_):
+
+    if format_ is None:
+        return ixbrlFormat
+        
+    format_ = format_.split(":")
+    if len(format_)>1:
+        namespace = format_[0]
+        format_ = ":".join(format_[1:])
+    else:
+        namespace = None
+        format_ = ":".join(format_)
+    
+    if format_ in ('zerodash', 'numdash'):
+        return ixtZeroDash
+    
+    if format_ == 'nocontent':
+        return ixtNoContent
+
+    if format_ in ('numdotdecimal', 'numcommadot', 'numspacedot'):
+        return ixbrlFormat
+
+    if format_ in ('numcomma', 'numdotcomma', 'numspacecomma'):
+        return ixtNumComma
+
+    raise NotImplementedError(
+        'Format "{}" not implemented (namespace "{}")'.format(
+            format_,
+            namespace,
+        )
+    )

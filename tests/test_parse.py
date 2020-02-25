@@ -122,10 +122,10 @@ def test_numeric():
         assert isinstance(n, ixbrlNumeric)
 
         if n.name == "NetCurrentAssetsLiabilities" and n.context.id == "cfwd_31_03_2017":
-            assert n.format["sign"] == "-"
+            assert n.format.sign == "-"
             assert n.value == -17957
 
-        if n.format["sign"] == "-":
+        if n.format.sign == "-":
             assert n.value < 0
 
     assert x.numeric[0].unit == "iso4217:GBP"

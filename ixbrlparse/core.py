@@ -1,6 +1,8 @@
 import datetime
 from bs4 import BeautifulSoup
 
+from ixbrlparse.components import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
+
 
 class IXBRL():
 
@@ -143,119 +145,3 @@ class IXBRL():
                 **segments
             })
         return ret
-
-
-class ixbrlContext:
-
-    def __init__(self, _id, entity, segments, instant, startdate, enddate):
-        self.id = _id
-        self.entity = entity
-        self.segments = segments
-        # @TODO: parse dates here
-        self.instant = datetime.datetime.strptime(
-            instant, "%Y-%m-%d").date() if instant else None
-        self.startdate = datetime.datetime.strptime(
-            startdate, "%Y-%m-%d").date() if startdate else None
-        self.enddate = datetime.datetime.strptime(
-            enddate, "%Y-%m-%d").date() if enddate else None
-
-    def __repr__(self):
-        if self.startdate and self.enddate:
-            datestr = "{} to {}".format(self.startdate, self.enddate)
-        else:
-            datestr = str(self.instant)
-
-        segmentstr = " (with segments)" if self.segments else ""
-
-        return "<IXBRLContext {} [{}]{}>".format(self.id, datestr, segmentstr)
-
-    def to_json(self):
-        values = self.__dict__
-        for i in ['startdate', 'enddate', 'instant']:
-            if isinstance(values[i], datetime.date):
-                values[i] = str(values[i])
-        return values
-
-
-class ixbrlNonNumeric:
-
-    def __init__(self, context, name, format_, value):
-
-        name = name.split(":", maxsplit=1)
-        if len(name) == 2:
-            self.schema = name[0]
-            self.name = name[1]
-        else:
-            self.schema = 'unknown'
-            self.name = name[0]
-
-        self.context = context
-        self.format = format_
-        self.value = value
-
-    def to_json(self):
-        values = self.__dict__
-        values['context'] = self.context.to_json()
-        return values
-
-
-class ixbrlNumeric:
-
-    # contextref
-    # decimals
-    # format
-    # name
-    # scale
-    # sign
-    # text
-    # unitref
-    # xmlns:ix
-    def __init__(self, attrs):
-        name = attrs.get('name', "").split(":", maxsplit=1)
-        if len(name) == 2:
-            self.schema = name[0]
-            self.name = name[1]
-        else:
-            self.schema = 'unknown'
-            self.name = name[0]
-
-        decimals = attrs.get('decimals', "0")
-        if decimals.lower() == "inf":
-            decimals = None
-        else:
-            decimals = int(decimals)
-
-        self.text = attrs.get('text')
-        self.value = attrs.get('value')
-        self.context = attrs.get('context')
-        self.unit = attrs.get('unit')
-        self.format = {
-            "format": attrs.get('format'),
-            "decimals": decimals,
-            "scale": int(attrs.get('scale', 0)),
-            "sign": attrs.get('sign', ""),
-        }
-        self._parse_value()
-
-    def _parse_value(self):
-        if not self.value:
-            # @TODO: Maybe do more comprehensive regex replace here
-            self.value = self.text.replace(',', '')
-
-        if self.value == '-':
-            self.value = 0
-
-        if isinstance(self.value, str):
-            self.value = self.value.replace(',', '')
-            self.value = float(self.value)
-
-        if self.format['sign'] == "-":
-            self.value = self.value * -1
-
-        if self.format['scale'] != 0:
-            self.value = self.value * (10 ** self.format['scale'])
-
-    def to_json(self):
-        values = self.__dict__
-        values['context'] = self.context.to_json()
-        return values

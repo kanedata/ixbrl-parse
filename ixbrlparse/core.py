@@ -1,6 +1,7 @@
 import datetime
 from bs4 import BeautifulSoup
 
+
 class IXBRL():
 
     def __init__(self, f):
@@ -17,7 +18,8 @@ class IXBRL():
             return cls(a)
 
     def _get_schema(self):
-        self.schema = self.soup.find(['link:schemaRef', 'schemaRef']).get('xlink:href')
+        self.schema = self.soup.find(
+            ['link:schemaRef', 'schemaRef']).get('xlink:href')
         self.namespaces = {}
         for k in self.soup.find('html').attrs:
             if k.startswith("xmlns") or ":" in k:
@@ -30,25 +32,52 @@ class IXBRL():
             self.contexts[s['id']] = ixbrlContext(**{
                 "_id": s['id'],
                 "entity": {
-                    "scheme": s.find(['xbrli:identifier', 'identifier'])['scheme'] if s.find(['xbrli:identifier', 'identifier']) else None,
-                    "identifier": s.find(['xbrli:identifier', 'identifier']).text if s.find(['xbrli:identifier', 'identifier']) else None,
+                    "scheme": s.find(
+                        ['xbrli:identifier', 'identifier']
+                    )['scheme'] if s.find(
+                        ['xbrli:identifier', 'identifier']
+                    ) else None,
+                    "identifier": s.find(
+                        ['xbrli:identifier', 'identifier']
+                    ).text if s.find(
+                        ['xbrli:identifier', 'identifier']
+                    ) else None,
                 },
                 "segments": [{
                     "tag": x.name,
                     "value": x.text.strip(),
                     **x.attrs
-                } for x in s.find(['xbrli:segment', 'segment']).findChildren()] if s.find(['xbrli:segment', 'segment']) else None,
-                "instant": s.find(['xbrli:instant', 'instant']).text if s.find(['xbrli:instant', 'instant']) else None,
-                "startdate": s.find(['xbrli:startDate', 'startDate']).text if s.find(['xbrli:startDate', 'startDate']) else None,
-                "enddate": s.find(['xbrli:endDate', 'endDate']).text if s.find(['xbrli:endDate', 'endDate']) else None,
+                } for x in s.find(
+                    ['xbrli:segment', 'segment']
+                ).findChildren()] if s.find(
+                    ['xbrli:segment', 'segment']
+                ) else None,
+                "instant": s.find(
+                    ['xbrli:instant', 'instant']
+                ).text if s.find(
+                    ['xbrli:instant', 'instant']
+                ) else None,
+                "startdate": s.find(
+                    ['xbrli:startDate', 'startDate']
+                ).text if s.find(
+                    ['xbrli:startDate', 'startDate']
+                ) else None,
+                "enddate": s.find(
+                    ['xbrli:endDate', 'endDate']
+                ).text if s.find(
+                    ['xbrli:endDate', 'endDate']
+                ) else None,
             })
 
     def _get_units(self):
         self.units = {}
         resources = self.soup.find(['ix:resources', 'resources'])
         for s in resources.find_all(['xbrli:unit', 'unit']):
-            self.units[s['id']] = s.find(['xbrli:measure', 'measure']).text if s.find([
-                'xbrli:measure', 'measure']) else None
+            self.units[s['id']] = s.find(
+                ['xbrli:measure', 'measure']
+            ).text if s.find(
+                ['xbrli:measure', 'measure']
+            ) else None
 
     def _get_nonnumeric(self):
         self.nonnumeric = [ixbrlNonNumeric(**{
@@ -96,17 +125,24 @@ class IXBRL():
                 segments = {"segment:0": ""}
 
             ret.append({
-                "schema": " ".join(self.namespaces.get("xmlns:{}".format(v.schema), [v.schema])),
+                "schema": " ".join(
+                    self.namespaces.get(
+                        "xmlns:{}".format(v.schema),
+                        [v.schema]
+                    )
+                ),
                 "name": v.name,
                 "value": v.value,
                 "unit": v.unit if hasattr(v, 'unit') else None,
-                "instant": str(v.context.instant) if v.context.instant else None,
-                "startdate": str(v.context.startdate) if v.context.startdate else None,
-                "enddate": str(v.context.enddate) if v.context.enddate else None,
+                "instant": str(v.context.instant)
+                if v.context.instant else None,
+                "startdate": str(v.context.startdate)
+                if v.context.startdate else None,
+                "enddate": str(v.context.enddate)
+                if v.context.enddate else None,
                 **segments
             })
         return ret
-
 
 
 class ixbrlContext:
@@ -140,6 +176,7 @@ class ixbrlContext:
                 values[i] = str(values[i])
         return values
 
+
 class ixbrlNonNumeric:
 
     def __init__(self, context, name, format_, value):
@@ -160,6 +197,7 @@ class ixbrlNonNumeric:
         values = self.__dict__
         values['context'] = self.context.to_json()
         return values
+
 
 class ixbrlNumeric:
 

@@ -5,8 +5,10 @@ from ixbrlparse.components import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
 
 class IXBRL():
 
-    def __init__(self, f):
+    def __init__(self, f, raise_on_error=True):
         self.soup = BeautifulSoup(f.read(), "xml")
+        self.raise_on_error = raise_on_error
+        self.errors = []
         self._get_schema()
         self._get_contexts()
         self._get_units()
@@ -14,9 +16,9 @@ class IXBRL():
         self._get_numeric()
 
     @classmethod
-    def open(cls, filename):
+    def open(cls, filename, raise_on_error=True):
         with open(filename) as a:
-            return cls(a)
+            return cls(a, raise_on_error=raise_on_error)
 
     def _get_schema(self):
         self.schema = self.soup.find(
@@ -33,41 +35,20 @@ class IXBRL():
             self.contexts[s['id']] = ixbrlContext(**{
                 "_id": s['id'],
                 "entity": {
-                    "scheme": s.find(
-                        ['xbrli:identifier', 'identifier']
-                    )['scheme'] if s.find(
-                        ['xbrli:identifier', 'identifier']
-                    ) else None,
-                    "identifier": s.find(
-                        ['xbrli:identifier', 'identifier']
-                    ).text if s.find(
-                        ['xbrli:identifier', 'identifier']
-                    ) else None,
+                    "scheme": s.find(['xbrli:identifier', 'identifier'])['scheme'] if s.find(['xbrli:identifier', 'identifier']) else None,
+                    "identifier": s.find(['xbrli:identifier', 'identifier']).text if s.find(['xbrli:identifier', 'identifier']) else None,
                 },
-                "segments": [{
-                    "tag": x.name,
-                    "value": x.text.strip(),
-                    **x.attrs
-                } for x in s.find(
-                    ['xbrli:segment', 'segment']
-                ).findChildren()] if s.find(
-                    ['xbrli:segment', 'segment']
-                ) else None,
-                "instant": s.find(
-                    ['xbrli:instant', 'instant']
-                ).text if s.find(
-                    ['xbrli:instant', 'instant']
-                ) else None,
-                "startdate": s.find(
-                    ['xbrli:startDate', 'startDate']
-                ).text if s.find(
-                    ['xbrli:startDate', 'startDate']
-                ) else None,
-                "enddate": s.find(
-                    ['xbrli:endDate', 'endDate']
-                ).text if s.find(
-                    ['xbrli:endDate', 'endDate']
-                ) else None,
+                "segments": [
+                    {
+                        "tag": x.name,
+                        "value": x.text.strip(),
+                        **x.attrs
+                    }
+                    for x in s.find(['xbrli:segment', 'segment']).findChildren()
+                ] if s.find(['xbrli:segment', 'segment']) else None,
+                "instant": s.find(['xbrli:instant', 'instant']).text if s.find(['xbrli:instant', 'instant']) else None,
+                "startdate": s.find(['xbrli:startDate', 'startDate']).text if s.find(['xbrli:startDate', 'startDate']) else None,
+                "enddate": s.find(['xbrli:endDate', 'endDate']).text if s.find(['xbrli:endDate', 'endDate']) else None,
             })
 
     def _get_units(self):
@@ -81,20 +62,47 @@ class IXBRL():
             ) else None
 
     def _get_nonnumeric(self):
-        self.nonnumeric = [ixbrlNonNumeric(**{
-            "context": self.contexts.get(s['contextRef'], s['contextRef']),
-            "name": s['name'],
-            "format_": s.get('format'),
-            "value": s.text.strip().replace("\n", "")
-        }) for s in self.soup.find_all({'nonNumeric'})]
+        self.nonnumeric = []
+        for s in self.soup.find_all({'nonNumeric'}):
+            element = {
+                "context": self.contexts.get(s['contextRef'], s['contextRef']),
+                "name": s['name'],
+                "format_": s.get('format'),
+                "value": s.text.strip().replace("\n", "")
+            }
+            try:
+                self.nonnumeric.append(ixbrlNonNumeric(**element))
+            except Exception as e:
+                self.errors.append({
+                    'error': e,
+                    'element': s,
+                })
+                if self.raise_on_error:
+                    raise
 
     def _get_numeric(self):
-        self.numeric = [ixbrlNumeric({
-            "text": s.text,
-            "context": self.contexts.get(s['contextRef'], s['contextRef']),
-            "unit": self.units.get(s['unitRef'], s['unitRef']),
-            **s.attrs
-        }) for s in self.soup.find_all({'nonFraction'})]
+        self.numeric = []
+        for s in self.soup.find_all({'nonFraction'}):
+            element = {
+                "text": s.text,
+                "context": self.contexts.get(
+                    s['contextRef'],
+                    s['contextRef']
+                ),
+                "unit": self.units.get(s['unitRef'], s['unitRef']),
+                **s.attrs
+            }
+            try:
+                self.numeric.append(
+                    ixbrlNumeric(element)
+                )
+            except Exception as e:
+                self.errors.append({
+                    'error': e,
+                    'element': s,
+                })
+                if self.raise_on_error:
+                    raise
 
     def to_json(self):
         return {
@@ -104,6 +112,7 @@ class IXBRL():
             "units": self.units,
             "nonnumeric": [a.to_json() for a in self.nonnumeric],
             "numeric": [a.to_json() for a in self.numeric],
+            "errors": len(self.errors),
         }
 
     def to_table(self, fields="numeric"):

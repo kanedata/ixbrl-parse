@@ -1,6 +1,7 @@
 import datetime
 from ixbrlparse.core import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
 
+
 def test_context():
 
     assert isinstance(ixbrlContext(**{
@@ -27,6 +28,7 @@ def test_context():
 
     # @TODO: Validation of values - eg startdate before enddate
 
+
 def test_context_segments():
 
     i = ixbrlContext(**{
@@ -45,6 +47,7 @@ def test_context_segments():
     assert i.segments[0]["value"] == "2"
     assert "with segment" in str(i)
 
+
 def test_nonnumeric():
 
     a = {"context": "", "format_": "", "value": ""}
@@ -52,6 +55,7 @@ def test_nonnumeric():
     x = ixbrlNonNumeric(name="value", **a)
     assert x.schema == "unknown"
     assert x.name == "value"
+
 
 def test_nonnumeric_schema():
 
@@ -61,15 +65,18 @@ def test_nonnumeric_schema():
     assert x.schema == "schema"
     assert x.name == "value"
 
+
 def test_numeric_value():
 
     assert ixbrlNumeric({"text": "1234"}).value == 1234
     assert ixbrlNumeric({"value": "1234"}).value == 1234
 
+
 def test_numeric_comma_replace():
 
     assert ixbrlNumeric({"text": "1,234"}).value == 1234
     assert ixbrlNumeric({"value": "1,234"}).value == 1234
+
 
 def test_numeric_sign():
 
@@ -77,16 +84,19 @@ def test_numeric_sign():
     assert ixbrlNumeric({"value": "1,234", "sign": "-"}).value == -1234
     assert ixbrlNumeric({"value": "1,234", "sign": ""}).value == 1234
 
+
 def test_numeric_blank():
 
     assert ixbrlNumeric({"value": "-"}).value == 0
     assert ixbrlNumeric({"text": "-"}).value == 0
+
 
 def test_numeric_scale():
 
     assert ixbrlNumeric({"value": "1,234", "scale": "0"}).value == 1234
     assert ixbrlNumeric({"value": "1,234", "scale": "1"}).value == 12340
     assert ixbrlNumeric({"text": "1,234", "scale": "2"}).value == 123400
+
 
 def test_numeric_scale_sign():
 

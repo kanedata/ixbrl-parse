@@ -1,5 +1,7 @@
 from datetime import date
 import io
+import pytest
+
 from bs4 import BeautifulSoup
 from ixbrlparse import IXBRL
 from ixbrlparse.core import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
@@ -10,6 +12,7 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_3.html",
     "tests/test_accounts/account_4.html",
     "tests/test_accounts/account_5.html",
+    "tests/test_accounts/account_errors.html",
 ]
 
 EXPECTED_TABLE_KEYS = [
@@ -42,7 +45,7 @@ def test_schema():
         ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 19),
     ]
 
-    for k, a in enumerate(TEST_ACCOUNTS):
+    for k, a in enumerate(TEST_ACCOUNTS[0:5]):
         print(a)
         x = IXBRL.open(a)
         assert x.schema == account_schema[k][0]
@@ -193,3 +196,23 @@ def test_table_output_nonnumeric():
 
         # value is a string
         assert isinstance(row['value'], (str, type(None)))
+
+
+def test_errors_raised():
+    with open(TEST_ACCOUNTS[5]) as a:
+        with pytest.raises(NotImplementedError):
+            IXBRL(a)
+
+    with open(TEST_ACCOUNTS[5]) as a:
+        x = IXBRL(a, raise_on_error=False)
+        assert isinstance(x.soup, BeautifulSoup)
+        assert len(x.errors) == 1
+
+
+def test_errors_raised_open():
+    with pytest.raises(NotImplementedError):
+        IXBRL.open(TEST_ACCOUNTS[5])
+
+    x = IXBRL.open(TEST_ACCOUNTS[5], raise_on_error=False)
+    assert isinstance(x.soup, BeautifulSoup)
+    assert len(x.errors) == 1

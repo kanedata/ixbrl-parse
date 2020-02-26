@@ -96,6 +96,31 @@ Non-numeric facts are stored in `x.nonnumeric` as a list of `ixbrlNonnumeric`
 objects, with similar `.value`, `.context`, `.name` and `.schema` values. 
 The value of `.value` will be a string for non-numeric facts.
 
+#### Check for any parsing errors
+
+By default, the parser will throw an exception if it encounters an error
+when processing the document.
+
+You can parse `raise_on_error=False` to the initial object to suppress
+these exceptions. You can then access a list of the errors (and the element)
+that created them through the `.errors` attribute. For example:
+
+```python
+with open('sample_ixbrl.html', encoding="utf8") as a:
+  x = IXBRL(a, raise_on_error=False)
+  print(x.errors) # populated with any exceptions found
+  # [ eg...
+  #   {
+  #     "error": <NotImplementedError>,
+  #     "element": <BeautifulSoupElement>
+  #   }
+  # ]
+```
+
+Note that the error catching is only available for parsing of `.nonnumeric`
+and `numeric` items in the document. Any other errors with parsing will be
+thrown as normal no matter what `raise_on_error` is set to.
+
 ## Run tests
 
 Tests can be run with `pytest`:

@@ -3,6 +3,7 @@ import csv
 import json
 from .core import IXBRL
 
+
 def main():
 
     parser = argparse.ArgumentParser(description='Extract financial data from a IXBRL file')
@@ -42,6 +43,7 @@ def main():
             args.outfile.write("\n")
     elif args.format == "json":
         json.dump(x.to_json(), args.outfile, indent=4)
+
 
 if __name__ == "__main__":
     main()

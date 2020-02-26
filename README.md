@@ -53,6 +53,18 @@ with open('sample_ixbrl.html', encoding="utf8") as a:
   x = IXBRL(a)
 ```
 
+If your IXBRL data comes as a string then use a `io.StringIO` wrapper to
+pass it to the class:
+
+```python
+import io
+from ixbrlparse import IXBRL
+
+content = '''<some ixbrl content>'''
+x = IXBRL(io.StringIO(content))
+```
+
+
 #### Get the contexts and units used in the data
 
 These are held in the object. The contexts are stored as a dictionary with the context

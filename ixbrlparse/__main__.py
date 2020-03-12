@@ -33,7 +33,10 @@ def main():
 
     if args.format == 'csv':
         values = x.to_table(args.fields)
-        writer = csv.DictWriter(args.outfile, values[0].keys())
+        columns = {}
+        for r in values:
+            columns = {**dict.fromkeys(r.keys())}
+        writer = csv.DictWriter(args.outfile, columns.keys())
         writer.writeheader()
         writer.writerows(values)
     elif args.format in ['jsonlines', 'jsonl']:

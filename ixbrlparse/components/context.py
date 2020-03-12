@@ -9,11 +9,11 @@ class ixbrlContext:
         self.segments = segments
         # @TODO: parse dates here
         self.instant = datetime.datetime.strptime(
-            instant, "%Y-%m-%d").date() if instant else None
+            instant.strip(), "%Y-%m-%d").date() if instant else None
         self.startdate = datetime.datetime.strptime(
-            startdate, "%Y-%m-%d").date() if startdate else None
+            startdate.strip(), "%Y-%m-%d").date() if startdate else None
         self.enddate = datetime.datetime.strptime(
-            enddate, "%Y-%m-%d").date() if enddate else None
+            enddate.strip(), "%Y-%m-%d").date() if enddate else None
 
     def __repr__(self):
         if self.startdate and self.enddate:

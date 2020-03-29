@@ -83,7 +83,7 @@ def get_format(format_):
     if format_ in ('numdotdecimal', 'numcommadot', 'numspacedot'):
         return ixbrlFormat
 
-    if format_ in ('numcomma', 'numdotcomma', 'numspacecomma'):
+    if format_ in ('numcomma', 'numdotcomma', 'numspacecomma', 'numcommadecimal'):
         return ixtNumComma
 
     raise NotImplementedError(

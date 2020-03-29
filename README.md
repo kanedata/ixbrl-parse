@@ -10,9 +10,6 @@ A python module for getting useful data out of ixbrl files. Developed for a proj
 [Power to Change](https://www.powertochange.org.uk/) looking at how to extract data from 
 financial documents of community businesses. The library is at an early stage.
 
-![tests](https://github.com/drkane/ixbrl-parse/workflows/tests/badge.svg)
-![](https://img.shields.io/github/license/drkane/ixbrl-parse.svg)
-
 ## Requirements
 
 The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) to parse the documents.

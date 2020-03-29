@@ -1,6 +1,12 @@
 # ixbrl-parse
 
-A python module for getting useful data out of ixbrl files. Currently in develop for a project with 
+
+![Test status](https://github.com/drkane/ixbrl-parse/workflows/tests/badge.svg)
+[![PyPI version](https://badge.fury.io/py/ixbrlparse.svg)](https://pypi.org/project/ixbrlparse/)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ixbrlparse)
+![PyPI - License](https://img.shields.io/pypi/l/ixbrlparse)
+
+A python module for getting useful data out of ixbrl files. Developed for a project with 
 [Power to Change](https://www.powertochange.org.uk/) looking at how to extract data from 
 financial documents of community businesses. The library is at an early stage.
 
@@ -10,6 +16,14 @@ financial documents of community businesses. The library is at an early stage.
 ## Requirements
 
 The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) to parse the documents.
+
+## How to install
+
+You can install from pypi using pip:
+
+```
+pip install ixbrlparse
+```
 
 ## How to use
 

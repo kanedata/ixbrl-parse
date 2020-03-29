@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name="ixbrlparse",
     packages=find_packages(),
-    version="0.1",
+    version="0.1.1",
     author="David Kane",
     author_email="david@dkane.net",
     description="A python module for getting useful data out of ixbrl files.",
@@ -24,4 +24,8 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.5',
+    install_requires=[
+        'beautifulsoup4',
+        'lxml',
+    ],
 )

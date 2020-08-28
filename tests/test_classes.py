@@ -107,3 +107,30 @@ def test_numeric_scale_sign():
 def test_numeric_inf_format():
 
     assert ixbrlNumeric({"text": "1234", "decimals": "INF"}).value == 1234
+
+
+def test_format_zerodash():
+
+    assert ixbrlNumeric({"text": "-", "format": "zerodash"}).value == 0
+    assert ixbrlNumeric({"text": "-", "format": "numdash"}).value == 0
+    assert ixbrlNumeric({"text": "-", "format": "numdotdecimal"}).value == 0
+
+
+def test_format_numdotdecimal():
+
+    assert ixbrlNumeric({"text": "1234.12", "format": "numdotdecimal"}).value == 1234.12
+    assert ixbrlNumeric({"text": "1234", "format": "numdotdecimal"}).value == 1234
+    assert ixbrlNumeric({"text": "1234.34", "format": "numcommadot"}).value == 1234.34
+    assert ixbrlNumeric({"text": "1234.45", "format": "numspacedot"}).value == 1234.45
+    assert ixbrlNumeric({"text": "1,234.45", "format": "numspacedot"}).value == 1234.45
+    assert ixbrlNumeric({"text": "1234.12", "format": "num-dot-decimal"}).value == 1234.12
+
+
+def test_format_numcomma():
+
+    assert ixbrlNumeric({"text": "1234,12", "format": "numcomma"}).value == 1234.12
+    assert ixbrlNumeric({"text": "1234", "format": "numcomma"}).value == 1234
+    assert ixbrlNumeric({"text": "1234,34", "format": "numcomma"}).value == 1234.34
+    assert ixbrlNumeric({"text": "1234,45", "format": "numcomma"}).value == 1234.45
+    assert ixbrlNumeric({"text": "1.234,45", "format": "numcomma"}).value == 1234.45
+    assert ixbrlNumeric({"text": "1234,12", "format": "numcomma"}).value == 1234.12

@@ -74,6 +74,8 @@ def get_format(format_):
         namespace = None
         format_ = ":".join(format_)
 
+    format_ = format_.replace("-", "")
+
     if format_ in ('zerodash', 'numdash'):
         return ixtZeroDash
 

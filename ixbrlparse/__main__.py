@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description='Extract financial data from a IXBRL file')
     parser.add_argument('infile',
                         help='file to open and convert',
-                        type=argparse.FileType('r')
+                        type=argparse.FileType('rb')
                         )
     parser.add_argument('--outfile',
                         default="-",
@@ -35,7 +35,7 @@ def main():
         values = x.to_table(args.fields)
         columns = {}
         for r in values:
-            columns = {**dict.fromkeys(r.keys())}
+            columns = {**dict.fromkeys(r.keys()), **columns}
         writer = csv.DictWriter(args.outfile, columns.keys())
         writer.writeheader()
         writer.writerows(values)

@@ -61,9 +61,11 @@ class ixtNumComma(ixbrlFormat):
         return super().parse_value(value)
 
 
-class ixtNumWordSen(ixbrlFormat):
+class ixtNumWordsEn(ixbrlFormat):
 
     def parse_value(self, value):
+        if value in ("no", "None"):
+            return 0
         from word2number import w2n
         return w2n.word_to_num(value)
 
@@ -96,7 +98,7 @@ def get_format(format_):
         return ixtNumComma
 
     if format_ == 'numwordsen':
-        return ixtNumWordSen
+        return ixtNumWordsEn
 
     raise NotImplementedError(
         'Format "{}" not implemented (namespace "{}")'.format(

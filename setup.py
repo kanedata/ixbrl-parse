@@ -27,5 +27,6 @@ setup(
     install_requires=[
         'beautifulsoup4',
         'lxml',
+        'word2number',
     ],
 )

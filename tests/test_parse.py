@@ -97,6 +97,12 @@ def test_contexts_no_prefix():
     assert x.contexts["current-period-director2"].entity['scheme'] == "http://www.companieshouse.gov.uk/"
 
 
+def test_json():
+    x = IXBRL.open(TEST_ACCOUNTS[0])
+
+    assert x.to_json()
+
+
 def test_units():
     x = IXBRL.open(TEST_ACCOUNTS[0])
 

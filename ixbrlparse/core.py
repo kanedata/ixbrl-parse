@@ -17,7 +17,7 @@ class IXBRL():
 
     @classmethod
     def open(cls, filename, raise_on_error=True):
-        with open(filename) as a:
+        with open(filename, 'rb') as a:
             return cls(a, raise_on_error=raise_on_error)
 
     def _get_schema(self):

@@ -134,3 +134,10 @@ def test_format_numcomma():
     assert ixbrlNumeric({"text": "1234,45", "format": "numcomma"}).value == 1234.45
     assert ixbrlNumeric({"text": "1.234,45", "format": "numcomma"}).value == 1234.45
     assert ixbrlNumeric({"text": "1234,12", "format": "numcomma"}).value == 1234.12
+
+
+def test_format_numwordsen():
+
+    assert ixbrlNumeric({"text": "one throusand two hundred and thirty four", "format": "numwordsen"}).value == 1234
+    assert ixbrlNumeric({"text": "eight", "format": "numwordsen"}).value == 8
+    assert ixbrlNumeric({"text": "one throusand two hundred and thirty four point four five", "format": "numwordsen"}).value == 1234.45

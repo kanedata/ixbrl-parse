@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name="ixbrlparse",
     packages=find_packages(),
-    version="0.1.1",
+    version="0.1.3",
     author="David Kane",
     author_email="david@dkane.net",
     description="A python module for getting useful data out of ixbrl files.",

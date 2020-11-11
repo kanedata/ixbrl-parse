@@ -12,7 +12,10 @@ financial documents of community businesses. The library is at an early stage.
 
 ## Requirements
 
-The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) to parse the documents.
+The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) and [lxml](https://lxml.de/) to parse the documents.
+
+[word2number](https://github.com/akshaynagpal/w2n) is used to process the
+numeric items with the `numsenwords` format.
 
 ## How to install
 

@@ -1,17 +1,21 @@
 import datetime
+import pytest
+
 from ixbrlparse.core import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
 
 
 def test_context():
 
-    assert isinstance(ixbrlContext(**{
+    instant_context = ixbrlContext(**{
         "_id": "123456",
         "entity": None,
         "segments": None,
         "instant": "2011-01-01",
         "startdate": None,
         "enddate": None,
-    }).instant, datetime.date)
+    })
+    assert isinstance(instant_context.instant, datetime.date)
+    assert "2011-01-01" in str(instant_context)
 
     interval = ixbrlContext(**{
         "_id": "123456",
@@ -27,6 +31,31 @@ def test_context():
     assert interval.enddate.month == 12
 
     # @TODO: Validation of values - eg startdate before enddate
+
+
+def test_context_json():
+
+    instant_context = ixbrlContext(**{
+        "_id": "123456",
+        "entity": None,
+        "segments": None,
+        "instant": "2011-01-01",
+        "startdate": None,
+        "enddate": None,
+    }).to_json()
+    assert instant_context["instant"] == "2011-01-01"
+    assert instant_context["startdate"] is None
+
+    interval = ixbrlContext(**{
+        "_id": "123456",
+        "entity": None,
+        "segments": None,
+        "instant": None,
+        "startdate": "2011-01-01",
+        "enddate": "2011-12-31",
+    }).to_json()
+    assert interval["startdate"] == "2011-01-01"
+    assert interval["instant"] is None
 
 
 def test_context_segments():
@@ -50,11 +79,26 @@ def test_context_segments():
 
 def test_nonnumeric():
 
-    a = {"context": "", "format_": "", "value": ""}
+    a = {"context": {}, "format_": "", "value": ""}
 
     x = ixbrlNonNumeric(name="value", **a)
     assert x.schema == "unknown"
     assert x.name == "value"
+
+
+def test_nonnumeric_json():
+
+    a = {"context": ixbrlContext(**{
+        "_id": "123456",
+        "entity": None,
+        "segments": None,
+        "instant": "2011-01-01",
+        "startdate": None,
+        "enddate": None,
+    }), "format_": "", "value": ""}
+
+    x = ixbrlNonNumeric(name="value", **a).to_json()
+    assert "context" in x
 
 
 def test_nonnumeric_schema():
@@ -70,6 +114,40 @@ def test_numeric_value():
 
     assert ixbrlNumeric({"text": "1234"}).value == 1234
     assert ixbrlNumeric({"value": "1234"}).value == 1234
+
+
+def test_numeric_value_error():
+
+    with pytest.raises(ValueError):
+        ixbrlNumeric({"text": "1234blahblab"})
+    with pytest.raises(ValueError):
+        ixbrlNumeric({"value": "1234blahblah"})
+
+
+def test_numeric_to_json():
+
+    assert ixbrlNumeric({"context": ixbrlContext(**{
+        "_id": "123456",
+        "entity": None,
+        "segments": None,
+        "instant": "2011-01-01",
+        "startdate": None,
+        "enddate": None,
+    }), "text": "1234"}).to_json()["value"] == 1234
+    assert ixbrlNumeric({"context": ixbrlContext(**{
+        "_id": "123456",
+        "entity": None,
+        "segments": None,
+        "instant": "2011-01-01",
+        "startdate": None,
+        "enddate": None,
+    }), "value": "1234"}).to_json()["value"] == 1234
+
+
+def test_numeric_already_float():
+
+    assert ixbrlNumeric({"value": 1234}).value == 1234
+    assert ixbrlNumeric({"value": 1234.0}).value == 1234
 
 
 def test_numeric_comma_replace():
@@ -116,6 +194,11 @@ def test_format_zerodash():
     assert ixbrlNumeric({"text": "-", "format": "numdotdecimal"}).value == 0
 
 
+def test_format_nocontent():
+
+    assert ixbrlNumeric({"text": "-", "format": "nocontent"}).value == 0
+
+
 def test_format_numdotdecimal():
 
     assert ixbrlNumeric({"text": "1234.12", "format": "numdotdecimal"}).value == 1234.12
@@ -134,3 +217,10 @@ def test_format_numcomma():
     assert ixbrlNumeric({"text": "1234,45", "format": "numcomma"}).value == 1234.45
     assert ixbrlNumeric({"text": "1.234,45", "format": "numcomma"}).value == 1234.45
     assert ixbrlNumeric({"text": "1234,12", "format": "numcomma"}).value == 1234.12
+
+
+def test_format_numwordsen():
+
+    assert ixbrlNumeric({"text": "one thousand two hundred and thirty four", "format": "numwordsen"}).value == 1234
+    assert ixbrlNumeric({"text": "eight", "format": "numwordsen"}).value == 8
+    assert ixbrlNumeric({"text": "one thousand two hundred and thirty four point four five", "format": "numwordsen"}).value == 1234.45

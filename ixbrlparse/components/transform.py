@@ -64,7 +64,8 @@ class ixtNumComma(ixbrlFormat):
 class ixtNumWordsEn(ixbrlFormat):
 
     def parse_value(self, value):
-        if value in ("no", "None"):
+        value = value.lower()
+        if value in ("no", "none"):
             return 0
         from word2number import w2n
         return w2n.word_to_num(value)

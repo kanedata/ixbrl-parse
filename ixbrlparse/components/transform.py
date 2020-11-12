@@ -1,5 +1,4 @@
 class ixbrlFormat:
-
     def __init__(self, format_, decimals, scale, sign):
 
         if decimals.lower() == "inf":
@@ -25,11 +24,11 @@ class ixbrlFormat:
         if isinstance(value, (int, float)):
             return value
 
-        if value in ('-', ''):
+        if value in ("-", ""):
             return 0
 
-        value = value.replace(' ', '')
-        value = value.replace(',', '')
+        value = value.replace(" ", "")
+        value = value.replace(",", "")
         value = float(value)
 
         if self.sign == "-":
@@ -42,32 +41,29 @@ class ixbrlFormat:
 
 
 class ixtZeroDash(ixbrlFormat):
-
     def parse_value(self, value):
         return 0
 
 
 class ixtNoContent(ixbrlFormat):
-
     def parse_value(self, value):
         return 0
 
 
 class ixtNumComma(ixbrlFormat):
-
     def parse_value(self, value):
-        value = value.replace('.', '')
-        value = value.replace(',', '.')
+        value = value.replace(".", "")
+        value = value.replace(",", ".")
         return super().parse_value(value)
 
 
 class ixtNumWordsEn(ixbrlFormat):
-
     def parse_value(self, value):
         value = value.lower()
         if value in ("no", "none"):
             return 0
         from word2number import w2n
+
         return w2n.word_to_num(value)
 
 
@@ -86,19 +82,19 @@ def get_format(format_):
 
     format_ = format_.replace("-", "")
 
-    if format_ in ('zerodash', 'numdash'):
+    if format_ in ("zerodash", "numdash"):
         return ixtZeroDash
 
-    if format_ == 'nocontent':
+    if format_ == "nocontent":
         return ixtNoContent
 
-    if format_ in ('numdotdecimal', 'numcommadot', 'numspacedot'):
+    if format_ in ("numdotdecimal", "numcommadot", "numspacedot"):
         return ixbrlFormat
 
-    if format_ in ('numcomma', 'numdotcomma', 'numspacecomma', 'numcommadecimal'):
+    if format_ in ("numcomma", "numdotcomma", "numspacecomma", "numcommadecimal"):
         return ixtNumComma
 
-    if format_ == 'numwordsen':
+    if format_ == "numwordsen":
         return ixtNumWordsEn
 
     raise NotImplementedError(

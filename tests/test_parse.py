@@ -1,8 +1,9 @@
-from datetime import date
 import io
-import pytest
+from datetime import date
 
+import pytest
 from bs4 import BeautifulSoup
+
 from ixbrlparse import IXBRL
 from ixbrlparse.core import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
 
@@ -16,7 +17,13 @@ TEST_ACCOUNTS = [
 ]
 
 EXPECTED_TABLE_KEYS = [
-    "schema", "name", "value", "unit", "instant", "startdate", "enddate"
+    "schema",
+    "name",
+    "value",
+    "unit",
+    "instant",
+    "startdate",
+    "enddate",
 ]
 
 
@@ -72,8 +79,8 @@ def test_contexts_values():
     assert x.contexts["icur1"].instant == date(2017, 10, 31)
     assert x.contexts["dcur1"].startdate == date(2016, 11, 1)
     assert x.contexts["dcur1"].enddate == date(2017, 10, 31)
-    assert x.contexts["dcur1"].entity['identifier'] == "05969206"
-    assert x.contexts["dcur1"].entity['scheme'] == "http://www.companieshouse.gov.uk/"
+    assert x.contexts["dcur1"].entity["identifier"] == "05969206"
+    assert x.contexts["dcur1"].entity["scheme"] == "http://www.companieshouse.gov.uk/"
 
 
 def test_contexts_segments():
@@ -82,8 +89,10 @@ def test_contexts_segments():
     assert len(x.contexts["dcur6"].segments) == 1
     assert x.contexts["dcur6"].segments[0]["tag"] in "xbrldi:explicitMember"
     assert x.contexts["dcur6"].segments[0]["value"] == "uk-bus:FullAccounts"
-    assert x.contexts["dcur6"].segments[0].get(
-        "dimension") == "uk-bus:AccountsTypeDimension"
+    assert (
+        x.contexts["dcur6"].segments[0].get("dimension")
+        == "uk-bus:AccountsTypeDimension"
+    )
 
 
 def test_contexts_no_prefix():
@@ -93,8 +102,11 @@ def test_contexts_no_prefix():
     # test values have been correctly parsed
     assert x.contexts["current-period-director2"].startdate == date(2016, 4, 1)
     assert x.contexts["current-period-director2"].enddate == date(2017, 3, 31)
-    assert x.contexts["current-period-director2"].entity['identifier'] == "07175596"
-    assert x.contexts["current-period-director2"].entity['scheme'] == "http://www.companieshouse.gov.uk/"
+    assert x.contexts["current-period-director2"].entity["identifier"] == "07175596"
+    assert (
+        x.contexts["current-period-director2"].entity["scheme"]
+        == "http://www.companieshouse.gov.uk/"
+    )
 
 
 def test_json():
@@ -125,7 +137,10 @@ def test_nonnumeric():
     assert isinstance(x.nonnumeric[0], ixbrlNonNumeric)
     assert "SAKO TECHNOLOGIES LIMITED" in [n.value for n in x.nonnumeric]
     for n in x.nonnumeric:
-        if n.schema == "uk-gaap-cd-bus" and n.name == "UKCompaniesHouseRegisteredNumber":
+        if (
+            n.schema == "uk-gaap-cd-bus"
+            and n.name == "UKCompaniesHouseRegisteredNumber"
+        ):
             assert n.value == "07713141"
             assert isinstance(n.context, ixbrlContext)
 
@@ -137,7 +152,10 @@ def test_numeric():
     for n in x.numeric:
         assert isinstance(n, ixbrlNumeric)
 
-        if n.name == "NetCurrentAssetsLiabilities" and n.context.id == "cfwd_31_03_2017":
+        if (
+            n.name == "NetCurrentAssetsLiabilities"
+            and n.context.id == "cfwd_31_03_2017"
+        ):
             assert n.format.sign == "-"
             assert n.value == -17957
 
@@ -165,7 +183,7 @@ def test_table_output():
             assert col in EXPECTED_TABLE_KEYS or col.startswith("segment")
 
         # needs either an instant or start & end dates
-        assert row['instant'] or (row["startdate"] and row["enddate"])
+        assert row["instant"] or (row["startdate"] and row["enddate"])
 
 
 def test_table_output_numeric():
@@ -183,7 +201,7 @@ def test_table_output_numeric():
             assert col in EXPECTED_TABLE_KEYS or col.startswith("segment")
 
         # value is numeric
-        assert isinstance(row['value'], (int, float))
+        assert isinstance(row["value"], (int, float))
 
 
 def test_table_output_nonnumeric():
@@ -201,7 +219,7 @@ def test_table_output_nonnumeric():
             assert col in EXPECTED_TABLE_KEYS or col.startswith("segment")
 
         # value is a string
-        assert isinstance(row['value'], (str, type(None)))
+        assert isinstance(row["value"], (str, type(None)))
 
 
 def test_errors_raised():

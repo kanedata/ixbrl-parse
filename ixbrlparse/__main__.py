@@ -1,8 +1,10 @@
 import argparse
 import csv
 import json
+import sys
 
-from .core import IXBRL
+from ixbrlparse import __version__
+from ixbrlparse.core import IXBRL
 
 
 def main():
@@ -11,7 +13,11 @@ def main():
         description="Extract financial data from a IXBRL file"
     )
     parser.add_argument(
-        "infile", help="file to open and convert", type=argparse.FileType("rb")
+        "infile",
+        help="file to open and convert",
+        type=argparse.FileType("rb"),
+        nargs="?",
+        default=sys.stdin,
     )
     parser.add_argument(
         "--outfile",
@@ -31,8 +37,18 @@ def main():
         default="all",
         help="Which fields to output",
     )
+    parser.add_argument(
+        "-v",
+        "--version",
+        dest="version",
+        action="store_true",
+    )
 
     args = parser.parse_args()
+
+    if args.version:
+        print(__version__)
+        sys.exit()
 
     x = IXBRL(args.infile)
 

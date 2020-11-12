@@ -3,10 +3,12 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+exec(open('ixbrlparse/version.py').read())
+
 setup(
     name="ixbrlparse",
     packages=find_packages(),
-    version="0.1.6",
+    version=__version__,
     author="David Kane",
     author_email="david@dkane.net",
     description="A python module for getting useful data out of ixbrl files.",

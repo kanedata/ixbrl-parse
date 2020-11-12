@@ -223,4 +223,8 @@ def test_format_numwordsen():
 
     assert ixbrlNumeric({"text": "one thousand two hundred and thirty four", "format": "numwordsen"}).value == 1234
     assert ixbrlNumeric({"text": "eight", "format": "numwordsen"}).value == 8
+    assert ixbrlNumeric({"text": "Eight", "format": "numwordsen"}).value == 8
     assert ixbrlNumeric({"text": "one thousand two hundred and thirty four point four five", "format": "numwordsen"}).value == 1234.45
+    assert ixbrlNumeric({"text": "no", "format": "numwordsen"}).value == 0
+    assert ixbrlNumeric({"text": "None", "format": "numwordsen"}).value == 0
+    assert ixbrlNumeric({"text": "none", "format": "numwordsen"}).value == 0

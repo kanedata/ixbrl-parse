@@ -35,7 +35,7 @@ class ixbrlFormat:
             value = value * -1
 
         if self.scale != 0:
-            value = value * (10 ** self.scale)
+            value = value * (10**self.scale)
 
         return value
 

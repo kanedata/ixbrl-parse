@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class ixbrlNonNumeric:
     def __init__(self, context, name, format_, value):
 
@@ -14,6 +17,6 @@ class ixbrlNonNumeric:
         self.value = value
 
     def to_json(self):
-        values = self.__dict__
+        values = deepcopy(self.__dict__)
         values["context"] = self.context.to_json()
         return values

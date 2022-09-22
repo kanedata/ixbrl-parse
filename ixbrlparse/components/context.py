@@ -1,4 +1,5 @@
 import datetime
+from copy import deepcopy
 
 
 class ixbrlContext:
@@ -34,7 +35,7 @@ class ixbrlContext:
         return "<IXBRLContext {} [{}]{}>".format(self.id, datestr, segmentstr)
 
     def to_json(self):
-        values = self.__dict__
+        values = deepcopy(self.__dict__)
         for i in ["startdate", "enddate", "instant"]:
             if isinstance(values[i], datetime.date):
                 values[i] = str(values[i])

@@ -1,4 +1,6 @@
-from .transform import get_format
+from copy import deepcopy
+
+from .transform import get_format, ixbrlFormat
 
 
 class ixbrlNumeric:
@@ -40,6 +42,8 @@ class ixbrlNumeric:
             raise
 
     def to_json(self):
-        values = self.__dict__
+        values = deepcopy(self.__dict__)
+        if isinstance(values.get("format"), ixbrlFormat):
+            values["format"] = values["format"].to_json()
         values["context"] = self.context.to_json()
         return values

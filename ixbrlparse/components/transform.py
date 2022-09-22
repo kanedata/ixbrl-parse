@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class ixbrlFormat:
     def __init__(self, format_, decimals, scale, sign):
 
@@ -18,6 +21,9 @@ class ixbrlFormat:
 
         self.scale = int(scale)
         self.sign = sign
+
+    def to_json(self):
+        return deepcopy(self.__dict__)
 
     def parse_value(self, value):
 

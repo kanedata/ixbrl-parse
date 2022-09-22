@@ -1,4 +1,5 @@
 import io
+import json
 from datetime import date
 
 import pytest
@@ -109,10 +110,12 @@ def test_contexts_no_prefix():
     )
 
 
-def test_json():
-    x = IXBRL.open(TEST_ACCOUNTS[0])
+@pytest.mark.parametrize("account", [a for a in TEST_ACCOUNTS if "error" not in a])
+def test_json(account):
+    x = IXBRL.open(account)
+    x.to_json()
 
-    assert x.to_json()
+    assert json.dumps(x.to_json())
 
 
 def test_units():

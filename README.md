@@ -170,6 +170,8 @@ black ixbrlparse tests
 ```bash
 python -m build
 twine upload dist/*
+git tag v<VERSION_NUMBER>
+git push origin v<VERSION_NUMBER>
 ```
 
 ## Install development version

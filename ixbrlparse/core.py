@@ -187,7 +187,6 @@ class IXBRL:
         self.soup = BeautifulSoup(f.read(), "xml")
         self.raise_on_error = raise_on_error
         self._get_parser()
-        print(self.filetype)
         self.parser._get_schema()
         self.parser._get_contexts()
         self.parser._get_units()
@@ -202,7 +201,6 @@ class IXBRL:
     def _get_parser(self):
         if self.soup.find("html"):
             self.filetype = FILETYPE_IXBRL
-            print(self.filetype)
             parser = IXBRLParser
         elif self.soup.find("xbrl"):
             self.filetype = FILETYPE_XBRL

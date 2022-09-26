@@ -16,6 +16,9 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_5.html",
     "tests/test_accounts/account_errors.html",
 ]
+TEST_XML_ACCOUNTS = [
+    "tests/test_accounts/account_1.xml",
+]
 
 EXPECTED_TABLE_KEYS = [
     "schema",
@@ -31,9 +34,11 @@ EXPECTED_TABLE_KEYS = [
 def test_open():
     with open(TEST_ACCOUNTS[0]) as a:
         x = IXBRL(a)
+        assert x.filetype == "ixbrl"
         assert isinstance(x.soup, BeautifulSoup)
 
     x = IXBRL.open(TEST_ACCOUNTS[1])
+    assert x.filetype == "ixbrl"
     assert isinstance(x.soup, BeautifulSoup)
 
 
@@ -41,36 +46,72 @@ def test_open_str():
     with open(TEST_ACCOUNTS[0]) as a:
         content = a.read()
         x = IXBRL(io.StringIO(content))
+        assert x.filetype == "ixbrl"
         assert isinstance(x.soup, BeautifulSoup)
 
 
-def test_schema():
-    account_schema = [
-        ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 11),
-        ("http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd", 12),
-        ("http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd", 12),
-        ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 38),
-        ("https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd", 19),
-    ]
+def test_open_xml():
+    with open(TEST_XML_ACCOUNTS[0]) as a:
+        x = IXBRL(a)
+        assert x.filetype == "xbrl"
+        assert isinstance(x.soup, BeautifulSoup)
 
-    for k, a in enumerate(TEST_ACCOUNTS[0:5]):
-        print(a)
-        x = IXBRL.open(a)
-        assert x.schema == account_schema[k][0]
-        assert len(x.namespaces) == account_schema[k][1]
+    x = IXBRL.open(TEST_XML_ACCOUNTS[0])
+    assert x.filetype == "xbrl"
+    assert isinstance(x.soup, BeautifulSoup)
 
 
-def test_contexts():
-    x = IXBRL.open(TEST_ACCOUNTS[0])
+def test_open_xml_str():
+    with open(TEST_XML_ACCOUNTS[0]) as a:
+        content = a.read()
+        x = IXBRL(io.StringIO(content))
+        assert x.filetype == "xbrl"
+        assert isinstance(x.soup, BeautifulSoup)
+
+
+@pytest.mark.parametrize(
+    "account,schema,namespaces",
+    zip(
+        TEST_ACCOUNTS[0:5] + TEST_XML_ACCOUNTS,
+        [
+            "https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd",
+            "http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd",
+            "http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd",
+            "https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd",
+            "https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd",
+            "http://www.companieshouse.gov.uk/ef/xbrl/uk/fr/gaap/ae/2009-06-21/uk-gaap-ae-2009-06-21.xsd",
+        ],
+        [
+            11,
+            12,
+            12,
+            38,
+            19,
+            10,
+        ],
+    ),
+)
+def test_schema(account, schema, namespaces):
+    x = IXBRL.open(account)
+    assert x.schema == schema
+    assert len(x.namespaces) == namespaces
+
+
+@pytest.mark.parametrize(
+    "account,contexts,expected_key",
+    [(TEST_ACCOUNTS[0], 12, "dcur6"), (TEST_XML_ACCOUNTS[0], 6, "y2")],
+)
+def test_contexts(account, contexts, expected_key):
+    x = IXBRL.open(account)
 
     # test all the contexts have been found
-    assert len(x.contexts) == 12
+    assert len(x.contexts) == contexts
 
     # test that the context is correct class
     assert isinstance(list(x.contexts.values())[0], ixbrlContext)
 
     # test an expected key is in the contexts
-    assert "dcur6" in x.contexts
+    assert expected_key in x.contexts
 
 
 def test_contexts_values():
@@ -80,7 +121,7 @@ def test_contexts_values():
     assert x.contexts["icur1"].instant == date(2017, 10, 31)
     assert x.contexts["dcur1"].startdate == date(2016, 11, 1)
     assert x.contexts["dcur1"].enddate == date(2017, 10, 31)
-    assert x.contexts["dcur1"].entity["identifier"] == "05969206"
+    assert x.contexts["dcur1"].entity["identifier"] == "02345678"
     assert x.contexts["dcur1"].entity["scheme"] == "http://www.companieshouse.gov.uk/"
 
 
@@ -96,6 +137,29 @@ def test_contexts_segments():
     )
 
 
+def test_contexts_values_xml():
+    x = IXBRL.open(TEST_XML_ACCOUNTS[0])
+
+    # test values have been correctly parsed
+    assert x.contexts["s1"].instant == date(2020, 1, 1)
+    assert x.contexts["y1"].startdate == date(2020, 1, 1)
+    assert x.contexts["y1"].enddate == date(2020, 12, 31)
+    assert x.contexts["y1"].entity["identifier"].strip() == "DEMO XML LIMITED"
+    assert x.contexts["y1"].entity["scheme"] == "gee-lawson-/results"
+
+
+# def test_contexts_segments_xml():
+#     x = IXBRL.open(TEST_XML_ACCOUNTS[0])
+
+#     assert len(x.contexts["dcur6"].segments) == 1
+#     assert x.contexts["dcur6"].segments[0]["tag"] in "xbrldi:explicitMember"
+#     assert x.contexts["dcur6"].segments[0]["value"] == "uk-bus:FullAccounts"
+#     assert (
+#         x.contexts["dcur6"].segments[0].get("dimension")
+#         == "uk-bus:AccountsTypeDimension"
+#     )
+
+
 def test_contexts_no_prefix():
     # check an account with <context> elements (without prefix)
     x = IXBRL.open(TEST_ACCOUNTS[1])
@@ -103,7 +167,7 @@ def test_contexts_no_prefix():
     # test values have been correctly parsed
     assert x.contexts["current-period-director2"].startdate == date(2016, 4, 1)
     assert x.contexts["current-period-director2"].enddate == date(2017, 3, 31)
-    assert x.contexts["current-period-director2"].entity["identifier"] == "07175596"
+    assert x.contexts["current-period-director2"].entity["identifier"] == "12345678"
     assert (
         x.contexts["current-period-director2"].entity["scheme"]
         == "http://www.companieshouse.gov.uk/"
@@ -138,13 +202,25 @@ def test_nonnumeric():
 
     assert len(x.nonnumeric) == 15
     assert isinstance(x.nonnumeric[0], ixbrlNonNumeric)
-    assert "SAKO TECHNOLOGIES LIMITED" in [n.value for n in x.nonnumeric]
+    assert "FAKETEST TECHNOLOGIES LIMITED" in [n.value for n in x.nonnumeric]
     for n in x.nonnumeric:
         if (
             n.schema == "uk-gaap-cd-bus"
             and n.name == "UKCompaniesHouseRegisteredNumber"
         ):
-            assert n.value == "07713141"
+            assert n.value == "03456789"
+            assert isinstance(n.context, ixbrlContext)
+
+
+def test_nonnumeric_xml():
+    x = IXBRL.open(TEST_XML_ACCOUNTS[0])
+
+    assert len(x.nonnumeric) == 14
+    assert isinstance(x.nonnumeric[0], ixbrlNonNumeric)
+    assert "DEMO XML LIMITED" in [n.value for n in x.nonnumeric]
+    for n in x.nonnumeric:
+        if n.name == "NameApprovingDirector":
+            assert n.value == "JOAN IMAGINARYNAME"
             assert isinstance(n.context, ixbrlContext)
 
 
@@ -169,6 +245,26 @@ def test_numeric():
     assert x.numeric[0].value == 52982
     assert x.numeric[0].name == "PropertyPlantEquipment"
     assert x.numeric[0].schema == "ns5"
+
+
+def test_numeric_xml():
+    x = IXBRL.open(TEST_XML_ACCOUNTS[0])
+
+    assert len(x.numeric) == 13
+    for n in x.numeric:
+        assert isinstance(n, ixbrlNumeric)
+
+        if n.name == "NumberOrdinarySharesAllotted" and n.context.id == "e2":
+            assert n.format.sign == ""
+            assert n.value == 1
+
+        if n.format.sign == "-":
+            assert n.value < 0
+
+    assert x.numeric[0].unit == "iso4217:GBP"
+    assert x.numeric[0].value == 1
+    assert x.numeric[0].name == "CashBankInHand"
+    assert x.numeric[0].schema == "unknown"
 
 
 def test_table_output():

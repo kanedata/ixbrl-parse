@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://www.companieshouse.gov.uk/ef/xbrl/uk/fr/gaap/ae/2009-06-21/stylesheet/CH-AE-dormant-stylesheet.xsl"?>
+<xbrl xmlns="http://www.xbrl.org/2003/instance" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ae="http://www.companieshouse.gov.uk/ef/xbrl/uk/fr/gaap/ae/2009-06-21" xmlns:gc="http://www.xbrl.org/uk/fr/gcd/2004-12-01" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:iso4217="http://www.xbrl.org/2003/iso4217" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:pt="http://www.xbrl.org/uk/fr/gaap/pt/2004-12-01" xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<schemaRef xlink:href="http://www.companieshouse.gov.uk/ef/xbrl/uk/fr/gaap/ae/2009-06-21/uk-gaap-ae-2009-06-21.xsd" xlink:type="simple" />
+	<CompanyDormant contextRef="y1">
+		true
+	</CompanyDormant>
+	<CompaniesHouseRegisteredNumber contextRef="y1">
+		01234567
+	</CompaniesHouseRegisteredNumber>
+	<EntityNames>
+		<EntityCurrentLegalName contextRef="y1">
+			DEMO XML LIMITED
+		</EntityCurrentLegalName>
+	</EntityNames>
+	<BalanceSheetDate contextRef="e1">
+		2020-12-31
+	</BalanceSheetDate>
+	<CashBankInHand decimals="2" contextRef="e1" unitRef="GBP">
+		1
+	</CashBankInHand>
+	<CashBankInHand decimals="2" contextRef="e2" unitRef="GBP">
+		1
+	</CashBankInHand>
+	<NetAssetsLiabilitiesIncludingPensionAssetLiability decimals="2" contextRef="e1" unitRef="GBP">
+		1
+	</NetAssetsLiabilitiesIncludingPensionAssetLiability>
+	<NetAssetsLiabilitiesIncludingPensionAssetLiability decimals="2" contextRef="e2" unitRef="GBP">
+		1
+	</NetAssetsLiabilitiesIncludingPensionAssetLiability>
+	<EquityAuthorisedDetails>
+		<TypeOrdinaryShare contextRef="y1">
+			Ordinary A shares
+		</TypeOrdinaryShare>
+		<NumberOrdinarySharesAuthorised precision="INF" contextRef="e1" unitRef="shares">
+			1
+		</NumberOrdinarySharesAuthorised>
+		<ParValueOrdinaryShare decimals="2" contextRef="y1" unitRef="GBP">
+			1
+		</ParValueOrdinaryShare>
+	</EquityAuthorisedDetails>
+	<DetailsOrdinarySharesAllotted>
+		<TypeOrdinaryShare contextRef="y1">
+			Ordinary A shares
+		</TypeOrdinaryShare>
+		<ParValueOrdinaryShare decimals="2" contextRef="y1" unitRef="GBP">
+			1
+		</ParValueOrdinaryShare>
+		<ValueOrdinarySharesAllotted decimals="2" contextRef="e1" unitRef="GBP">
+			1
+		</ValueOrdinarySharesAllotted>
+		<ValueOrdinarySharesAllotted decimals="2" contextRef="e2" unitRef="GBP">
+			1
+		</ValueOrdinarySharesAllotted>
+		<NumberOrdinarySharesAllotted precision="INF" contextRef="e1" unitRef="shares">
+			1
+		</NumberOrdinarySharesAllotted>
+		<NumberOrdinarySharesAllotted precision="INF" contextRef="e2" unitRef="shares">
+			1
+		</NumberOrdinarySharesAllotted>
+	</DetailsOrdinarySharesAllotted>
+	<CompanyEntitledToExemptionUnderSection480CompaniesAct2006 contextRef="y1">
+		true
+	</CompanyEntitledToExemptionUnderSection480CompaniesAct2006>
+	<MembersHaveNotRequiredCompanyToObtainAnAudit contextRef="y1">
+		true
+	</MembersHaveNotRequiredCompanyToObtainAnAudit>
+	<DirectorsAcknowledgeTheirResponsibilitiesUnderCompaniesAct contextRef="y1">
+		true
+	</DirectorsAcknowledgeTheirResponsibilitiesUnderCompaniesAct>
+	<AccountsAreInAccordanceWithSpecialProvisionsCompaniesActRelatingToSmallCompanies contextRef="y1">
+		true
+	</AccountsAreInAccordanceWithSpecialProvisionsCompaniesActRelatingToSmallCompanies>
+	<CompaniesHouseDocumentAuthentication contextRef="y1">
+	</CompaniesHouseDocumentAuthentication>
+	<DateApproval contextRef="e1">
+		2021-08-18
+	</DateApproval>
+	<ApprovalDetails>
+		<NameApprovingDirector contextRef="y1">
+			JOAN IMAGINARYNAME
+		</NameApprovingDirector>
+	</ApprovalDetails>
+	<ShareholderFunds decimals="2" contextRef="e1" unitRef="GBP">
+		1
+	</ShareholderFunds>
+	<ShareholderFunds decimals="2" contextRef="e2" unitRef="GBP">
+		1
+	</ShareholderFunds>
+	<unit id="shares">
+		<measure>
+			xbrli:shares
+		</measure>
+	</unit>
+	<unit id="pure">
+		<measure>
+			xbrli:pure
+		</measure>
+	</unit>
+	<unit id="GBP">
+		<measure>
+			iso4217:GBP
+		</measure>
+	</unit>
+	<context id="y1">
+		<entity>
+			<identifier scheme="gee-lawson-/results">
+				DEMO XML LIMITED
+			</identifier>
+		</entity>
+		<period>
+			<startDate>
+				2020-01-01
+			</startDate>
+			<endDate>
+				2020-12-31
+			</endDate>
+		</period>
+	</context>
+	<context id="y2">
+		<entity>
+			<identifier scheme="gee-lawson-/results">
+				DEMO XML LIMITED
+			</identifier>
+		</entity>
+		<period>
+			<startDate>
+				2019-01-01
+			</startDate>
+			<endDate>
+				2019-12-31
+			</endDate>
+		</period>
+	</context>
+	<context id="s1">
+		<entity>
+			<identifier scheme="gee-lawson-/results">
+				DEMO XML LIMITED
+			</identifier>
+		</entity>
+		<period>
+			<instant>
+				2020-01-01
+			</instant>
+		</period>
+	</context>
+	<context id="e1">
+		<entity>
+			<identifier scheme="gee-lawson-/results">
+				DEMO XML LIMITED
+			</identifier>
+		</entity>
+		<period>
+			<instant>
+				2020-12-31
+			</instant>
+		</period>
+	</context>
+	<context id="s2">
+		<entity>
+			<identifier scheme="gee-lawson-/results">
+				DEMO XML LIMITED
+			</identifier>
+		</entity>
+		<period>
+			<instant>
+				2019-01-01
+			</instant>
+		</period>
+	</context>
+	<context id="e2">
+		<entity>
+			<identifier scheme="gee-lawson-/results">
+				DEMO XML LIMITED
+			</identifier>
+		</entity>
+		<period>
+			<instant>
+				2019-12-31
+			</instant>
+		</period>
+	</context>
+	<DateAccountsReceived contextRef="e1">
+		2021-08-19
+	</DateAccountsReceived>
+</xbrl>

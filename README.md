@@ -6,9 +6,9 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ixbrlparse)
 ![PyPI - License](https://img.shields.io/pypi/l/ixbrlparse)
 
-A python module for getting useful data out of ixbrl files. Developed for a project with 
-[Power to Change](https://www.powertochange.org.uk/) looking at how to extract data from 
-financial documents of community businesses. The library is at an early stage.
+A python module for getting useful data out of ixbrl files. The library is at an early stage - feedback and improvements are very welcome.
+
+**New in version 0.4**: I've added initial support for pure XBRL files as well as tagged HTML iXBRL files. Feedback on this feature is welcome - particularly around getting values out of numeric items.
 
 ## Requirements
 
@@ -177,3 +177,9 @@ requirement.
 Any additional development requirements must be added to `dev-requirements.in`
 and then the `dev-requirements.txt` should be generated using `pip-compile dev-requirements.in`. You can then install the development requirements using
 `pip-sync dev-requirements.txt`.
+
+## Acknowledgements
+
+Originally developed for a project with 
+[Power to Change](https://www.powertochange.org.uk/) looking at how to extract data from 
+financial documents of community businesses.

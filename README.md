@@ -165,6 +165,13 @@ isort ixbrlparse tests
 black ixbrlparse tests
 ```
 
+## Publish to pypi
+
+```bash
+python -m build
+twine upload dist/*
+```
+
 ## Install development version
 
 The development requirements are installed using `pip install -r dev-requirements.txt`.

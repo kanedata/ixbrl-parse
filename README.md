@@ -2,7 +2,7 @@
 
 
 ![Test status](https://github.com/drkane/ixbrl-parse/workflows/tests/badge.svg)
-[![PyPI version](https://badge.fury.io/py/ixbrlparse.svg)](https://pypi.org/project/ixbrlparse/)
+[![PyPI version](https://img.shields.io/pypi/v/ixbrlparse)](https://pypi.org/project/ixbrlparse/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ixbrlparse)
 ![PyPI - License](https://img.shields.io/pypi/l/ixbrlparse)
 

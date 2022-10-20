@@ -53,7 +53,17 @@ class ixtZeroDash(ixbrlFormat):
 
 class ixtNoContent(ixbrlFormat):
     def parse_value(self, value):
-        return 0
+        return None
+
+
+class ixtFixedFalse(ixbrlFormat):
+    def parse_value(self, value):
+        return False
+
+
+class ixtFixedTrue(ixbrlFormat):
+    def parse_value(self, value):
+        return True
 
 
 class ixtNumComma(ixbrlFormat):
@@ -75,6 +85,8 @@ class ixtNumWordsEn(ixbrlFormat):
 
 def get_format(format_):
 
+    original_format = format_
+
     if format_ is None:
         return ixbrlFormat
 
@@ -88,11 +100,17 @@ def get_format(format_):
 
     format_ = format_.replace("-", "")
 
-    if format_ in ("zerodash", "numdash"):
+    if format_ in ("zerodash", "numdash", "fixedzero"):
         return ixtZeroDash
 
-    if format_ == "nocontent":
+    if format_ in ("nocontent", "fixedempty"):
         return ixtNoContent
+
+    if format_ in ("booleanfalse", "fixedfalse"):
+        return ixtFixedFalse
+
+    if format_ in ("booleantrue", "fixedtrue"):
+        return ixtFixedTrue
 
     if format_ in ("numdotdecimal", "numcommadot", "numspacedot"):
         return ixbrlFormat
@@ -105,7 +123,7 @@ def get_format(format_):
 
     raise NotImplementedError(
         'Format "{}" not implemented (namespace "{}")'.format(
-            format_,
+            original_format,
             namespace,
         )
     )

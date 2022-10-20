@@ -229,7 +229,20 @@ def test_format_zerodash():
 
 def test_format_nocontent():
 
-    assert ixbrlNumeric({"text": "-", "format": "nocontent"}).value == 0
+    assert ixbrlNumeric({"text": "-", "format": "nocontent"}).value is None
+    assert ixbrlNumeric({"text": "-", "format": "fixed-empty"}).value is None
+
+
+def test_format_fixed_true():
+
+    assert ixbrlNumeric({"text": "-", "format": "fixed-true"}).value is True
+    assert ixbrlNumeric({"text": "-", "format": "booleantrue"}).value is True
+
+
+def test_format_fixed_false():
+
+    assert ixbrlNumeric({"text": "-", "format": "fixed-false"}).value is False
+    assert ixbrlNumeric({"text": "-", "format": "booleanfalse"}).value is False
 
 
 def test_format_numdotdecimal():

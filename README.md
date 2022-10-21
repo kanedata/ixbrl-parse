@@ -187,6 +187,13 @@ Any additional development requirements must be added to `dev-requirements.in`
 and then the `dev-requirements.txt` should be generated using `pip-compile dev-requirements.in`. You can then install the development requirements using
 `pip-sync dev-requirements.txt`.
 
+## Generate documentation
+
+```sh
+handsdown --external "https://github.com/drkane/ixbrl-parse.git" --exclude env/ --create-configs ixbrlparse
+python -m mkdocs build
+```
+
 ## Acknowledgements
 
 Originally developed for a project with 

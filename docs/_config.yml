@@ -1,0 +1,4 @@
+theme: jekyll-theme-cayman
+show_downloads: true
+source: "https://github.com/drkane/ixbrl-parse"
+highlighter: rouge

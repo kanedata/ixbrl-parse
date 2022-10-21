@@ -5,3 +5,5 @@ isort
 coverage
 black
 twine
+handsdown
+mkdocs

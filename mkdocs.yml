@@ -1,0 +1,8 @@
+site_name: "Ixbrl-parse"
+repo_url: "https://github.com/drkane/ixbrl-parse"
+site_dir: "site"
+docs_dir: "docs"
+
+theme:
+  name: readthedocs
+  include_sidebar: true

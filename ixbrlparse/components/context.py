@@ -3,11 +3,20 @@ from copy import deepcopy
 
 
 class ixbrlContext:
+    """Models a context in an iXBRL document
+
+    Attributes:
+        id (str): The id of the context
+        entity (str): The entity of the context
+        segments (list): A list of segments
+        instant (datetime.date): The instant of the context
+        startdate (datetime.date): The start date of the context
+        enddate (datetime.date): The end date of the context"""
+
     def __init__(self, _id, entity, segments, instant, startdate, enddate):
         self.id = _id
         self.entity = entity
         self.segments = segments
-        # @TODO: parse dates here
         self.instant = (
             datetime.datetime.strptime(instant.strip(), "%Y-%m-%d").date()
             if instant

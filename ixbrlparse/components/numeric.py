@@ -4,16 +4,17 @@ from .transform import get_format, ixbrlFormat
 
 
 class ixbrlNumeric:
+    """Models a numeric element in an iXBRL document
 
-    # contextref
-    # decimals
-    # format
-    # name
-    # scale
-    # sign
-    # text
-    # unitref
-    # xmlns:ix
+    Attributes:
+        dictionary containing the following keys:
+            context (ixbrlContext): The context of the numeric element
+            name (str): The name of the numeric element
+            format (ixbrlFormat): The format of the numeric element
+            value (float): The value of the numeric element
+            unit (str): The unit of the numeric element
+            text (str): The text of the numeric element"""
+
     def __init__(self, attrs):
         name = attrs.get("name", "").split(":", maxsplit=1)
         if len(name) == 2:

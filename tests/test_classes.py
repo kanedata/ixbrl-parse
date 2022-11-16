@@ -125,23 +125,25 @@ def test_nonnumeric_schema():
 
 def test_numeric_value():
 
-    assert ixbrlNumeric({"text": "1234"}).value == 1234
-    assert ixbrlNumeric({"value": "1234"}).value == 1234
+    assert ixbrlNumeric(**{"text": "1234"}).value == 1234
+    assert ixbrlNumeric(**{"value": "1234"}).value == 1234
 
 
 def test_numeric_value_error():
 
     with pytest.raises(ValueError):
-        ixbrlNumeric({"text": "1234blahblab"})
+        ixbrlNumeric(**{"text": "1234blahblab"})
     with pytest.raises(ValueError):
-        ixbrlNumeric({"value": "1234blahblah"})
+        ixbrlNumeric(**{"value": "1234blahblah"})
+    with pytest.raises(ValueError):
+        ixbrlNumeric()
 
 
 def test_numeric_to_json():
 
     assert (
         ixbrlNumeric(
-            {
+            **{
                 "context": ixbrlContext(
                     **{
                         "_id": "123456",
@@ -159,7 +161,7 @@ def test_numeric_to_json():
     )
     assert (
         ixbrlNumeric(
-            {
+            **{
                 "context": ixbrlContext(
                     **{
                         "_id": "123456",
@@ -179,113 +181,126 @@ def test_numeric_to_json():
 
 def test_numeric_already_float():
 
-    assert ixbrlNumeric({"value": 1234}).value == 1234
-    assert ixbrlNumeric({"value": 1234.0}).value == 1234
+    assert ixbrlNumeric(**{"value": 1234}).value == 1234
+    assert ixbrlNumeric(**{"value": 1234.0}).value == 1234
 
 
 def test_numeric_comma_replace():
 
-    assert ixbrlNumeric({"text": "1,234"}).value == 1234
-    assert ixbrlNumeric({"value": "1,234"}).value == 1234
+    assert ixbrlNumeric(**{"text": "1,234"}).value == 1234
+    assert ixbrlNumeric(**{"value": "1,234"}).value == 1234
 
 
 def test_numeric_sign():
 
-    assert ixbrlNumeric({"text": "1,234", "sign": "-"}).value == -1234
-    assert ixbrlNumeric({"value": "1,234", "sign": "-"}).value == -1234
-    assert ixbrlNumeric({"value": "1,234", "sign": ""}).value == 1234
+    assert ixbrlNumeric(**{"text": "1,234", "sign": "-"}).value == -1234
+    assert ixbrlNumeric(**{"value": "1,234", "sign": "-"}).value == -1234
+    assert ixbrlNumeric(**{"value": "1,234", "sign": ""}).value == 1234
 
 
 def test_numeric_blank():
 
-    assert ixbrlNumeric({"value": "-"}).value == 0
-    assert ixbrlNumeric({"text": "-"}).value == 0
+    assert ixbrlNumeric(**{"value": "-"}).value == 0
+    assert ixbrlNumeric(**{"text": "-"}).value == 0
 
 
 def test_numeric_scale():
 
-    assert ixbrlNumeric({"value": "1,234", "scale": "0"}).value == 1234
-    assert ixbrlNumeric({"value": "1,234", "scale": "1"}).value == 12340
-    assert ixbrlNumeric({"text": "1,234", "scale": "2"}).value == 123400
+    assert ixbrlNumeric(**{"value": "1,234", "scale": "0"}).value == 1234
+    assert ixbrlNumeric(**{"value": "1,234", "scale": "1"}).value == 12340
+    assert ixbrlNumeric(**{"text": "1,234", "scale": "2"}).value == 123400
 
 
 def test_numeric_scale_sign():
 
-    assert ixbrlNumeric({"value": "1,234", "scale": "3", "sign": "-"}).value == -1234000
-    assert ixbrlNumeric({"text": "1,234", "scale": "3", "sign": "-"}).value == -1234000
+    assert (
+        ixbrlNumeric(**{"value": "1,234", "scale": "3", "sign": "-"}).value == -1234000
+    )
+    assert (
+        ixbrlNumeric(**{"text": "1,234", "scale": "3", "sign": "-"}).value == -1234000
+    )
 
 
 def test_numeric_inf_format():
 
-    assert ixbrlNumeric({"text": "1234", "decimals": "INF"}).value == 1234
+    assert ixbrlNumeric(**{"text": "1234", "decimals": "INF"}).value == 1234
 
 
 def test_format_zerodash():
 
-    assert ixbrlNumeric({"text": "-", "format": "zerodash"}).value == 0
-    assert ixbrlNumeric({"text": "-", "format": "numdash"}).value == 0
-    assert ixbrlNumeric({"text": "-", "format": "numdotdecimal"}).value == 0
+    assert ixbrlNumeric(**{"text": "-", "format": "zerodash"}).value == 0
+    assert ixbrlNumeric(**{"text": "-", "format": "numdash"}).value == 0
+    assert ixbrlNumeric(**{"text": "-", "format": "numdotdecimal"}).value == 0
 
 
 def test_format_nocontent():
 
-    assert ixbrlNumeric({"text": "-", "format": "nocontent"}).value is None
-    assert ixbrlNumeric({"text": "-", "format": "fixed-empty"}).value is None
+    assert ixbrlNumeric(**{"text": "-", "format": "nocontent"}).value is None
+    assert ixbrlNumeric(**{"text": "-", "format": "fixed-empty"}).value is None
 
 
 def test_format_fixed_true():
 
-    assert ixbrlNumeric({"text": "-", "format": "fixed-true"}).value is True
-    assert ixbrlNumeric({"text": "-", "format": "booleantrue"}).value is True
+    assert ixbrlNumeric(**{"text": "-", "format": "fixed-true"}).value is True
+    assert ixbrlNumeric(**{"text": "-", "format": "booleantrue"}).value is True
 
 
 def test_format_fixed_false():
 
-    assert ixbrlNumeric({"text": "-", "format": "fixed-false"}).value is False
-    assert ixbrlNumeric({"text": "-", "format": "booleanfalse"}).value is False
+    assert ixbrlNumeric(**{"text": "-", "format": "fixed-false"}).value is False
+    assert ixbrlNumeric(**{"text": "-", "format": "booleanfalse"}).value is False
 
 
 def test_format_numdotdecimal():
 
-    assert ixbrlNumeric({"text": "1234.12", "format": "numdotdecimal"}).value == 1234.12
-    assert ixbrlNumeric({"text": "1234", "format": "numdotdecimal"}).value == 1234
-    assert ixbrlNumeric({"text": "1234.34", "format": "numcommadot"}).value == 1234.34
-    assert ixbrlNumeric({"text": "1234.45", "format": "numspacedot"}).value == 1234.45
-    assert ixbrlNumeric({"text": "1,234.45", "format": "numspacedot"}).value == 1234.45
     assert (
-        ixbrlNumeric({"text": "1234.12", "format": "num-dot-decimal"}).value == 1234.12
+        ixbrlNumeric(**{"text": "1234.12", "format": "numdotdecimal"}).value == 1234.12
+    )
+    assert ixbrlNumeric(**{"text": "1234", "format": "numdotdecimal"}).value == 1234
+    assert ixbrlNumeric(**{"text": "1234.34", "format": "numcommadot"}).value == 1234.34
+    assert ixbrlNumeric(**{"text": "1234.45", "format": "numspacedot"}).value == 1234.45
+    assert (
+        ixbrlNumeric(**{"text": "1,234.45", "format": "numspacedot"}).value == 1234.45
+    )
+    assert (
+        ixbrlNumeric(**{"text": "1234.12", "format": "num-dot-decimal"}).value
+        == 1234.12
     )
 
 
 def test_format_numcomma():
 
-    assert ixbrlNumeric({"text": "1234,12", "format": "numcomma"}).value == 1234.12
-    assert ixbrlNumeric({"text": "1234", "format": "numcomma"}).value == 1234
-    assert ixbrlNumeric({"text": "1234,34", "format": "numcomma"}).value == 1234.34
-    assert ixbrlNumeric({"text": "1234,45", "format": "numcomma"}).value == 1234.45
-    assert ixbrlNumeric({"text": "1.234,45", "format": "numcomma"}).value == 1234.45
-    assert ixbrlNumeric({"text": "1234,12", "format": "numcomma"}).value == 1234.12
+    assert ixbrlNumeric(**{"text": "1234,12", "format": "numcomma"}).value == 1234.12
+    assert ixbrlNumeric(**{"text": "1234", "format": "numcomma"}).value == 1234
+    assert ixbrlNumeric(**{"text": "1234,34", "format": "numcomma"}).value == 1234.34
+    assert ixbrlNumeric(**{"text": "1234,45", "format": "numcomma"}).value == 1234.45
+    assert ixbrlNumeric(**{"text": "1.234,45", "format": "numcomma"}).value == 1234.45
+    assert ixbrlNumeric(**{"text": "1234,12", "format": "numcomma"}).value == 1234.12
 
 
 def test_format_numwordsen():
 
     assert (
         ixbrlNumeric(
-            {"text": "one thousand two hundred and thirty four", "format": "numwordsen"}
+            **{
+                "text": "one thousand two hundred and thirty four",
+                "format": "numwordsen",
+            }
         ).value
         == 1234
     )
-    assert ixbrlNumeric({"text": "eight", "format": "numwordsen"}).value == 8
-    assert ixbrlNumeric({"text": "Eight", "format": "numwordsen"}).value == 8
+    assert ixbrlNumeric(**{"text": "eight", "format": "numwordsen"}).value == 8
+    assert ixbrlNumeric(**{"text": 8, "format": "numwordsen"}).value == 8
+    assert ixbrlNumeric(**{"text": "Eight", "format": "numwordsen"}).value == 8
     assert (
         ixbrlNumeric(
-            {
+            **{
                 "text": "one thousand two hundred and thirty four point four five",
                 "format": "numwordsen",
             }
         ).value
         == 1234.45
     )
-    assert ixbrlNumeric({"text": "no", "format": "numwordsen"}).value == 0
-    assert ixbrlNumeric({"text": "None", "format": "numwordsen"}).value == 0
-    assert ixbrlNumeric({"text": "none", "format": "numwordsen"}).value == 0
+    assert ixbrlNumeric(**{"text": "no", "format": "numwordsen"}).value == 0
+    assert ixbrlNumeric(**{"text": "None", "format": "numwordsen"}).value == 0
+    assert ixbrlNumeric(**{"text": "none", "format": "numwordsen"}).value == 0

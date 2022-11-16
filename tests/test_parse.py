@@ -6,7 +6,13 @@ import pytest
 from bs4 import BeautifulSoup
 
 from ixbrlparse import IXBRL
-from ixbrlparse.core import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
+from ixbrlparse.core import (
+    BaseParser,
+    IXBRLParseError,
+    ixbrlContext,
+    ixbrlNonNumeric,
+    ixbrlNumeric,
+)
 
 TEST_ACCOUNTS = [
     "tests/test_accounts/account_1.html",
@@ -15,9 +21,11 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_4.html",
     "tests/test_accounts/account_5.html",
     "tests/test_accounts/account_errors.html",
+    "tests/test_accounts/account_errors_nonnumeric.html",
 ]
 TEST_XML_ACCOUNTS = [
     "tests/test_accounts/account_1.xml",
+    "tests/test_accounts/account_errors.xml",
 ]
 
 EXPECTED_TABLE_KEYS = [
@@ -29,6 +37,22 @@ EXPECTED_TABLE_KEYS = [
     "startdate",
     "enddate",
 ]
+
+
+def test_base_parser():
+    p = BaseParser()
+
+    assert p._get_schema() is None
+    assert p._get_contexts() is None
+    assert p._get_units() is None
+    assert p._get_nonnumeric() is None
+    assert p._get_numeric() is None
+
+    s = BeautifulSoup("<html attribute='hello'>World</html>", "html.parser")
+
+    assert p._get_tag_attribute(s, "html", "attribute") == "hello"
+    assert p._get_tag_attribute(s, "html", "missingattribute") is None
+    assert p._get_tag_text(s, "html") == "World"
 
 
 def test_open():
@@ -48,6 +72,12 @@ def test_open_str():
         x = IXBRL(io.StringIO(content))
         assert x.filetype == "ixbrl"
         assert isinstance(x.soup, BeautifulSoup)
+
+
+def test_open_malformed_str():
+    content = "blahblah"
+    with pytest.raises(IXBRLParseError):
+        IXBRL(io.StringIO(content))
 
 
 def test_open_xml():
@@ -72,7 +102,7 @@ def test_open_xml_str():
 @pytest.mark.parametrize(
     "account,schema,namespaces",
     zip(
-        TEST_ACCOUNTS[0:5] + TEST_XML_ACCOUNTS,
+        TEST_ACCOUNTS[0:5] + TEST_XML_ACCOUNTS[0:1],
         [
             "https://xbrl.frc.org.uk/FRS-102/2014-09-01/FRS-102-2014-09-01.xsd",
             "http://www.xbrl.org/uk/gaap/core/2009-09-01/uk-gaap-full-2009-09-01.xsd",
@@ -203,6 +233,7 @@ def test_nonnumeric():
     assert len(x.nonnumeric) == 15
     assert isinstance(x.nonnumeric[0], ixbrlNonNumeric)
     assert "FAKETEST TECHNOLOGIES LIMITED" in [n.value for n in x.nonnumeric]
+    value_seen = False
     for n in x.nonnumeric:
         if (
             n.schema == "uk-gaap-cd-bus"
@@ -210,6 +241,8 @@ def test_nonnumeric():
         ):
             assert n.value == "03456789"
             assert isinstance(n.context, ixbrlContext)
+            value_seen = True
+    assert value_seen
 
 
 def test_nonnumeric_xml():
@@ -218,28 +251,36 @@ def test_nonnumeric_xml():
     assert len(x.nonnumeric) == 14
     assert isinstance(x.nonnumeric[0], ixbrlNonNumeric)
     assert "DEMO XML LIMITED" in [n.value for n in x.nonnumeric]
+    value_seen = False
     for n in x.nonnumeric:
         if n.name == "NameApprovingDirector":
             assert n.value == "JOAN IMAGINARYNAME"
             assert isinstance(n.context, ixbrlContext)
+            value_seen = True
+    assert value_seen
 
 
 def test_numeric():
     x = IXBRL.open(TEST_ACCOUNTS[3])
 
     assert len(x.numeric) == 32
+    value_seen = False
     for n in x.numeric:
         assert isinstance(n, ixbrlNumeric)
 
         if (
             n.name == "NetCurrentAssetsLiabilities"
+            and isinstance(n.context, ixbrlContext)
             and n.context.id == "cfwd_31_03_2017"
         ):
             assert n.format.sign == "-"
             assert n.value == -17957
+            value_seen = True
 
         if n.format.sign == "-":
             assert n.value < 0
+
+    assert value_seen
 
     assert x.numeric[0].unit == "iso4217:GBP"
     assert x.numeric[0].value == 52982
@@ -250,16 +291,20 @@ def test_numeric():
 def test_numeric_xml():
     x = IXBRL.open(TEST_XML_ACCOUNTS[0])
 
-    assert len(x.numeric) == 13
+    assert len(x.numeric) == 14
+    value_seen = False
     for n in x.numeric:
         assert isinstance(n, ixbrlNumeric)
 
         if n.name == "NumberOrdinarySharesAllotted" and n.context.id == "e2":
             assert n.format.sign == ""
             assert n.value == 1
+            value_seen = True
 
         if n.format.sign == "-":
             assert n.value < 0
+
+    assert value_seen
 
     assert x.numeric[0].unit == "iso4217:GBP"
     assert x.numeric[0].value == 1
@@ -332,6 +377,17 @@ def test_errors_raised():
         assert len(x.errors) == 1
 
 
+def test_errors_raised_nonnumeric():
+    with open(TEST_ACCOUNTS[6]) as a:
+        with pytest.raises(KeyError):
+            IXBRL(a)
+
+    with open(TEST_ACCOUNTS[6]) as a:
+        x = IXBRL(a, raise_on_error=False)
+        assert isinstance(x.soup, BeautifulSoup)
+        assert len(x.errors) == 2
+
+
 def test_errors_raised_open():
     with pytest.raises(NotImplementedError):
         IXBRL.open(TEST_ACCOUNTS[5])
@@ -339,3 +395,21 @@ def test_errors_raised_open():
     x = IXBRL.open(TEST_ACCOUNTS[5], raise_on_error=False)
     assert isinstance(x.soup, BeautifulSoup)
     assert len(x.errors) == 1
+
+
+def test_errors_raised_open_xml():
+    with pytest.raises(NotImplementedError):
+        IXBRL.open(TEST_XML_ACCOUNTS[1])
+
+    x = IXBRL.open(TEST_XML_ACCOUNTS[1], raise_on_error=False)
+    assert isinstance(x.soup, BeautifulSoup)
+    assert len(x.errors) == 1
+
+
+def test_errors_raised_open_nonnumeric():
+    with pytest.raises(KeyError):
+        IXBRL.open(TEST_ACCOUNTS[6])
+
+    x = IXBRL.open(TEST_ACCOUNTS[6], raise_on_error=False)
+    assert isinstance(x.soup, BeautifulSoup)
+    assert len(x.errors) == 2

@@ -49,7 +49,7 @@
 		<ValueOrdinarySharesAllotted decimals="2" contextRef="e1" unitRef="GBP">
 			1
 		</ValueOrdinarySharesAllotted>
-		<ValueOrdinarySharesAllotted decimals="2" contextRef="e2" unitRef="GBP">
+		<ValueOrdinarySharesAllotted decimals="2" format="ixt2:numdotdecimalblahblah" contextRef="e2" unitRef="GBP">
 			1
 		</ValueOrdinarySharesAllotted>
 		<NumberOrdinarySharesAllotted precision="INF" contextRef="e1" unitRef="shares">

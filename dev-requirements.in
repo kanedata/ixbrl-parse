@@ -5,3 +5,5 @@ isort
 coverage
 black
 twine
+mypy
+types-beautifulsoup4

@@ -2,12 +2,13 @@ import argparse
 import csv
 import json
 import sys
+from typing import Any, Dict
 
 from ixbrlparse import __version__
 from ixbrlparse.core import IXBRL
 
 
-def main():
+def main() -> None:
 
     parser = argparse.ArgumentParser(
         description="Extract financial data from a IXBRL file"
@@ -54,7 +55,7 @@ def main():
 
     if args.format == "csv":
         values = x.to_table(args.fields)
-        columns = {}
+        columns: Dict[str, Any] = {}
         for r in values:
             columns = {**dict.fromkeys(r.keys()), **columns}
         writer = csv.DictWriter(args.outfile, columns.keys())

@@ -25,6 +25,7 @@ jobs:
         pip install black
         pip install isort
         pip install mypy
+        pip install types-beautifulsoup4
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -39,4 +40,4 @@ jobs:
         isort . --check
     - name: Typechecking with mypy
       run: |
-        mypy . --check
+        mypy ixbrlparse tests

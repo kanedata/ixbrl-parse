@@ -9,6 +9,10 @@ FILETYPE_IXBRL = "ixbrl"
 FILETYPE_XBRL = "xbrl"
 
 
+class IXBRLParseError(Exception):
+    pass
+
+
 class BaseParser:
     def _get_tag_attribute(
         self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]], attribute: str
@@ -95,8 +99,10 @@ class IXBRLParser(BaseParser):
     def _get_contexts(self) -> None:
         self.contexts = {}
         for s in self._get_context_elements():
-            if not isinstance(s["id"], str):
+            if not s.get("id"):
                 continue
+            if not isinstance(s["id"], str):
+                continue  # pragma: no cover
             self.contexts[s["id"]] = ixbrlContext(
                 _id=s["id"],
                 entity={
@@ -134,14 +140,21 @@ class IXBRLParser(BaseParser):
     def _get_nonnumeric(self) -> None:
         self.nonnumeric = []
         for s in self.soup.find_all({"nonNumeric"}):
-            element = {
-                "context": self.contexts.get(s["contextRef"], s["contextRef"]),
-                "name": s["name"],
-                "format_": s.get("format"),
-                "value": s.text.strip().replace("\n", ""),
-            }
             try:
-                self.nonnumeric.append(ixbrlNonNumeric(**element))
+                context = self.contexts.get(s["contextRef"], s["contextRef"])
+                format_ = s.get("format")
+                if not isinstance(format_, str):
+                    format_ = None
+                self.nonnumeric.append(
+                    ixbrlNonNumeric(
+                        context=context,
+                        name=s["name"] if isinstance(s["name"], str) else "",
+                        format_=format_,
+                        value=s.text.strip().replace("\n", "")
+                        if isinstance(s.text, str)
+                        else "",
+                    )
+                )
             except Exception as e:
                 self.errors.append(
                     {
@@ -155,14 +168,15 @@ class IXBRLParser(BaseParser):
     def _get_numeric(self) -> None:
         self.numeric = []
         for s in self.soup.find_all({"nonFraction"}):
-            element = {
-                "text": s.text,
-                "context": self.contexts.get(s["contextRef"], s["contextRef"]),
-                "unit": self.units.get(s["unitRef"], s["unitRef"]),
-                **s.attrs,
-            }
             try:
-                self.numeric.append(ixbrlNumeric(**element))
+                self.numeric.append(
+                    ixbrlNumeric(
+                        text=s.text,
+                        context=self.contexts.get(s["contextRef"], s["contextRef"]),
+                        unit=self.units.get(s["unitRef"], s["unitRef"]),
+                        **s.attrs
+                    )
+                )
             except Exception as e:
                 self.errors.append(
                     {
@@ -202,7 +216,7 @@ class XBRLParser(IXBRLParser):
             if not isinstance(s["contextRef"], str) or not isinstance(
                 s["unitRef"], str
             ):
-                continue
+                continue  # pragma: no cover
             try:
                 self.numeric.append(
                     ixbrlNumeric(
@@ -229,36 +243,26 @@ class XBRLParser(IXBRLParser):
             if not s.get("contextRef") or s.get("unitRef"):
                 continue
             if not isinstance(s["contextRef"], str):
-                continue
+                continue  # pragma: no cover
             context = self.contexts.get(s["contextRef"], s["contextRef"])
             format_ = s.get("format")
             if not isinstance(format_, str):
                 format_ = None
-            try:
-                self.nonnumeric.append(
-                    ixbrlNonNumeric(
-                        context=context,
-                        name=s.name if isinstance(s.name, str) else "",
-                        format_=format_,
-                        value=s.text.strip().replace("\n", "")
-                        if isinstance(s.text, str)
-                        else "",
-                    )
+            self.nonnumeric.append(
+                ixbrlNonNumeric(
+                    context=context,
+                    name=s.name if isinstance(s.name, str) else "",
+                    format_=format_,
+                    value=s.text.strip().replace("\n", "")
+                    if isinstance(s.text, str)
+                    else "",
                 )
-            except Exception as e:
-                self.errors.append(
-                    {
-                        "error": e,
-                        "element": s,
-                    }
-                )
-                if self.raise_on_error:
-                    raise
+            )
 
 
 class IXBRL:
     def __init__(self, f: IO, raise_on_error: bool = True) -> None:
-        self.soup = BeautifulSoup(f.read(), "xml")
+        self.soup = BeautifulSoup(f.read(), "xml", multi_valued_attributes=None)
         self.raise_on_error = raise_on_error
         self._get_parser()
         self.parser._get_schema()
@@ -280,7 +284,7 @@ class IXBRL:
             self.filetype = FILETYPE_XBRL
             parser = XBRLParser
         else:
-            raise Exception("Filetype not recognised")
+            raise IXBRLParseError("Filetype not recognised")
         self.parser: BaseParser = parser(self.soup, raise_on_error=self.raise_on_error)
 
     def __getattr__(self, name: str):
@@ -307,7 +311,7 @@ class IXBRL:
 
         ret = []
         for v in values:
-            if v.context.segments:
+            if isinstance(v.context, ixbrlContext) and v.context.segments:
                 segments = {
                     "segment:{}".format(i): "{} {} {}".format(
                         s.get("tag", ""), s.get("dimension"), s.get("value")
@@ -325,11 +329,15 @@ class IXBRL:
                     "name": v.name,
                     "value": v.value,
                     "unit": v.unit if hasattr(v, "unit") else None,
-                    "instant": str(v.context.instant) if v.context.instant else None,
-                    "startdate": str(v.context.startdate)
-                    if v.context.startdate
+                    "instant": str(v.context.instant)
+                    if isinstance(v.context, ixbrlContext) and v.context.instant
                     else None,
-                    "enddate": str(v.context.enddate) if v.context.enddate else None,
+                    "startdate": str(v.context.startdate)
+                    if isinstance(v.context, ixbrlContext) and v.context.startdate
+                    else None,
+                    "enddate": str(v.context.enddate)
+                    if isinstance(v.context, ixbrlContext) and v.context.enddate
+                    else None,
                     **segments,
                 }
             )

@@ -135,6 +135,8 @@ def test_numeric_value_error():
         ixbrlNumeric(**{"text": "1234blahblab"})
     with pytest.raises(ValueError):
         ixbrlNumeric(**{"value": "1234blahblah"})
+    with pytest.raises(ValueError):
+        ixbrlNumeric()
 
 
 def test_numeric_to_json():
@@ -288,6 +290,7 @@ def test_format_numwordsen():
         == 1234
     )
     assert ixbrlNumeric(**{"text": "eight", "format": "numwordsen"}).value == 8
+    assert ixbrlNumeric(**{"text": 8, "format": "numwordsen"}).value == 8
     assert ixbrlNumeric(**{"text": "Eight", "format": "numwordsen"}).value == 8
     assert (
         ixbrlNumeric(

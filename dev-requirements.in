@@ -7,4 +7,3 @@ black
 twine
 mypy
 types-beautifulsoup4
-typing_extensions

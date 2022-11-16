@@ -8,6 +8,8 @@
 
 A python module for getting useful data out of ixbrl files. The library is at an early stage - feedback and improvements are very welcome.
 
+**New in version 0.5**: Support for Python 3.11 has been added. I've had some problems with Python 3.11 and Windows as lxml binaries aren't yet available. Also new in version 0.5 is type checking - the whole library now has types added. 
+
 **New in version 0.4**: I've added initial support for pure XBRL files as well as tagged HTML iXBRL files. Feedback on this feature is welcome - particularly around getting values out of numeric items.
 
 ## Requirements
@@ -147,7 +149,9 @@ Note that the error catching is only available for parsing of `.nonnumeric`
 and `numeric` items in the document. Any other errors with parsing will be
 thrown as normal no matter what `raise_on_error` is set to.
 
-## Run tests
+## Code checks
+
+### Run tests
 
 Tests can be run with `pytest`:
 
@@ -156,19 +160,33 @@ pip install -e . # install the package
 pytest tests
 ```
 
-## Run typing checks
+### Test coverage
 
+```bash
+coverage run -m pytest tests
+coverage html
+python -m http.server -d htmlcov
 ```
+
+### Run typing checks
+
+```bash
 mypy ixbrlparse tests
 ```
 
-## Linting
+### Linting
 
 Black and isort should be run before committing any changes.
 
 ```bash
 isort ixbrlparse tests
 black ixbrlparse tests
+```
+
+### Run all checks at once
+
+```sh
+black . && isort . && mypy ixbrlparse tests && coverage run -m pytest tests && coverage html --fail-under=100
 ```
 
 ## Publish to pypi

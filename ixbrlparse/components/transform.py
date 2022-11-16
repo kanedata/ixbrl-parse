@@ -55,8 +55,6 @@ class ixbrlFormat:
 
             return value_numeric
 
-        return None
-
 
 class ixtZeroDash(ixbrlFormat):
     def parse_value(self, value: Union[str, int, float]) -> Union[int, float]:

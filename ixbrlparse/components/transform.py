@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Union, Optional, Literal, Type
+from typing import Literal, Optional, Type, Union
 
 
 class ixbrlFormat:

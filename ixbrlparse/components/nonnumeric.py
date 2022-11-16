@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Optional, Any, Union
+from typing import Any, Optional, Union
 
 from ixbrlparse.components import ixbrlContext
 

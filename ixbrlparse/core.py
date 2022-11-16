@@ -1,5 +1,5 @@
-from typing import Generator, IO, Union, Literal, Optional, Iterable
 from pathlib import Path
+from typing import IO, Generator, Iterable, Literal, Optional, Union
 
 from bs4 import BeautifulSoup, Tag
 

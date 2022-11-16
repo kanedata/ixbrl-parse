@@ -1,8 +1,6 @@
 from copy import deepcopy
 from typing import List, Optional, Type, Union
 
-from typing_extensions import Literal
-
 
 class ixbrlFormat:
     def __init__(
@@ -10,7 +8,7 @@ class ixbrlFormat:
         format_: str,
         decimals: Optional[Union[int, str]],
         scale: Union[int, str] = 1,
-        sign: Optional[Literal["-", ""]] = None,
+        sign: Optional[str] = None,
     ) -> None:
 
         if isinstance(decimals, str):

@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import IO, Dict, Generator, Iterable, List, Optional, Union
 
 from bs4 import BeautifulSoup, Tag
-from typing_extensions import Literal
 
 from ixbrlparse.components import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
 
@@ -299,7 +298,7 @@ class IXBRL:
         }
 
     def to_table(
-        self, fields: Literal["numeric", "nonnumeric", "both"] = "numeric"
+        self, fields: str = "numeric"
     ) -> List[Dict]:
         if fields == "nonnumeric":
             values = self.nonnumeric

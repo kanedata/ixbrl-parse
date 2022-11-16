@@ -297,9 +297,7 @@ class IXBRL:
             "errors": len(self.errors),
         }
 
-    def to_table(
-        self, fields: str = "numeric"
-    ) -> List[Dict]:
+    def to_table(self, fields: str = "numeric") -> List[Dict]:
         if fields == "nonnumeric":
             values = self.nonnumeric
         elif fields == "numeric":

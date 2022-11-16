@@ -156,6 +156,12 @@ pip install -e . # install the package
 pytest tests
 ```
 
+## Run typing checks
+
+```
+mypy ixbrlparse tests
+```
+
 ## Linting
 
 Black and isort should be run before committing any changes.

@@ -48,8 +48,12 @@ mccabe==0.7.0
     # via flake8
 more-itertools==9.0.0
     # via jaraco-classes
+mypy==0.991
+    # via -r dev-requirements.in
 mypy-extensions==0.4.3
-    # via black
+    # via
+    #   black
+    #   mypy
 packaging==21.3
     # via pytest
 pathspec==0.10.1
@@ -97,9 +101,14 @@ soupsieve==2.3.2.post1
 tomli==2.0.1
     # via
     #   black
+    #   mypy
     #   pytest
 twine==4.0.1
     # via -r dev-requirements.in
+types-beautifulsoup4==4.11.6.1
+    # via -r dev-requirements.in
+typing-extensions==4.4.0
+    # via mypy
 urllib3==1.26.12
     # via
     #   requests

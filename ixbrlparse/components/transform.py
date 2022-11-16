@@ -1,22 +1,31 @@
 from copy import deepcopy
+from typing import Union, Optional, Literal, Type
 
 
 class ixbrlFormat:
-    def __init__(self, format_, decimals, scale, sign):
+    def __init__(
+        self,
+        format_: str,
+        decimals: Optional[Union[int, str]],
+        scale: Union[int, str] = 1,
+        sign: Optional[Literal["-", ""]] = None,
+    ) -> None:
 
-        if decimals.lower() == "inf":
-            self.decimals = None
-        else:
-            self.decimals = int(decimals)
-
-        self.format = None
-        if format_:
-            format_ = format_.split(":")
-            if len(format_) > 1:
-                self.format = ":".join(format_[1:])
-                self.namespace = format_[0]
+        if isinstance(decimals, str):
+            if decimals.lower() == "inf":
+                self.decimals = None
             else:
-                self.format = ":".join(format_)
+                self.decimals = int(decimals)
+
+        self.format: Optional[str] = None
+        self.namespace: Optional[str] = None
+        if format_:
+            format_array: list[str] = format_.split(":")
+            if len(format_array) > 1:
+                self.format = ":".join(format_array[1:])
+                self.namespace = format_array[0]
+            else:
+                self.format = ":".join(format_array)
                 self.namespace = None
 
         self.scale = int(scale)
@@ -25,78 +34,84 @@ class ixbrlFormat:
     def to_json(self):
         return deepcopy(self.__dict__)
 
-    def parse_value(self, value):
+    def parse_value(
+        self, value: Union[str, int, float]
+    ) -> Optional[Union[int, float, bool]]:
 
         if isinstance(value, (int, float)):
             return value
 
-        if value in ("-", ""):
-            return 0
+        if isinstance(value, str):
+            if value in ("-", ""):
+                return 0
 
-        value = value.replace(" ", "")
-        value = value.replace(",", "")
-        value = float(value)
+            value_numeric: float = float(value.replace(" ", "").replace(",", ""))
 
-        if self.sign == "-":
-            value = value * -1
+            if self.sign == "-":
+                value_numeric = value_numeric * -1
 
-        if self.scale != 0:
-            value = value * (10**self.scale)
+            if self.scale != 0:
+                value_numeric = value_numeric * (10**self.scale)
 
-        return value
+            return value_numeric
+
+        return None
 
 
 class ixtZeroDash(ixbrlFormat):
-    def parse_value(self, value):
+    def parse_value(self, value: Union[str, int, float]) -> Union[int, float]:
         return 0
 
 
 class ixtNoContent(ixbrlFormat):
-    def parse_value(self, value):
+    def parse_value(self, value: Union[str, int, float]) -> None:
         return None
 
 
 class ixtFixedFalse(ixbrlFormat):
-    def parse_value(self, value):
+    def parse_value(self, value: Union[str, int, float]) -> bool:
         return False
 
 
 class ixtFixedTrue(ixbrlFormat):
-    def parse_value(self, value):
+    def parse_value(self, value: Union[str, int, float]) -> bool:
         return True
 
 
 class ixtNumComma(ixbrlFormat):
-    def parse_value(self, value):
-        value = value.replace(".", "")
-        value = value.replace(",", ".")
+    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
+        if isinstance(value, str):
+            value = value.replace(".", "")
+            value = value.replace(",", ".")
         return super().parse_value(value)
 
 
 class ixtNumWordsEn(ixbrlFormat):
-    def parse_value(self, value):
-        value = value.lower()
-        if value in ("no", "none"):
-            return 0
-        from word2number import w2n
+    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
+        if isinstance(value, str):
+            value = value.lower()
+            if value in ("no", "none"):
+                return 0
+            from word2number import w2n  # type: ignore
 
-        return w2n.word_to_num(value)
+            return w2n.word_to_num(value)
+        return super().parse_value(value)
 
 
-def get_format(format_):
+def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
 
-    original_format = format_
-
-    if format_ is None:
+    if not isinstance(format_, str):
         return ixbrlFormat
 
-    format_ = format_.split(":")
-    if len(format_) > 1:
-        namespace = format_[0]
-        format_ = ":".join(format_[1:])
+    original_format: str = format_
+
+    format_list: list = format_.split(":")
+    if len(format_list) > 1:
+        namespace = format_list[0]
+        format_ = ":".join(format_list[1:])
     else:
         namespace = None
-        format_ = ":".join(format_)
+        format_ = ":".join(format_list)
 
     format_ = format_.replace("-", "")
 
@@ -118,7 +133,7 @@ def get_format(format_):
     if format_ in ("numcomma", "numdotcomma", "numspacecomma", "numcommadecimal"):
         return ixtNumComma
 
-    if format_ == "numwordsen":
+    if format_ in ("numwordsen"):
         return ixtNumWordsEn
 
     raise NotImplementedError(

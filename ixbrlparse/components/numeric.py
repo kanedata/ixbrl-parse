@@ -1,5 +1,7 @@
 from copy import deepcopy
+from typing import Optional, Union
 
+from .context import ixbrlContext
 from .transform import get_format, ixbrlFormat
 
 
@@ -14,18 +16,34 @@ class ixbrlNumeric:
     # text
     # unitref
     # xmlns:ix
-    def __init__(self, attrs):
-        name = attrs.get("name", "").split(":", maxsplit=1)
-        if len(name) == 2:
-            self.schema = name[0]
-            self.name = name[1]
-        else:
-            self.schema = "unknown"
-            self.name = name[0]
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        unit: Optional[str] = None,
+        value: Optional[Union[str, int, float]] = None,
+        text: Optional[Union[str, int, float]] = None,
+        context: Union[ixbrlContext, str, None] = None,
+        **attrs,
+    ) -> None:
+        self.name: Optional[str] = name
+        self.schema: str = "unknown"
+        if isinstance(name, str):
+            name_value = name.split(":", maxsplit=1)
+            if len(name_value) == 2:
+                self.schema = name_value[0]
+                self.name = name_value[1]
+            else:
+                self.schema = "unknown"
+                self.name = name_value[0]
 
-        self.text = attrs.get("value", attrs.get("text"))
-        self.context = attrs.get("context")
-        self.unit = attrs.get("unit")
+        if not isinstance(value, (str, int, float)):
+            value = text
+        if not isinstance(value, (str, int, float)):
+            raise ValueError("Must provide either value or text")
+        self.text: Union[str, int, float] = value
+        self.context: Union[ixbrlContext, str, None] = context
+        self.unit: Optional[str] = unit
+        self.value: Optional[Union[int, float]] = None
 
         format_ = {
             "format_": attrs.get("format"),
@@ -33,17 +51,19 @@ class ixbrlNumeric:
             "scale": attrs.get("scale", 0),
             "sign": attrs.get("sign", ""),
         }
-        self.format = get_format(format_["format_"])(**format_)
+        self.format: Optional[ixbrlFormat] = get_format(format_["format_"])(**format_)
 
         try:
-            self.value = self.format.parse_value(self.text)
+            if isinstance(self.format, ixbrlFormat):
+                self.value = self.format.parse_value(self.text)
         except ValueError:
             print(attrs)
             raise
 
-    def to_json(self):
+    def to_json(self) -> dict:
         values = deepcopy(self.__dict__)
-        if isinstance(values.get("format"), ixbrlFormat):
-            values["format"] = values["format"].to_json()
-        values["context"] = self.context.to_json()
+        if isinstance(self.format, ixbrlFormat):
+            values["format"] = self.format.to_json()
+        if isinstance(self.context, ixbrlContext):
+            values["context"] = self.context.to_json()
         return values

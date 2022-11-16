@@ -90,7 +90,7 @@ class ixtNumWordsEn(ixbrlFormat):
             value = value.lower()
             if value in ("no", "none"):
                 return 0
-            from word2number import w2n  # type: ignore
+            from word2number import w2n
 
             return w2n.word_to_num(value)
         return super().parse_value(value)

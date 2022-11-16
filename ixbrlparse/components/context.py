@@ -1,14 +1,14 @@
 import datetime
 from copy import deepcopy
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 
 
 class ixbrlContext:
     def __init__(
         self,
         _id: str,
-        entity: dict[str, Optional[str]],
-        segments: Optional[list[dict]],
+        entity: Dict[str, Optional[str]],
+        segments: Optional[List[Dict]],
         instant: Optional[str],
         startdate: Optional[str],
         enddate: Optional[str],
@@ -42,7 +42,7 @@ class ixbrlContext:
 
         return "<IXBRLContext {} [{}]{}>".format(self.id, datestr, segmentstr)
 
-    def to_json(self) -> dict[str, list[dict[str, Any]]]:
+    def to_json(self) -> Dict[str, List[Dict[str, Any]]]:
         values = deepcopy(self.__dict__)
         for i in ["startdate", "enddate", "instant"]:
             if isinstance(values[i], datetime.date):

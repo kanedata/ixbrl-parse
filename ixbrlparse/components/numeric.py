@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 from .context import ixbrlContext
 from .transform import get_format, ixbrlFormat
@@ -60,7 +60,7 @@ class ixbrlNumeric:
             print(attrs)
             raise
 
-    def to_json(self) -> dict:
+    def to_json(self) -> Dict:
         values = deepcopy(self.__dict__)
         if isinstance(self.format, ixbrlFormat):
             values["format"] = self.format.to_json()

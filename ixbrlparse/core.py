@@ -1,7 +1,8 @@
 from pathlib import Path
-from typing import IO, Generator, Iterable, Literal, Optional, Union
+from typing import IO, Dict, Generator, Iterable, List, Optional, Union
 
 from bs4 import BeautifulSoup, Tag
+from typing_extensions import Literal
 
 from ixbrlparse.components import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
 
@@ -11,7 +12,7 @@ FILETYPE_XBRL = "xbrl"
 
 class BaseParser:
     def _get_tag_attribute(
-        self, s: Union[BeautifulSoup, Tag], tag: Union[str, list[str]], attribute: str
+        self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]], attribute: str
     ) -> Optional[str]:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
@@ -21,7 +22,7 @@ class BaseParser:
         return None
 
     def _get_tag_text(
-        self, s: Union[BeautifulSoup, Tag], tag: Union[str, list[str]]
+        self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]
     ) -> Optional[str]:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
@@ -31,7 +32,7 @@ class BaseParser:
         return None
 
     def _get_tag_children(
-        self, s: Union[BeautifulSoup, Tag], tag: Union[str, list[str]]
+        self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]
     ) -> Iterable[Tag]:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
@@ -60,12 +61,12 @@ class IXBRLParser(BaseParser):
     def __init__(self, soup: BeautifulSoup, raise_on_error: bool = True) -> None:
         self.soup = soup
         self.raise_on_error = raise_on_error
-        self.errors: list = []
-        self.contexts: dict[str, ixbrlContext] = {}
+        self.errors: List = []
+        self.contexts: Dict[str, ixbrlContext] = {}
         self.schema: Optional[str] = None
-        self.namespaces: dict[str, Union[str, list[str]]] = {}
-        self.nonnumeric: list[ixbrlNonNumeric] = []
-        self.numeric: list[ixbrlNumeric] = []
+        self.namespaces: Dict[str, Union[str, List[str]]] = {}
+        self.nonnumeric: List[ixbrlNonNumeric] = []
+        self.numeric: List[ixbrlNumeric] = []
 
     def _get_schema(self) -> None:
         self.schema = None
@@ -124,7 +125,7 @@ class IXBRLParser(BaseParser):
                     yield s
 
     def _get_units(self) -> None:
-        self.units: dict[str, Optional[str]] = {}
+        self.units: Dict[str, Optional[str]] = {}
         for s in self._get_unit_elements():
             if isinstance(s["id"], str):
                 self.units[s["id"]] = self._get_tag_text(
@@ -286,7 +287,7 @@ class IXBRL:
     def __getattr__(self, name: str):
         return getattr(self.parser, name)
 
-    def to_json(self) -> dict:
+    def to_json(self) -> Dict:
         return {
             "schema": self.schema,
             "namespaces": self.namespaces,
@@ -299,7 +300,7 @@ class IXBRL:
 
     def to_table(
         self, fields: Literal["numeric", "nonnumeric", "both"] = "numeric"
-    ) -> list[dict]:
+    ) -> List[Dict]:
         if fields == "nonnumeric":
             values = self.nonnumeric
         elif fields == "numeric":

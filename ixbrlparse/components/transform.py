@@ -1,5 +1,7 @@
 from copy import deepcopy
-from typing import Literal, Optional, Type, Union
+from typing import List, Optional, Type, Union
+
+from typing_extensions import Literal
 
 
 class ixbrlFormat:
@@ -20,7 +22,7 @@ class ixbrlFormat:
         self.format: Optional[str] = None
         self.namespace: Optional[str] = None
         if format_:
-            format_array: list[str] = format_.split(":")
+            format_array: List[str] = format_.split(":")
             if len(format_array) > 1:
                 self.format = ":".join(format_array[1:])
                 self.namespace = format_array[0]
@@ -105,7 +107,7 @@ def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
 
     original_format: str = format_
 
-    format_list: list = format_.split(":")
+    format_list: List = format_.split(":")
     if len(format_list) > 1:
         namespace = format_list[0]
         format_ = ":".join(format_list[1:])

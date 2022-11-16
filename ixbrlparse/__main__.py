@@ -2,7 +2,7 @@ import argparse
 import csv
 import json
 import sys
-from typing import Any
+from typing import Any, Dict
 
 from ixbrlparse import __version__
 from ixbrlparse.core import IXBRL
@@ -55,7 +55,7 @@ def main() -> None:
 
     if args.format == "csv":
         values = x.to_table(args.fields)
-        columns: dict[str, Any] = {}
+        columns: Dict[str, Any] = {}
         for r in values:
             columns = {**dict.fromkeys(r.keys()), **columns}
         writer = csv.DictWriter(args.outfile, columns.keys())

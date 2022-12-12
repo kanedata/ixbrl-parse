@@ -1,6 +1,8 @@
 from copy import deepcopy
 from typing import List, Optional, Type, Union
 
+from .functionixt import ixtNamespaceFunctions
+
 
 class ixbrlFormat:
     def __init__(
@@ -9,6 +11,7 @@ class ixbrlFormat:
         decimals: Optional[Union[int, str]],
         scale: Union[int, str] = 1,
         sign: Optional[str] = None,
+        ixt: Optional[str] = None,
     ) -> None:
 
         if isinstance(decimals, str):
@@ -30,15 +33,16 @@ class ixbrlFormat:
 
         self.scale = int(scale)
         self.sign = sign
+        self.ixt = ixt
 
     def to_json(self):
         return deepcopy(self.__dict__)
 
     def parse_value(
         self, value: Union[str, int, float]
-    ) -> Optional[Union[int, float, bool]]:
+    ) -> Optional[Union[int, float, bool, str]]:
 
-        if isinstance(value, (int, float)):
+        if isinstance(value, (int, float, str)):
             return value
 
         if isinstance(value, str):
@@ -96,6 +100,11 @@ class ixtNumWordsEn(ixbrlFormat):
         return super().parse_value(value)
 
 
+class ixtWrapper(ixbrlFormat):
+    def parse_value(self, value):
+        return ixtNamespaceFunctions[self.ixt][self.format](value)
+
+
 def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
 
     if not isinstance(format_, str):
@@ -113,26 +122,10 @@ def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
 
     format_ = format_.replace("-", "")
 
-    if format_ in ("zerodash", "numdash", "fixedzero"):
-        return ixtZeroDash
-
-    if format_ in ("nocontent", "fixedempty"):
-        return ixtNoContent
-
-    if format_ in ("booleanfalse", "fixedfalse"):
-        return ixtFixedFalse
-
-    if format_ in ("booleantrue", "fixedtrue"):
-        return ixtFixedTrue
-
-    if format_ in ("numdotdecimal", "numcommadot", "numspacedot"):
-        return ixbrlFormat
-
-    if format_ in ("numcomma", "numdotcomma", "numspacecomma", "numcommadecimal"):
-        return ixtNumComma
-
-    if format_ in ("numwordsen"):
+    if format_ == "numwordsen":
         return ixtNumWordsEn
+    elif format_:
+        return ixtWrapper
 
     raise NotImplementedError(
         'Format "{}" not implemented (namespace "{}")'.format(

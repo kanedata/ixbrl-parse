@@ -86,7 +86,7 @@ def test_context_segments():
 
 def test_nonnumeric():
 
-    a = {"context": {}, "format_": "", "value": ""}
+    a = {"context": {}, "format_": None, "value": "", "ixt": ""}
 
     x = ixbrlNonNumeric(name="value", **a)
     assert x.schema == "unknown"
@@ -108,6 +108,7 @@ def test_nonnumeric_json():
         ),
         "format_": "",
         "value": "",
+        "ixt": "",
     }
 
     x = ixbrlNonNumeric(name="value", **a).to_json()

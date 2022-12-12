@@ -50,6 +50,7 @@ class ixbrlNumeric:
             "decimals": attrs.get("decimals", "0"),
             "scale": attrs.get("scale", 0),
             "sign": attrs.get("sign", ""),
+            "ixt": attrs.get("ixt", ""),
         }
         self.format: Optional[ixbrlFormat] = get_format(format_["format_"])(**format_)
 

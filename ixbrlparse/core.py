@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import IO, Dict, Generator, Iterable, List, Optional, Union
 
@@ -153,6 +154,11 @@ class IXBRLParser(BaseParser):
                         value=s.text.strip().replace("\n", "")
                         if isinstance(s.text, str)
                         else "",
+                        ixt=self.namespaces.get(
+                            f'xmlns:{s.get("format").split(":")[0]}', []
+                        )[0]
+                        if s.get("format") is not None
+                        else None,
                     )
                 )
             except Exception as e:
@@ -174,7 +180,12 @@ class IXBRLParser(BaseParser):
                         text=s.text,
                         context=self.contexts.get(s["contextRef"], s["contextRef"]),
                         unit=self.units.get(s["unitRef"], s["unitRef"]),
-                        **s.attrs
+                        ixt=self.namespaces.get(
+                            f'xmlns:{s.attrs["format"].split(":")[0]}', []
+                        )[0]
+                        if s.get("format") is not None
+                        else "",
+                        **s.attrs,
                     )
                 )
             except Exception as e:
@@ -224,7 +235,12 @@ class XBRLParser(IXBRLParser):
                         text=s.text,
                         context=self.contexts.get(s["contextRef"], s["contextRef"]),
                         unit=self.units.get(s["unitRef"], s["unitRef"]),
-                        **s.attrs
+                        ixt=self.namespaces.get(
+                            f'xmlns:{s.attrs["format"].split(":")[0]}', []
+                        )[0]
+                        if s.get("format") is not None
+                        else "",
+                        **s.attrs,
                     )
                 )
             except Exception as e:
@@ -256,6 +272,11 @@ class XBRLParser(IXBRLParser):
                     value=s.text.strip().replace("\n", "")
                     if isinstance(s.text, str)
                     else "",
+                    ixt=self.namespaces.get(
+                        f'xmlns:{s.get("format").split(":")[0]}', []
+                    )[0]
+                    if s.get("format") is not None
+                    else None,
                 )
             )
 
@@ -293,9 +314,11 @@ class IXBRL:
     def to_json(self) -> Dict:
         return {
             "schema": self.schema,
-            "namespaces": self.namespaces,
-            "contexts": {c: ct.to_json() for c, ct in self.contexts.items()},
-            "units": self.units,
+            "namespaces": [
+                {"namespace": n, "uri": ns} for n, ns in self.namespaces.items()
+            ],
+            "contexts": [ct.to_json() for ct in self.contexts.values()],
+            "units": [{"name": n, "unit": u} for n, u in self.units.items()],
             "nonnumeric": [a.to_json() for a in self.nonnumeric],
             "numeric": [a.to_json() for a in self.numeric],
             "errors": len(self.errors),

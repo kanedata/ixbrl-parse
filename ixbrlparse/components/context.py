@@ -44,6 +44,17 @@ class ixbrlContext:
 
     def to_json(self) -> Dict[str, List[Dict[str, Any]]]:
         values = deepcopy(self.__dict__)
+        if values["segments"]:
+            values["segments"] = [
+                {
+                    "tag": s.get("tag"),
+                    "dimension": s.get("dimension"),
+                    "value": s.get("value"),
+                }
+                for s in values["segments"]
+            ]
+        else:
+            values["segments"] = {"tag": None, "dimension": None, "value": None}
         for i in ["startdate", "enddate", "instant"]:
             if isinstance(values[i], datetime.date):
                 values[i] = str(values[i])

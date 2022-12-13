@@ -1,3 +1,3 @@
-import datetime
+import importlib.metadata
 
-__version__ = datetime.datetime.now().strftime("%Y.%m.%d.%H%M")
+__version__ = importlib.metadata.version("ixbrlparse")

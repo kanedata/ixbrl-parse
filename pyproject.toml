@@ -7,9 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ixbrlparse"
-dynamic = [
-    'version'
-]
+version = "0.5.3"
 authors = [
     { name = "David Kane", email = "david@dkane.net" },
 ]

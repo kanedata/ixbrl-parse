@@ -37,3 +37,7 @@ classifiers = [
 
 [tool.setuptools]
 py-modules = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false

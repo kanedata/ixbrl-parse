@@ -36,5 +36,5 @@ classifiers = [
 "Bug Tracker" = "https://github.com/drkane/ixbrl-parse/issues"
 
 [tool.setuptools.packages.find]
-where = ["ixbrlparse"]
+include = ["ixbrlparse"]
 namespaces = false

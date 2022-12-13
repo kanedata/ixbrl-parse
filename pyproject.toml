@@ -39,5 +39,5 @@ classifiers = [
 py-modules = []
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["ixbrlparse"]
 namespaces = false

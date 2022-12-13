@@ -31,5 +31,6 @@ setup(
         "beautifulsoup4",
         "lxml",
         "word2number",
+        "regex",
     ],
 )

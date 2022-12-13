@@ -1,1 +1,2 @@
-__version__ = "0.5.2"
+import datetime
+__version__ = datetime.datetime.now().strftime('%Y.%m.%d.%H%M')

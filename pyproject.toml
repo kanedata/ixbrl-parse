@@ -1,8 +1,5 @@
 [build-system]
 requires = [
-    "beautifulsoup4",
-    "lxml",
-    "word2number",
     "setuptools",
     "setuptools-scm",
 ]
@@ -19,6 +16,12 @@ authors = [
 description = "A python module for getting useful data out of ixbrl files."
 readme = "README.md"
 requires-python = ">=3.7"
+dependencies = [
+    "beautifulsoup4",
+    "lxml",
+    "word2number",
+    "regex",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3.7",

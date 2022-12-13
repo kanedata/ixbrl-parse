@@ -3,6 +3,8 @@ requires = [
     "beautifulsoup4",
     "lxml",
     "word2number",
+    "setuptools",
+    "setuptools-scm",
 ]
 build-backend = "setuptools.build_meta"
 

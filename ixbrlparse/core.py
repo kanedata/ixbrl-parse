@@ -146,6 +146,8 @@ class IXBRLParser(BaseParser):
                 format_ = s.get("format")
                 if not isinstance(format_, str):
                     format_ = None
+                if s.find("exclude"):
+                    s.find("exclude").extract()
                 self.nonnumeric.append(
                     ixbrlNonNumeric(
                         context=context,

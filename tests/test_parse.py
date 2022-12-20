@@ -20,6 +20,7 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_3.html",
     "tests/test_accounts/account_4.html",
     "tests/test_accounts/account_5.html",
+    "tests/test_accounts/account_6.xhtml",
     "tests/test_accounts/account_errors.html",
     "tests/test_accounts/account_errors_nonnumeric.html",
 ]
@@ -316,6 +317,17 @@ def test_numeric_xml():
     assert x.numeric[0].schema == "unknown"
 
 
+def test_exclude():
+    x = IXBRL.open(TEST_ACCOUNTS[5])
+    value_seen = False
+    for n in x.nonnumeric:
+        if n.name == "BalanceSheetDate":
+            assert n.value == "31 July 2022"
+            value_seen = True
+
+    assert value_seen
+
+
 def test_table_output():
     x = IXBRL.open(TEST_ACCOUNTS[1])
     table = x.to_table("all")
@@ -371,22 +383,22 @@ def test_table_output_nonnumeric():
 
 
 def test_errors_raised():
-    with open(TEST_ACCOUNTS[5]) as a:
+    with open(TEST_ACCOUNTS[6]) as a:
         with pytest.raises(NotImplementedError):
             IXBRL(a)
 
-    with open(TEST_ACCOUNTS[5]) as a:
+    with open(TEST_ACCOUNTS[6]) as a:
         x = IXBRL(a, raise_on_error=False)
         assert isinstance(x.soup, BeautifulSoup)
         assert len(x.errors) == 1
 
 
 def test_errors_raised_nonnumeric():
-    with open(TEST_ACCOUNTS[6]) as a:
+    with open(TEST_ACCOUNTS[7]) as a:
         with pytest.raises(KeyError):
             IXBRL(a)
 
-    with open(TEST_ACCOUNTS[6]) as a:
+    with open(TEST_ACCOUNTS[7]) as a:
         x = IXBRL(a, raise_on_error=False)
         assert isinstance(x.soup, BeautifulSoup)
         assert len(x.errors) == 2
@@ -394,9 +406,9 @@ def test_errors_raised_nonnumeric():
 
 def test_errors_raised_open():
     with pytest.raises(NotImplementedError):
-        IXBRL.open(TEST_ACCOUNTS[5])
+        IXBRL.open(TEST_ACCOUNTS[6])
 
-    x = IXBRL.open(TEST_ACCOUNTS[5], raise_on_error=False)
+    x = IXBRL.open(TEST_ACCOUNTS[6], raise_on_error=False)
     assert isinstance(x.soup, BeautifulSoup)
     assert len(x.errors) == 1
 
@@ -412,8 +424,8 @@ def test_errors_raised_open_xml():
 
 def test_errors_raised_open_nonnumeric():
     with pytest.raises(KeyError):
-        IXBRL.open(TEST_ACCOUNTS[6])
+        IXBRL.open(TEST_ACCOUNTS[7])
 
-    x = IXBRL.open(TEST_ACCOUNTS[6], raise_on_error=False)
+    x = IXBRL.open(TEST_ACCOUNTS[7], raise_on_error=False)
     assert isinstance(x.soup, BeautifulSoup)
     assert len(x.errors) == 2

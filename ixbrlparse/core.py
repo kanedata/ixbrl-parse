@@ -138,6 +138,21 @@ class IXBRLParser(BaseParser):
             if isinstance(s_id, str):
                 self.units[s_id] = self._get_tag_text(s, ["xbrli:measure", "measure"])
 
+    def _get_tag_continuation(
+        self, s: Union[BeautifulSoup, Tag], start_str: str = ""
+    ) -> str:
+        if not isinstance(s, Tag):
+            return start_str
+        start_str += s.text
+        if s.attrs.get("continuedAt"):
+            continuation_tag = self.soup.find(id=s.attrs.get("continuedAt"))
+            if (
+                isinstance(continuation_tag, Tag)
+                and continuation_tag.name == "continuation"
+            ):
+                return self._get_tag_continuation(continuation_tag, start_str)
+        return start_str
+
     def _get_nonnumeric(self) -> None:
         self.nonnumeric = []
         for s in self.soup.find_all({"nonNumeric"}):
@@ -146,15 +161,21 @@ class IXBRLParser(BaseParser):
                 format_ = s.get("format")
                 if not isinstance(format_, str):
                     format_ = None
-                if s.find("exclude"):
-                    s.find("exclude").extract()
+                exclusion = s.find("exclude")
+                if exclusion is not None:
+                    exclusion.extract()
+
+                text = s.text
+                if s.attrs.get("continuedAt"):
+                    text = self._get_tag_continuation(s)
+
                 self.nonnumeric.append(
                     ixbrlNonNumeric(
                         context=context,
                         name=s["name"] if isinstance(s["name"], str) else "",
                         format_=format_,
-                        value=s.text.strip().replace("\n", "")
-                        if isinstance(s.text, str)
+                        value=text.strip().replace("\n", "")
+                        if isinstance(text, str)
                         else "",
                     )
                 )
@@ -252,13 +273,21 @@ class XBRLParser(IXBRLParser):
             format_ = s.get("format")
             if not isinstance(format_, str):
                 format_ = None
+            exclusion = s.find("exclude")
+            if exclusion is not None:
+                exclusion.extract()
+
+            text = s.text
+            if s.attrs.get("continuedAt"):
+                text = self._get_tag_continuation(s)
+
             self.nonnumeric.append(
                 ixbrlNonNumeric(
                     context=context,
                     name=s.name if isinstance(s.name, str) else "",
                     format_=format_,
-                    value=s.text.strip().replace("\n", "")
-                    if isinstance(s.text, str)
+                    value=text.strip().replace("\n", "")
+                    if isinstance(text, str)
                     else "",
                 )
             )

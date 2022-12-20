@@ -273,12 +273,12 @@ def test_numeric():
             and isinstance(n.context, ixbrlContext)
             and n.context.id == "cfwd_31_03_2017"
         ):
-            assert n.format.sign == "-"
+            assert n.format is not None and n.format.sign == "-"
             assert n.value == -17957
             value_seen = True
 
-        if n.format.sign == "-":
-            assert n.value < 0
+        if n.format is not None and n.format.sign == "-":
+            assert n.value is not None and n.value < 0
 
     assert value_seen
 
@@ -296,13 +296,17 @@ def test_numeric_xml():
     for n in x.numeric:
         assert isinstance(n, ixbrlNumeric)
 
-        if n.name == "NumberOrdinarySharesAllotted" and n.context.id == "e2":
-            assert n.format.sign == ""
+        if (
+            n.name == "NumberOrdinarySharesAllotted"
+            and isinstance(n.context, ixbrlContext)
+            and n.context.id == "e2"
+        ):
+            assert n.format is not None and n.format.sign == ""
             assert n.value == 1
             value_seen = True
 
-        if n.format.sign == "-":
-            assert n.value < 0
+        if n.format is not None and n.format.sign == "-":
+            assert n.value is not None and n.value < 0
 
     assert value_seen
 

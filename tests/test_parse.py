@@ -20,6 +20,7 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_3.html",
     "tests/test_accounts/account_4.html",
     "tests/test_accounts/account_5.html",
+    "tests/test_accounts/account_6.xhtml",
     "tests/test_accounts/account_errors.html",
     "tests/test_accounts/account_errors_nonnumeric.html",
 ]
@@ -316,6 +317,31 @@ def test_numeric_xml():
     assert x.numeric[0].schema == "unknown"
 
 
+def test_exclude():
+    x = IXBRL.open(TEST_ACCOUNTS[5])
+    value_seen = False
+    for n in x.nonnumeric:
+        if n.name == "BalanceSheetDate":
+            assert n.value == "31 July 2022"
+            value_seen = True
+
+    assert value_seen
+
+
+def test_continuation():
+    x = IXBRL.open(TEST_ACCOUNTS[5])
+    value_seen = False
+    for n in x.nonnumeric:
+        if n.name == "AccountantsReportOnFinancialStatements":
+            assert (
+                n.value
+                == "This report is made solely to the board of directors of Test Exclude Limited, as a body, in accordance with the terms of our engagement letter dated 18 November 2022. Our work has been undertaken solely to prepare for your approval the financial statements of Test Exclude Limited and state those matters that we have agreed to state to the board of directors of Test Exclude Limited, as a body, in this report in accordance with ICAEW Technical Release 07/16 AAF. To the fullest extent permitted by law, we do not accept or assume responsibility to anyone other than Test Exclude Limited and its board of directors as a body, for our work or for this report."
+            )
+            value_seen = True
+
+    assert value_seen
+
+
 def test_table_output():
     x = IXBRL.open(TEST_ACCOUNTS[1])
     table = x.to_table("all")
@@ -371,22 +397,22 @@ def test_table_output_nonnumeric():
 
 
 def test_errors_raised():
-    with open(TEST_ACCOUNTS[5]) as a:
+    with open(TEST_ACCOUNTS[6]) as a:
         with pytest.raises(NotImplementedError):
             IXBRL(a)
 
-    with open(TEST_ACCOUNTS[5]) as a:
+    with open(TEST_ACCOUNTS[6]) as a:
         x = IXBRL(a, raise_on_error=False)
         assert isinstance(x.soup, BeautifulSoup)
         assert len(x.errors) == 1
 
 
 def test_errors_raised_nonnumeric():
-    with open(TEST_ACCOUNTS[6]) as a:
+    with open(TEST_ACCOUNTS[7]) as a:
         with pytest.raises(KeyError):
             IXBRL(a)
 
-    with open(TEST_ACCOUNTS[6]) as a:
+    with open(TEST_ACCOUNTS[7]) as a:
         x = IXBRL(a, raise_on_error=False)
         assert isinstance(x.soup, BeautifulSoup)
         assert len(x.errors) == 2
@@ -394,9 +420,9 @@ def test_errors_raised_nonnumeric():
 
 def test_errors_raised_open():
     with pytest.raises(NotImplementedError):
-        IXBRL.open(TEST_ACCOUNTS[5])
+        IXBRL.open(TEST_ACCOUNTS[6])
 
-    x = IXBRL.open(TEST_ACCOUNTS[5], raise_on_error=False)
+    x = IXBRL.open(TEST_ACCOUNTS[6], raise_on_error=False)
     assert isinstance(x.soup, BeautifulSoup)
     assert len(x.errors) == 1
 
@@ -412,8 +438,8 @@ def test_errors_raised_open_xml():
 
 def test_errors_raised_open_nonnumeric():
     with pytest.raises(KeyError):
-        IXBRL.open(TEST_ACCOUNTS[6])
+        IXBRL.open(TEST_ACCOUNTS[7])
 
-    x = IXBRL.open(TEST_ACCOUNTS[6], raise_on_error=False)
+    x = IXBRL.open(TEST_ACCOUNTS[7], raise_on_error=False)
     assert isinstance(x.soup, BeautifulSoup)
     assert len(x.errors) == 2

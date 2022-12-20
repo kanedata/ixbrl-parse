@@ -79,8 +79,8 @@ def test_context_segments():
             "enddate": "2011-12-31",
         }
     )
-    assert len(i.segments) == 1
-    assert i.segments[0]["value"] == "2"
+    assert isinstance(i.segments, list) and len(i.segments) == 1
+    assert i.segments is not None and i.segments[0]["value"] == "2"
     assert "with segment" in str(i)
 
 

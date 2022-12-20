@@ -75,8 +75,9 @@ class IXBRLParser(BaseParser):
         self.schema = None
         schema_tag = self.soup.find(["link:schemaRef", "schemaRef"])
         if isinstance(schema_tag, Tag) and schema_tag.get("xlink:href"):
-            if isinstance(schema_tag["xlink:href"], str):
-                self.schema = schema_tag["xlink:href"].strip()
+            schema = schema_tag["xlink:href"]
+            if isinstance(schema, str):
+                self.schema = schema.strip()
 
         self.namespaces = {}
         namespace_tag = self.soup.find(self.root_element)
@@ -101,10 +102,11 @@ class IXBRLParser(BaseParser):
         for s in self._get_context_elements():
             if not s.get("id"):
                 continue
-            if not isinstance(s["id"], str):
+            s_id = s["id"]
+            if not isinstance(s_id, str):
                 continue  # pragma: no cover
-            self.contexts[s["id"]] = ixbrlContext(
-                _id=s["id"],
+            self.contexts[s_id] = ixbrlContext(
+                _id=s_id,
                 entity={
                     "scheme": self._get_tag_attribute(
                         s, ["xbrli:identifier", "identifier"], "scheme"
@@ -132,10 +134,24 @@ class IXBRLParser(BaseParser):
     def _get_units(self) -> None:
         self.units: Dict[str, Optional[str]] = {}
         for s in self._get_unit_elements():
-            if isinstance(s["id"], str):
-                self.units[s["id"]] = self._get_tag_text(
-                    s, ["xbrli:measure", "measure"]
-                )
+            s_id = s.get("id")
+            if isinstance(s_id, str):
+                self.units[s_id] = self._get_tag_text(s, ["xbrli:measure", "measure"])
+
+    def _get_tag_continuation(
+        self, s: Union[BeautifulSoup, Tag], start_str: str = ""
+    ) -> str:
+        if not isinstance(s, Tag):
+            return start_str
+        start_str += s.text
+        if s.attrs.get("continuedAt"):
+            continuation_tag = self.soup.find(id=s.attrs.get("continuedAt"))
+            if (
+                isinstance(continuation_tag, Tag)
+                and continuation_tag.name == "continuation"
+            ):
+                return self._get_tag_continuation(continuation_tag, start_str)
+        return start_str
 
     def _get_nonnumeric(self) -> None:
         self.nonnumeric = []
@@ -145,13 +161,21 @@ class IXBRLParser(BaseParser):
                 format_ = s.get("format")
                 if not isinstance(format_, str):
                     format_ = None
+                exclusion = s.find("exclude")
+                if exclusion is not None:
+                    exclusion.extract()
+
+                text = s.text
+                if s.attrs.get("continuedAt"):
+                    text = self._get_tag_continuation(s)
+
                 self.nonnumeric.append(
                     ixbrlNonNumeric(
                         context=context,
                         name=s["name"] if isinstance(s["name"], str) else "",
                         format_=format_,
-                        value=s.text.strip().replace("\n", "")
-                        if isinstance(s.text, str)
+                        value=text.strip().replace("\n", "")
+                        if isinstance(text, str)
                         else "",
                     )
                 )
@@ -213,17 +237,17 @@ class XBRLParser(IXBRLParser):
         for s in self._get_elements():
             if not s.get("contextRef") or not s.get("unitRef"):
                 continue
-            if not isinstance(s["contextRef"], str) or not isinstance(
-                s["unitRef"], str
-            ):
+            context_ref = s["contextRef"]
+            unit_ref = s["unitRef"]
+            if not isinstance(context_ref, str) or not isinstance(unit_ref, str):
                 continue  # pragma: no cover
             try:
                 self.numeric.append(
                     ixbrlNumeric(
                         name=s.name,
                         text=s.text,
-                        context=self.contexts.get(s["contextRef"], s["contextRef"]),
-                        unit=self.units.get(s["unitRef"], s["unitRef"]),
+                        context=self.contexts.get(context_ref, context_ref),
+                        unit=self.units.get(unit_ref, unit_ref),
                         **s.attrs
                     )
                 )
@@ -242,19 +266,28 @@ class XBRLParser(IXBRLParser):
         for s in self._get_elements():
             if not s.get("contextRef") or s.get("unitRef"):
                 continue
-            if not isinstance(s["contextRef"], str):
+            context_ref = s["contextRef"]
+            if not isinstance(context_ref, str):
                 continue  # pragma: no cover
-            context = self.contexts.get(s["contextRef"], s["contextRef"])
+            context = self.contexts.get(context_ref, context_ref)
             format_ = s.get("format")
             if not isinstance(format_, str):
                 format_ = None
+            exclusion = s.find("exclude")
+            if exclusion is not None:
+                exclusion.extract()
+
+            text = s.text
+            if s.attrs.get("continuedAt"):
+                text = self._get_tag_continuation(s)
+
             self.nonnumeric.append(
                 ixbrlNonNumeric(
                     context=context,
                     name=s.name if isinstance(s.name, str) else "",
                     format_=format_,
-                    value=s.text.strip().replace("\n", "")
-                    if isinstance(s.text, str)
+                    value=text.strip().replace("\n", "")
+                    if isinstance(text, str)
                     else "",
                 )
             )

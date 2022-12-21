@@ -13,7 +13,7 @@ class ixbrlNonNumeric:
         name: str,
         format_: Optional[str],
         value: str,
-        ixt: str,
+        ixt: Optional[str],
     ) -> None:
 
         name_split: List[str] = name.split(":", maxsplit=1)
@@ -23,22 +23,25 @@ class ixbrlNonNumeric:
         else:
             self.schema = "unknown"
             self.name = name_split[0]
-        self.text: Union[str, int, float] = value
+
+        self.text: value
         self.context = context
         self.format = format_
         self.value = value
 
         format_ = {
-            "format_": format_,
+            "format_": self.format,
+            "numeric": False,
             "decimals": None,
-            "scale": 1,
+            "scale": None,
             "sign": None,
             "ixt": ixt,
         }
         self.format: Optional[ixbrlFormat] = get_format(format_["format_"])(**format_)
 
         try:
-            self.value = self.format.parse_value(self.value)
+            if isinstance(self.format, ixbrlFormat):
+                self.value = self.format.parse_value(self.text)
         except ValueError:
             print(value)
             raise

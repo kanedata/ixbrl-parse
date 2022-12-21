@@ -7,6 +7,7 @@ from .functionixt import ixtNamespaceFunctions
 class ixbrlFormat:
     def __init__(
         self,
+        numeric: bool,
         format_: str,
         decimals: Optional[Union[int, str]],
         scale: Union[int, str] = 1,
@@ -20,6 +21,7 @@ class ixbrlFormat:
             else:
                 self.decimals = int(decimals)
 
+        self.numeric = numeric
         self.format: Optional[str] = None
         self.namespace: Optional[str] = None
         if format_:
@@ -31,7 +33,8 @@ class ixbrlFormat:
                 self.format = ":".join(format_array)
                 self.namespace = None
 
-        self.scale = int(scale)
+        if self.numeric:
+            self.scale = int(scale)
         self.sign = sign
         self.ixt = ixt
 
@@ -40,9 +43,12 @@ class ixbrlFormat:
 
     def parse_value(
         self, value: Union[str, int, float]
-    ) -> Optional[Union[int, float, bool, str]]:
+    ) -> Optional[Union[int, float, bool]]:
 
-        if isinstance(value, (int, float, str)):
+        if not self.numeric:
+            return value
+
+        if isinstance(value, (int, float)):
             return value
 
         if isinstance(value, str):
@@ -60,34 +66,6 @@ class ixbrlFormat:
             return value_numeric
 
 
-class ixtZeroDash(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> Union[int, float]:
-        return 0
-
-
-class ixtNoContent(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> None:
-        return None
-
-
-class ixtFixedFalse(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> bool:
-        return False
-
-
-class ixtFixedTrue(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> bool:
-        return True
-
-
-class ixtNumComma(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
-        if isinstance(value, str):
-            value = value.replace(".", "")
-            value = value.replace(",", ".")
-        return super().parse_value(value)
-
-
 class ixtNumWordsEn(ixbrlFormat):
     def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
         if isinstance(value, str):
@@ -101,8 +79,10 @@ class ixtNumWordsEn(ixbrlFormat):
 
 
 class ixtWrapper(ixbrlFormat):
-    def parse_value(self, value):
-        return ixtNamespaceFunctions[self.ixt][self.format](value)
+    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[str, int, float]]:
+        if isinstance(value, str):
+            value = ixtNamespaceFunctions[self.ixt][self.format](value)
+        return super().parse_value(value)
 
 
 def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
@@ -122,7 +102,7 @@ def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
 
     format_ = format_.replace("-", "")
 
-    if format_ == "numwordsen":
+    if format_ in ("numwordsen"):
         return ixtNumWordsEn
     elif format_:
         return ixtWrapper

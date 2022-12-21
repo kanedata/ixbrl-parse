@@ -47,6 +47,7 @@ class ixbrlNumeric:
 
         format_ = {
             "format_": attrs.get("format"),
+            "numeric": True,
             "decimals": attrs.get("decimals", "0"),
             "scale": attrs.get("scale", 0),
             "sign": attrs.get("sign", ""),

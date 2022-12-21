@@ -24,7 +24,7 @@ class ixbrlNonNumeric:
             self.schema = "unknown"
             self.name = name_split[0]
 
-        self.text: value
+        self.text = value
         self.context = context
         self.format = format_
         self.value = value

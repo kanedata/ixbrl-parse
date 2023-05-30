@@ -1,12 +1,13 @@
 from copy import deepcopy
 from typing import Dict, Optional, Union
 
+from bs4 import Tag
+
 from .context import ixbrlContext
 from .transform import get_format, ixbrlFormat
 
 
 class ixbrlNumeric:
-
     # contextref
     # decimals
     # format
@@ -18,6 +19,7 @@ class ixbrlNumeric:
     # xmlns:ix
     def __init__(
         self,
+        soup_tag: Optional[Tag] = None,
         name: Optional[str] = None,
         unit: Optional[str] = None,
         value: Optional[Union[str, int, float]] = None,
@@ -44,6 +46,7 @@ class ixbrlNumeric:
         self.context: Union[ixbrlContext, str, None] = context
         self.unit: Optional[str] = unit
         self.value: Optional[Union[int, float]] = None
+        self.soup_tag = soup_tag
 
         format_ = {
             "format_": attrs.get("format"),
@@ -61,7 +64,7 @@ class ixbrlNumeric:
             raise
 
     def to_json(self) -> Dict:
-        values = deepcopy(self.__dict__)
+        values = {k: deepcopy(v) for k, v in self.__dict__.items() if k != "soup_tag"}
         if isinstance(self.format, ixbrlFormat):
             values["format"] = self.format.to_json()
         if isinstance(self.context, ixbrlContext):

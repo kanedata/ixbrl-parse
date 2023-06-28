@@ -3,7 +3,7 @@ import json
 from datetime import date
 
 import pytest
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from ixbrlparse import IXBRL
 from ixbrlparse.core import (
@@ -243,7 +243,7 @@ def test_nonnumeric():
             assert n.value == "03456789"
             assert isinstance(n.context, ixbrlContext)
             value_seen = True
-    assert x.nonnumeric[0].soup_tag is not None
+    assert isinstance(x.nonnumeric[0].soup_tag, Tag)
     assert value_seen
 
 
@@ -288,7 +288,7 @@ def test_numeric():
     assert x.numeric[0].value == 52982
     assert x.numeric[0].name == "PropertyPlantEquipment"
     assert x.numeric[0].schema == "ns5"
-    assert x.nonnumeric[0].soup_tag is not None
+    assert isinstance(x.nonnumeric[0].soup_tag, Tag)
 
 
 def test_numeric_xml():
@@ -317,7 +317,7 @@ def test_numeric_xml():
     assert x.numeric[0].value == 1
     assert x.numeric[0].name == "CashBankInHand"
     assert x.numeric[0].schema == "unknown"
-    assert x.nonnumeric[0].soup_tag is not None
+    assert isinstance(x.nonnumeric[0].soup_tag, Tag)
 
 
 def test_exclude():

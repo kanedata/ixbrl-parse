@@ -1,7 +1,7 @@
 import datetime
 import re
 import warnings
-from typing import Optional, Type, Union
+from typing import Optional, Tuple, Type, Union
 
 from ixbrlparse.components._base import ixbrlFormat
 from ixbrlparse.hookspecs import hookimpl
@@ -118,7 +118,7 @@ DATE_ORDINAL_SUFFIX_REGEX = re.compile(r"([0-9]{1,2})(st|nd|rd|th)\b")
 
 
 class ixtDateFormat(ixbrlFormat):  # noqa: N801
-    format_names = ()
+    format_names: Tuple[str, ...] = ()
     date_format = "%Y-%m-%d"
 
     def parse_value(self, value: Union[str, int, float]) -> Optional[datetime.date]:

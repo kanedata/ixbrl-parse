@@ -1,6 +1,6 @@
 from copy import deepcopy
 from datetime import date
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union
 
 
 class ixbrlFormat:  # noqa: N801
@@ -11,7 +11,7 @@ class ixbrlFormat:  # noqa: N801
     Attributes:
         format_names: A tuple of format names that this class should be used for."""
 
-    format_names: tuple[str, ...] = ()
+    format_names: Tuple[str, ...] = ()
 
     def __init__(
         self,

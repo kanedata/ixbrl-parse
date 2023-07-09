@@ -10,6 +10,8 @@ A python module for getting useful data out of ixbrl files. The library is at an
 
 ## Changelog
 
+**New in version 0.6.0**: Switch to use the [hatch](https://hatch.pypa.io/latest/) build and development system.
+
 **New in version 0.5.4**: Added backreferences to BeautifulSoup objects - thanks to @avyfain for PR.
 
 **New in version 0.5.3**: Support for `exclude` and `continuation` elements within XBRL documents. Thanks to @wcollinscw for adding support for exclude elements.

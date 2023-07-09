@@ -27,6 +27,7 @@ dependencies = [
     "beautifulsoup4",
     "lxml",
     "word2number",
+    "pluggy",
 ]
 
 [project.urls]

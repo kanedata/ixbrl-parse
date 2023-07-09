@@ -2,6 +2,7 @@ import csv
 import json
 import logging
 import sys
+from datetime import date
 from typing import Any, Dict
 
 import click
@@ -44,6 +45,8 @@ def ixbrlparse_cli(output_format: str, fields: str, outfile, infile):
     elif output_format in ["jsonlines", "jsonl"]:
         values = x.to_table(fields)
         for v in values:
+            if isinstance(v["value"], date):
+                v["value"] = str(v["value"])
             json.dump(v, outfile)
             outfile.write("\n")
     elif output_format == "json":

@@ -312,7 +312,7 @@ def test_exclude():
     value_seen = False
     for n in x.nonnumeric:
         if n.name == "BalanceSheetDate":
-            assert n.value == "31 July 2022"
+            assert n.value == date(2022, 7, 31)
             value_seen = True
 
     assert value_seen

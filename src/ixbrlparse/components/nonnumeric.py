@@ -1,7 +1,7 @@
 import warnings
 from copy import deepcopy
 from datetime import date
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from bs4 import Tag
 
@@ -13,7 +13,7 @@ from ixbrlparse.components.transform import get_format, ixbrlFormat
 class ixbrlNonNumeric:  # noqa: N801
     def __init__(
         self,
-        context: Optional[ixbrlContext | str] = None,
+        context: Optional[Union[ixbrlContext, str]] = None,
         name: Optional[str] = None,
         format_: Optional[str] = None,
         value: Optional[str] = None,

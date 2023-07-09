@@ -1,5 +1,7 @@
 # Changelog
 
+**New in version 0.7.1**: Allow for case-insensitive schema tags
+
 **New in version 0.7.0**: Add plugin support. Add documentation
 
 **New in version 0.6.0**: Switch to use the [hatch](https://hatch.pypa.io/latest/) build and development system.

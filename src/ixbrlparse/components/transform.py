@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import List, Optional, Type, Union
 
 
-class ixbrlFormat:
+class ixbrlFormat:  # noqa: N801
     def __init__(
         self,
         format_: str,
@@ -10,7 +10,6 @@ class ixbrlFormat:
         scale: Union[int, str] = 1,
         sign: Optional[str] = None,
     ) -> None:
-
         if isinstance(decimals, str):
             if decimals.lower() == "inf":
                 self.decimals = None
@@ -34,10 +33,7 @@ class ixbrlFormat:
     def to_json(self):
         return deepcopy(self.__dict__)
 
-    def parse_value(
-        self, value: Union[str, int, float]
-    ) -> Optional[Union[int, float, bool]]:
-
+    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float, bool]]:
         if isinstance(value, (int, float)):
             return value
 
@@ -56,27 +52,27 @@ class ixbrlFormat:
             return value_numeric
 
 
-class ixtZeroDash(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> Union[int, float]:
+class ixtZeroDash(ixbrlFormat):  # noqa: N801
+    def parse_value(self, *_args, **_kwargs) -> Union[int, float]:
         return 0
 
 
-class ixtNoContent(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> None:
+class ixtNoContent(ixbrlFormat):  # noqa: N801
+    def parse_value(self, *_args, **_kwargs) -> None:
         return None
 
 
-class ixtFixedFalse(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> bool:
+class ixtFixedFalse(ixbrlFormat):  # noqa: N801
+    def parse_value(self, *_args, **_kwargs) -> bool:
         return False
 
 
-class ixtFixedTrue(ixbrlFormat):
-    def parse_value(self, value: Union[str, int, float]) -> bool:
+class ixtFixedTrue(ixbrlFormat):  # noqa: N801
+    def parse_value(self, *_args, **_kwargs) -> bool:
         return True
 
 
-class ixtNumComma(ixbrlFormat):
+class ixtNumComma(ixbrlFormat):  # noqa: N801
     def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
         if isinstance(value, str):
             value = value.replace(".", "")
@@ -84,7 +80,7 @@ class ixtNumComma(ixbrlFormat):
         return super().parse_value(value)
 
 
-class ixtNumWordsEn(ixbrlFormat):
+class ixtNumWordsEn(ixbrlFormat):  # noqa: N801
     def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
         if isinstance(value, str):
             value = value.lower()
@@ -97,7 +93,6 @@ class ixtNumWordsEn(ixbrlFormat):
 
 
 def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
-
     if not isinstance(format_, str):
         return ixbrlFormat
 
@@ -134,9 +129,8 @@ def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
     if format_ in ("numwordsen"):
         return ixtNumWordsEn
 
-    raise NotImplementedError(
-        'Format "{}" not implemented (namespace "{}")'.format(
-            original_format,
-            namespace,
-        )
+    msg = 'Format "{}" not implemented (namespace "{}")'.format(
+        original_format,
+        namespace,
     )
+    raise NotImplementedError(msg)

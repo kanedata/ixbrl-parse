@@ -1,9 +1,0 @@
--r requirements.txt
-pytest
-flake8
-isort
-coverage
-black
-twine
-mypy
-types-beautifulsoup4

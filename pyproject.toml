@@ -1,0 +1,187 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ixbrlparse"
+dynamic = ["version"]
+description = "A python module for getting useful data out of ixbrl files."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    { name = "David Kane", email = "david@dkane.net" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "click",
+    "beautifulsoup4",
+    "lxml",
+    "word2number",
+]
+
+[project.urls]
+Homepage = "https://github.com/drkane/ixbrl-parse"
+Documentation = "https://github.com/drkane/ixbrl-parse#readme"
+Issues = "https://github.com/drkane/ixbrl-parse/issues"
+Source = "https://github.com/drkane/ixbrl-parse"
+
+[project.scripts]
+ixbrlparse = "ixbrlparse.cli:ixbrlparse"
+
+[tool.hatch.version]
+path = "src/ixbrlparse/__about__.py"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "coverage[toml]>=6.5",
+  "pytest",
+]
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov = [
+  "test-cov",
+  "cov-report",
+]
+cov-fail = [
+  "test-cov",
+  "- coverage combine",
+  "coverage report --fail-under=95",
+]
+cov-html = [
+  "test-cov",
+  "- coverage combine",
+  "coverage report",
+  "coverage html",
+  "python -m http.server -d htmlcov",
+]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11"]
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+  "black>=23.1.0",
+  "mypy>=1.0.0",
+  "ruff>=0.0.243",
+  "types-beautifulsoup4",
+]
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/ixbrlparse tests}"
+style = [
+  "ruff {args:.}",
+  "black --check --diff {args:.}",
+]
+fmt = [
+  "black {args:.}",
+  "ruff --fix {args:.}",
+  "style",
+]
+all = [
+  "style",
+  "typing",
+]
+
+[tool.mypy]
+ignore_missing_imports = true
+mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs/"
+files="./stubs/**.*"
+
+[tool.black]
+target-version = ["py37"]
+line-length = 120
+skip-string-normalization = true
+
+[tool.ruff]
+target-version = "py37"
+line-length = 120
+select = [
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105", "S106", "S107",
+  # Ignore complexity
+  "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
+
+[tool.ruff.isort]
+known-first-party = ["ixbrlparse"]
+
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.coverage.run]
+source_pkgs = ["ixbrlparse", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/ixbrlparse/__about__.py",
+]
+
+[tool.coverage.paths]
+ixbrlparse = ["src/ixbrlparse", "*/ixbrlparse/src/ixbrlparse"]
+tests = ["tests", "*/ixbrlparse/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/ixbrlparse",
+]

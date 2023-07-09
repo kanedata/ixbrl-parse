@@ -27,11 +27,12 @@ dependencies = [
     "beautifulsoup4",
     "lxml",
     "word2number",
+    "pluggy",
 ]
 
 [project.urls]
 Homepage = "https://github.com/drkane/ixbrl-parse"
-Documentation = "https://github.com/drkane/ixbrl-parse#readme"
+Documentation = "https://dkane.net/ixbrl-parse/"
 Issues = "https://github.com/drkane/ixbrl-parse/issues"
 Source = "https://github.com/drkane/ixbrl-parse"
 
@@ -72,6 +73,17 @@ cov-html = [
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.8", "3.9", "3.10", "3.11"]
+
+[tool.hatch.envs.docs]
+dependencies = [
+  "mkdocs",
+  "mkdocs-material",
+  "mkdocstrings[python]",
+]
+[tool.hatch.envs.docs.scripts]
+serve = "mkdocs serve"
+build = "mkdocs build"
+deploy = "mkdocs gh-deploy --force"
 
 [tool.hatch.envs.lint]
 detached = true

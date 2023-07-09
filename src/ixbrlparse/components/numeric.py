@@ -61,7 +61,9 @@ class ixbrlNumeric:  # noqa: N801
 
         try:
             if isinstance(self.format, ixbrlFormat):
-                self.value = self.format.parse_value(self.text)
+                parsed_value = self.format.parse_value(self.text)
+                if isinstance(parsed_value, (int, float)):
+                    self.value = parsed_value
         except ValueError:
             logging.info(attrs)
             raise

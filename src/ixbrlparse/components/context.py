@@ -4,6 +4,18 @@ from typing import Any, Dict, List, Optional
 
 
 class ixbrlContext:  # noqa: N801
+    """Class to represent an ixbrl context.
+
+    The context should either have an instant date or a start and end date.
+
+    Attributes:
+        id: The id of the context.
+        entity: A dictionary of the entity information.
+        segments: A list of dictionaries of the segment information.
+        instant: The instant date of the context.
+        startdate: The start date of the context.
+        enddate: The end date of the context."""
+
     def __init__(
         self,
         _id: str,
@@ -37,6 +49,7 @@ class ixbrlContext:  # noqa: N801
         return f"<IXBRLContext {self.id} [{datestr}]{segmentstr}>"
 
     def to_json(self) -> Dict[str, List[Dict[str, Any]]]:
+        """Convert the object to a JSON serialisable dictionary."""
         values = deepcopy(self.__dict__)
         for i in ["startdate", "enddate", "instant"]:
             if isinstance(values[i], datetime.date):

@@ -1,0 +1,27 @@
+site_name: ixbrlParse
+repo_url: https://github.com/drkane/ixbrl-parse
+site_description: A python module for getting useful data out of ixbrl files.
+site_author: David Kane
+theme:
+  name: material
+  features:
+  # - navigation.tabs
+  - navigation.sections
+nav:
+  - index.md
+  - changelog.md
+  - 'Usage':
+    - 'command-line.md'
+    - 'python-module.md'
+  - 'Development':
+    - 'development.md'
+    - 'plugins.md'
+  - reference.md
+plugins:
+- mkdocstrings:
+    enabled: true
+    default_handler: python
+    handlers:
+      python:
+        options:
+          heading_level: 3

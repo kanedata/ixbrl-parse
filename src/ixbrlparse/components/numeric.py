@@ -1,13 +1,15 @@
+import logging
 from copy import deepcopy
 from typing import Dict, Optional, Union
 
 from bs4 import Tag
 
-from .context import ixbrlContext
-from .transform import get_format, ixbrlFormat
+from ixbrlparse.components.constants import NAME_SPLIT_EXPECTED
+from ixbrlparse.components.context import ixbrlContext
+from ixbrlparse.components.transform import get_format, ixbrlFormat
 
 
-class ixbrlNumeric:
+class ixbrlNumeric:  # noqa: N801
     # contextref
     # decimals
     # format
@@ -31,7 +33,7 @@ class ixbrlNumeric:
         self.schema: str = "unknown"
         if isinstance(name, str):
             name_value = name.split(":", maxsplit=1)
-            if len(name_value) == 2:
+            if len(name_value) == NAME_SPLIT_EXPECTED:
                 self.schema = name_value[0]
                 self.name = name_value[1]
             else:
@@ -41,7 +43,8 @@ class ixbrlNumeric:
         if not isinstance(value, (str, int, float)):
             value = text
         if not isinstance(value, (str, int, float)):
-            raise ValueError("Must provide either value or text")
+            msg = "Must provide either value or text"
+            raise ValueError(msg)
         self.text: Union[str, int, float] = value
         self.context: Union[ixbrlContext, str, None] = context
         self.unit: Optional[str] = unit
@@ -60,7 +63,7 @@ class ixbrlNumeric:
             if isinstance(self.format, ixbrlFormat):
                 self.value = self.format.parse_value(self.text)
         except ValueError:
-            print(attrs)
+            logging.info(attrs)
             raise
 
     def to_json(self) -> Dict:

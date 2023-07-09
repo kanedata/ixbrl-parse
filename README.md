@@ -8,6 +8,10 @@
 
 A python module for getting useful data out of ixbrl files. The library is at an early stage - feedback and improvements are very welcome.
 
+## Changelog
+
+**New in version 0.6.0**: Switch to use the [hatch](https://hatch.pypa.io/latest/) build and development system.
+
 **New in version 0.5.4**: Added backreferences to BeautifulSoup objects - thanks to @avyfain for PR.
 
 **New in version 0.5.3**: Support for `exclude` and `continuation` elements within XBRL documents. Thanks to @wcollinscw for adding support for exclude elements.
@@ -38,6 +42,8 @@ pip install ixbrlparse
 You can run the module directly to extract data from an IXBRL file.
 
 ```bash
+ixbrlparse example_file.html
+# or
 python -m ixbrlparse example_file.html
 ```
 
@@ -155,65 +161,66 @@ thrown as normal no matter what `raise_on_error` is set to.
 
 ## Code checks
 
+The module is setup for development using [hatch](https://hatch.pypa.io/latest/).
+
 ### Run tests
 
 Tests can be run with `pytest`:
 
 ```bash
-pip install -e . # install the package
-pytest tests
+hatch run test
 ```
 
 ### Test coverage
 
+Run tests then report on coverage
+
 ```bash
-coverage run -m pytest tests
-coverage html
-python -m http.server -d htmlcov
+hatch run cov
+```
+
+Run tests then run a server showing where coverage is missing
+
+```bash
+hatch run cov-html
 ```
 
 ### Run typing checks
 
 ```bash
-mypy ixbrlparse tests
+hatch run lint:typing
 ```
 
 ### Linting
 
-Black and isort should be run before committing any changes.
+Black and ruff should be run before committing any changes.
+
+To check for any changes needed:
 
 ```bash
-isort ixbrlparse tests
-black ixbrlparse tests
+hatch run lint:style
+```
+
+To run any autoformatting possible:
+
+```sh
+hatch run lint:fmt
 ```
 
 ### Run all checks at once
 
 ```sh
-black . && isort . && mypy ixbrlparse tests && coverage run -m pytest tests && coverage html --fail-under=100
+hatch run lint:all
 ```
 
 ## Publish to pypi
 
 ```bash
-python -m build
-twine upload dist/*
+hatch build
+hatch publish
 git tag v<VERSION_NUMBER>
 git push origin v<VERSION_NUMBER>
 ```
-
-## Install development version
-
-The development requirements are installed using `pip install -r dev-requirements.txt`.
-
-Any additional requirements for the module itself must be added to
-`install_requires` in `setup.py`. You should then generate a new 
-`requirements.txt` using using [`pip-tools`](https://github.com/jazzband/pip-tools) (`pip-compile`). You can then run `pip-sync` to install the 
-requirement.
-
-Any additional development requirements must be added to `dev-requirements.in`
-and then the `dev-requirements.txt` should be generated using `pip-compile dev-requirements.in`. You can then install the development requirements using
-`pip-sync dev-requirements.txt`.
 
 ## Acknowledgements
 

@@ -22,21 +22,17 @@ class BaseParser:
             attribute_value = tag_contents.get(attribute)
             if isinstance(attribute_value, str):
                 return attribute_value.strip()
-        return None
+        return None  # pragma: no cover
 
-    def _get_tag_text(
-        self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]
-    ) -> Optional[str]:
+    def _get_tag_text(self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]) -> Optional[str]:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
             text_value = tag_contents.text
             if isinstance(text_value, str):
                 return text_value.strip()
-        return None
+        return None  # pragma: no cover
 
-    def _get_tag_children(
-        self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]
-    ) -> Iterable[Tag]:
+    def _get_tag_children(self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]) -> Iterable[Tag]:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
             return tag_contents.findChildren()
@@ -61,7 +57,7 @@ class BaseParser:
 class IXBRLParser(BaseParser):
     root_element: str = "html"
 
-    def __init__(self, soup: BeautifulSoup, raise_on_error: bool = True) -> None:
+    def __init__(self, soup: BeautifulSoup, raise_on_error: bool = True) -> None:  # noqa: FBT001, FBT002
         self.soup = soup
         self.raise_on_error = raise_on_error
         self.errors: List = []
@@ -108,12 +104,8 @@ class IXBRLParser(BaseParser):
             self.contexts[s_id] = ixbrlContext(
                 _id=s_id,
                 entity={
-                    "scheme": self._get_tag_attribute(
-                        s, ["xbrli:identifier", "identifier"], "scheme"
-                    ),
-                    "identifier": self._get_tag_text(
-                        s, ["xbrli:identifier", "identifier"]
-                    ),
+                    "scheme": self._get_tag_attribute(s, ["xbrli:identifier", "identifier"], "scheme"),
+                    "identifier": self._get_tag_text(s, ["xbrli:identifier", "identifier"]),
                 },
                 segments=[
                     {"tag": x.name, "value": x.text.strip(), **x.attrs}
@@ -138,18 +130,13 @@ class IXBRLParser(BaseParser):
             if isinstance(s_id, str):
                 self.units[s_id] = self._get_tag_text(s, ["xbrli:measure", "measure"])
 
-    def _get_tag_continuation(
-        self, s: Union[BeautifulSoup, Tag], start_str: str = ""
-    ) -> str:
+    def _get_tag_continuation(self, s: Union[BeautifulSoup, Tag], start_str: str = "") -> str:
         if not isinstance(s, Tag):
             return start_str
         start_str += s.text
         if s.attrs.get("continuedAt"):
             continuation_tag = self.soup.find(id=s.attrs.get("continuedAt"))
-            if (
-                isinstance(continuation_tag, Tag)
-                and continuation_tag.name == "continuation"
-            ):
+            if isinstance(continuation_tag, Tag) and continuation_tag.name == "continuation":
                 return self._get_tag_continuation(continuation_tag, start_str)
         return start_str
 
@@ -174,9 +161,7 @@ class IXBRLParser(BaseParser):
                         context=context,
                         name=s["name"] if isinstance(s["name"], str) else "",
                         format_=format_,
-                        value=text.strip().replace("\n", "")
-                        if isinstance(text, str)
-                        else "",
+                        value=text.strip().replace("\n", "") if isinstance(text, str) else "",
                         soup_tag=s,
                     )
                 )
@@ -200,7 +185,7 @@ class IXBRLParser(BaseParser):
                         context=self.contexts.get(s["contextRef"], s["contextRef"]),
                         unit=self.units.get(s["unitRef"], s["unitRef"]),
                         soup_tag=s,
-                        **s.attrs
+                        **s.attrs,
                     )
                 )
             except Exception as e:
@@ -251,7 +236,7 @@ class XBRLParser(IXBRLParser):
                         context=self.contexts.get(context_ref, context_ref),
                         unit=self.units.get(unit_ref, unit_ref),
                         soup_tag=s,
-                        **s.attrs
+                        **s.attrs,
                     )
                 )
             except Exception as e:
@@ -276,29 +261,22 @@ class XBRLParser(IXBRLParser):
             format_ = s.get("format")
             if not isinstance(format_, str):
                 format_ = None
-            exclusion = s.find("exclude")
-            if exclusion is not None:
-                exclusion.extract()
 
             text = s.text
-            if s.attrs.get("continuedAt"):
-                text = self._get_tag_continuation(s)
 
             self.nonnumeric.append(
                 ixbrlNonNumeric(
                     context=context,
                     name=s.name if isinstance(s.name, str) else "",
                     format_=format_,
-                    value=text.strip().replace("\n", "")
-                    if isinstance(text, str)
-                    else "",
+                    value=text.strip().replace("\n", "") if isinstance(text, str) else "",
                     soup_tag=s,
                 )
             )
 
 
 class IXBRL:
-    def __init__(self, f: IO, raise_on_error: bool = True) -> None:
+    def __init__(self, f: IO, raise_on_error: bool = True) -> None:  # noqa: FBT001, FBT002
         self.soup = BeautifulSoup(f.read(), "xml", multi_valued_attributes=None)
         self.raise_on_error = raise_on_error
         self._get_parser()
@@ -309,7 +287,7 @@ class IXBRL:
         self.parser._get_numeric()
 
     @classmethod
-    def open(cls, filename: Union[str, Path], raise_on_error: bool = True):
+    def open(cls, filename: Union[str, Path], raise_on_error: bool = True):  # noqa: FBT001, FBT002, A003
         with open(filename, "rb") as a:
             return cls(a, raise_on_error=raise_on_error)
 
@@ -321,7 +299,8 @@ class IXBRL:
             self.filetype = FILETYPE_XBRL
             parser = XBRLParser
         else:
-            raise IXBRLParseError("Filetype not recognised")
+            msg = "Filetype not recognised"
+            raise IXBRLParseError(msg)
         self.parser: BaseParser = parser(self.soup, raise_on_error=self.raise_on_error)
 
     def __getattr__(self, name: str):
@@ -350,9 +329,7 @@ class IXBRL:
         for v in values:
             if isinstance(v.context, ixbrlContext) and v.context.segments:
                 segments = {
-                    "segment:{}".format(i): "{} {} {}".format(
-                        s.get("tag", ""), s.get("dimension"), s.get("value")
-                    ).strip()
+                    f"segment:{i}": "{} {} {}".format(s.get("tag", ""), s.get("dimension"), s.get("value")).strip()
                     for i, s in enumerate(v.context.segments)
                 }
             else:
@@ -360,9 +337,7 @@ class IXBRL:
 
             ret.append(
                 {
-                    "schema": " ".join(
-                        self.namespaces.get("xmlns:{}".format(v.schema), [v.schema])
-                    ),
+                    "schema": " ".join(self.namespaces.get(f"xmlns:{v.schema}", [v.schema])),
                     "name": v.name,
                     "value": v.value,
                     "unit": v.unit if hasattr(v, "unit") else None,

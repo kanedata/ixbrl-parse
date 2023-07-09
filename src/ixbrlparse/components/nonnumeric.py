@@ -4,9 +4,10 @@ from typing import Any, Dict, List, Optional, Union
 from bs4 import Tag
 
 from ixbrlparse.components import ixbrlContext
+from ixbrlparse.components.constants import NAME_SPLIT_EXPECTED
 
 
-class ixbrlNonNumeric:
+class ixbrlNonNumeric:  # noqa: N801
     def __init__(
         self,
         context: Union[ixbrlContext, str, None],
@@ -16,7 +17,7 @@ class ixbrlNonNumeric:
         soup_tag: Optional[Tag] = None,
     ) -> None:
         name_split: List[str] = name.split(":", maxsplit=1)
-        if len(name_split) == 2:
+        if len(name_split) == NAME_SPLIT_EXPECTED:
             self.schema = name_split[0]
             self.name = name_split[1]
         else:

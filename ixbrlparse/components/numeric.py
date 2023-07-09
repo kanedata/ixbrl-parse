@@ -19,12 +19,12 @@ class ixbrlNumeric:
     # xmlns:ix
     def __init__(
         self,
-        soup_tag: Optional[Tag] = None,
         name: Optional[str] = None,
         unit: Optional[str] = None,
         value: Optional[Union[str, int, float]] = None,
         text: Optional[Union[str, int, float]] = None,
         context: Union[ixbrlContext, str, None] = None,
+        soup_tag: Optional[Tag] = None,
         **attrs,
     ) -> None:
         self.name: Optional[str] = name

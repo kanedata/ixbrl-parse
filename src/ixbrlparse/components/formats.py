@@ -1,7 +1,7 @@
 import datetime
 import re
 import warnings
-from typing import Optional, Tuple, Type, Union
+from typing import List, Optional, Tuple, Type, Union
 
 from ixbrlparse.components._base import ixbrlFormat
 from ixbrlparse.hookspecs import hookimpl
@@ -151,7 +151,7 @@ class ixtDateDayMonthYear(ixtDateFormat):  # noqa: N801
 
 
 @hookimpl
-def ixbrl_add_formats() -> list[Type[ixbrlFormat]]:
+def ixbrl_add_formats() -> List[Type[ixbrlFormat]]:
     return [
         ixtZeroDash,
         ixtNoContent,

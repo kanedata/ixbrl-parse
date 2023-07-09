@@ -1,4 +1,4 @@
-from typing import Type
+from typing import List, Type
 
 import pluggy
 
@@ -9,9 +9,9 @@ hookspec = pluggy.HookspecMarker("ixbrlparse")
 
 
 @hookspec
-def ixbrl_add_formats() -> list[Type[ixbrlFormat]]:  # type: ignore
+def ixbrl_add_formats() -> List[Type[ixbrlFormat]]:  # type: ignore
     """Add new formats to the ixbrlparse library.
 
     Returns:
-        list[[ixbrlFormat]]: A list of ixbrlFormat classes.
+        List[[ixbrlFormat]]: A list of ixbrlFormat classes.
     """

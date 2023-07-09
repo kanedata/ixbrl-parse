@@ -276,7 +276,17 @@ class XBRLParser(IXBRLParser):
 
 
 class IXBRL:
+    """
+    Parse an iXBRL file.
+    """
+
     def __init__(self, f: IO, raise_on_error: bool = True) -> None:  # noqa: FBT001, FBT002
+        """Constructor for the IXBRL class.
+
+        Parameters:
+            f:  File-like object to parse.
+            raise_on_error:  Whether to raise an exception on error
+        """
         self.soup = BeautifulSoup(f.read(), "xml", multi_valued_attributes=None)
         self.raise_on_error = raise_on_error
         self._get_parser()
@@ -288,6 +298,12 @@ class IXBRL:
 
     @classmethod
     def open(cls, filename: Union[str, Path], raise_on_error: bool = True):  # noqa: FBT001, FBT002, A003
+        """Open an iXBRL file.
+
+        Parameters:
+            filename:  Path to file to parse.
+            raise_on_error:  Whether to raise an exception on error
+        """
         with open(filename, "rb") as a:
             return cls(a, raise_on_error=raise_on_error)
 
@@ -307,6 +323,19 @@ class IXBRL:
         return getattr(self.parser, name)
 
     def to_json(self) -> Dict:
+        """Return a JSON representation of the iXBRL file.
+
+        Returns:
+            A dictionary containing the following keys:
+
+                - schema:  The schema used in the iXBRL file.
+                - namespaces:  The namespaces used in the iXBRL file.
+                - contexts:  The contexts used in the iXBRL file.
+                - units:  The units used in the iXBRL file.
+                - nonnumeric:  The non-numeric elements in the iXBRL file.
+                - numeric:  The numeric elements in the iXBRL file.
+                - errors:  The number of errors encountered when parsing the iXBRL file.
+        """
         return {
             "schema": self.schema,
             "namespaces": self.namespaces,
@@ -318,6 +347,22 @@ class IXBRL:
         }
 
     def to_table(self, fields: str = "numeric") -> List[Dict]:
+        """Return a list of dictionaries representing the iXBRL file.
+
+        This is suitable for passing to pandas.DataFrame.from_records().
+
+        Parameters:
+            fields:  Which fields to include in the output.  Can be "numeric", "nonnumeric" or "all".
+
+        Returns:
+            A list of dictionaries representing the iXBRL file.
+
+        Examples:
+            >>> import pandas as pd
+            >>> i = IXBRL.open("tests/fixtures/ixbrl/uk-gaap/2009-12-31/Company-Accounts-Data.xml")
+            >>> df = pd.DataFrame.from_records(i.to_table(fields="numeric"))
+            >>> df.head()
+        """
         if fields == "nonnumeric":
             values = self.nonnumeric
         elif fields == "numeric":

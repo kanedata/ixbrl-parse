@@ -8,7 +8,11 @@
 
 A python module for getting useful data out of ixbrl files. The library is at an early stage - feedback and improvements are very welcome.
 
+Full documentation is available at [dkane.net/ixbrl-parse/](https://dkane.net/ixbrl-parse/)
+
 ## Changelog
+
+**New in version 0.7.0**: Add plugin support. Add documentation
 
 **New in version 0.6.0**: Switch to use the [hatch](https://hatch.pypa.io/latest/) build and development system.
 
@@ -61,8 +65,6 @@ python -m ixbrlparse -h
 ```
 
 ### Use as a python module
-
-An example of usage is shown in [`test.py`](test.py).
 
 #### Import the `IXBRL` class which parses the file.
 
@@ -159,7 +161,7 @@ Note that the error catching is only available for parsing of `.nonnumeric`
 and `numeric` items in the document. Any other errors with parsing will be
 thrown as normal no matter what `raise_on_error` is set to.
 
-## Code checks
+## Development
 
 The module is setup for development using [hatch](https://hatch.pypa.io/latest/).
 

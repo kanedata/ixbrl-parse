@@ -4,6 +4,13 @@ from typing import List, Optional, Union
 
 
 class ixbrlFormat:  # noqa: N801
+    """Class to represent an ixbrl format.
+
+    This class should generally be subclassed to provide additional functionality.
+
+    Attributes:
+        format_names: A tuple of format names that this class should be used for."""
+
     format_names: tuple[str, ...] = ()
 
     def __init__(
@@ -13,6 +20,16 @@ class ixbrlFormat:  # noqa: N801
         scale: Union[int, str] = 0,
         sign: Optional[str] = None,
     ) -> None:
+        """Initialise the ixbrl format object.
+
+        Parameters:
+            format_: The name of the format.
+            decimals: The number of decimal places (only used for numeric formats).
+            scale: The scale of the format (only for numeric formats).
+                If more than 0 this value is used as the exponent for a value, so for example with a scale of
+                4 and a value of 20, the parsed value is 20 * (10 ^ 4) == 200000.
+            sign: The sign of the format (only for numeric formats). The sign given is usually "-" or empty.
+        """
         if isinstance(decimals, str):
             if decimals.lower() == "inf":
                 self.decimals = None
@@ -34,9 +51,18 @@ class ixbrlFormat:  # noqa: N801
         self.sign = sign
 
     def to_json(self):
+        """Convert the object to a JSON serialisable dictionary."""
         return deepcopy(self.__dict__)
 
     def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float, bool, date]]:
+        """Parse a value using the format.
+
+        Parameters:
+            value: The value to parse.
+
+        Returns:
+            The parsed value in the appropriate python type.
+        """
         if isinstance(value, (int, float)):
             return value
 

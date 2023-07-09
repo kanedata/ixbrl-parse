@@ -8,6 +8,8 @@
 
 A python module for getting useful data out of ixbrl files. The library is at an early stage - feedback and improvements are very welcome.
 
+**New in version 0.5.4**: Added backreferences to BeautifulSoup objects - thanks to @avyfain for PR.
+
 **New in version 0.5.3**: Support for `exclude` and `continuation` elements within XBRL documents. Thanks to @wcollinscw for adding support for exclude elements.
 
 **New in version 0.5**: Support for Python 3.11 has been added. I've had some problems with Python 3.11 and Windows as lxml binaries aren't yet available. Also new in version 0.5 is type checking - the whole library now has types added. 

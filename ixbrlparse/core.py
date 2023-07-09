@@ -177,6 +177,7 @@ class IXBRLParser(BaseParser):
                         value=text.strip().replace("\n", "")
                         if isinstance(text, str)
                         else "",
+                        soup_tag=s,
                     )
                 )
             except Exception as e:
@@ -198,6 +199,7 @@ class IXBRLParser(BaseParser):
                         text=s.text,
                         context=self.contexts.get(s["contextRef"], s["contextRef"]),
                         unit=self.units.get(s["unitRef"], s["unitRef"]),
+                        soup_tag=s,
                         **s.attrs
                     )
                 )
@@ -248,6 +250,7 @@ class XBRLParser(IXBRLParser):
                         text=s.text,
                         context=self.contexts.get(context_ref, context_ref),
                         unit=self.units.get(unit_ref, unit_ref),
+                        soup_tag=s,
                         **s.attrs
                     )
                 )
@@ -289,6 +292,7 @@ class XBRLParser(IXBRLParser):
                     value=text.strip().replace("\n", "")
                     if isinstance(text, str)
                     else "",
+                    soup_tag=s,
                 )
             )
 

@@ -22,7 +22,7 @@ class BaseParser:
             attribute_value = tag_contents.get(attribute)
             if isinstance(attribute_value, str):
                 return attribute_value.strip()
-        return None
+        return None  # pragma: no cover
 
     def _get_tag_text(self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]) -> Optional[str]:
         tag_contents = s.find(tag)
@@ -30,7 +30,7 @@ class BaseParser:
             text_value = tag_contents.text
             if isinstance(text_value, str):
                 return text_value.strip()
-        return None
+        return None  # pragma: no cover
 
     def _get_tag_children(self, s: Union[BeautifulSoup, Tag], tag: Union[str, List[str]]) -> Iterable[Tag]:
         tag_contents = s.find(tag)
@@ -261,13 +261,8 @@ class XBRLParser(IXBRLParser):
             format_ = s.get("format")
             if not isinstance(format_, str):
                 format_ = None
-            exclusion = s.find("exclude")
-            if exclusion is not None:
-                exclusion.extract()
 
             text = s.text
-            if s.attrs.get("continuedAt"):
-                text = self._get_tag_continuation(s)
 
             self.nonnumeric.append(
                 ixbrlNonNumeric(

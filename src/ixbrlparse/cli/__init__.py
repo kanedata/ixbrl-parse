@@ -15,7 +15,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s:%(name
 @click.group(
     context_settings={"help_option_names": ["-h", "--help"]},
     invoke_without_command=True,
-    help="Extract financial data from a IXBRL file",
 )
 @click.version_option(version=__version__, prog_name="IXBRLParse")
 @click.option(
@@ -31,7 +30,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s:%(name
 )
 @click.option("--outfile", default=sys.stdout, help="Where to output the file", type=click.File("w", encoding="UTF-8"))
 @click.argument("infile", type=click.File("rb"), default=sys.stdin, nargs=1)
-def ixbrlparse(output_format: str, fields: str, outfile, infile):
+def ixbrlparse_cli(output_format: str, fields: str, outfile, infile):
     x = IXBRL(infile)
 
     if output_format == "csv":

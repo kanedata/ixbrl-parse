@@ -69,7 +69,7 @@ class IXBRLParser(BaseParser):
 
     def _get_schema(self) -> None:
         self.schema = None
-        schema_tag = self.soup.find(["link:schemaRef", "schemaRef"])
+        schema_tag = self.soup.find(["link:schemaRef", "schemaRef", "link:schemaref", "schemaref"])
         if isinstance(schema_tag, Tag) and schema_tag.get("xlink:href"):
             schema = schema_tag["xlink:href"]
             if isinstance(schema, str):

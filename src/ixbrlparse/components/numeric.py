@@ -10,15 +10,8 @@ from ixbrlparse.components.transform import get_format, ixbrlFormat
 
 
 class ixbrlNumeric:  # noqa: N801
-    # contextref
-    # decimals
-    # format
-    # name
-    # scale
-    # sign
-    # text
-    # unitref
-    # xmlns:ix
+    """Models a numeric element in an iXBRL document"""
+
     def __init__(
         self,
         name: Optional[str] = None,
@@ -29,6 +22,16 @@ class ixbrlNumeric:  # noqa: N801
         soup_tag: Optional[Tag] = None,
         **attrs,
     ) -> None:
+        """Constructor for the ixbrlNumeric class.
+
+        Parameters:
+            name (str): The name of the numeric element
+            unit (str): The unit of the numeric element
+            value (float): The value of the numeric element
+            text (str): The text of the numeric element
+            context (ixbrlContext): The context of the numeric element
+            soup_tag (Tag): The source tag in beautiful soup
+        """
         self.name: Optional[str] = name
         self.schema: str = "unknown"
         if isinstance(name, str):

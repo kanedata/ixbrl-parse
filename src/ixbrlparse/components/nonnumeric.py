@@ -11,6 +11,13 @@ from ixbrlparse.components.transform import get_format, ixbrlFormat
 
 
 class ixbrlNonNumeric:  # noqa: N801
+    """Models a non-numeric element in an iXBRL document
+
+    Non-numeric elements are used to store information such as the name of the
+    entity, the name of the reporting period, etc.
+    The value of non-numeric elements is always a string, so we don't need to
+    worry about parsing the string."""
+
     def __init__(
         self,
         context: Optional[Union[ixbrlContext, str]] = None,
@@ -19,6 +26,15 @@ class ixbrlNonNumeric:  # noqa: N801
         value: Optional[str] = None,
         soup_tag: Optional[Tag] = None,
     ) -> None:
+        """Constructor for the ixbrlNonNumeric class.
+
+        Parameters:
+            context (ixbrlContext): The context of the non-numeric element
+            name (str): The name of the non-numeric element
+            format_ (str): The format of the non-numeric element
+            value (str): The value of the non-numeric element
+            soup_tag (Tag): The source tag in beautiful soup
+        """
         if isinstance(name, str):
             name_split: List[str] = name.split(":", maxsplit=1)
             if len(name_split) == NAME_SPLIT_EXPECTED:

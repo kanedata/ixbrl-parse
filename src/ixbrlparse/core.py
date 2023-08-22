@@ -357,6 +357,17 @@ class IXBRL:
         Returns:
             A list of dictionaries representing the iXBRL file.
 
+        The fields included are:
+
+        - schema (str)
+        - name (str) -- the name of the element
+        - value -- the value of the element. Can be number, str, None, or boolean
+        - unit (str) -- the unit of the element if present
+        - instant (date) -- the instant date of the element context if present
+        - startdate (date) -- the start date of the element context if present
+        - enddate (date) -- the end date of the element context if present
+        - segment:N (str) -- the Nth segment of the element context if present (can be repeated)
+
         Examples:
             >>> import pandas as pd
             >>> i = IXBRL.open("tests/fixtures/ixbrl/uk-gaap/2009-12-31/Company-Accounts-Data.xml")

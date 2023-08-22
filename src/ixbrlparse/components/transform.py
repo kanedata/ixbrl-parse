@@ -25,18 +25,12 @@ def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
         for format_class in additional_formats:
             for format_str in format_class.format_names:
                 if format_str in formats:
-                    msg = 'Format "{}" already exists (namespace "{}")'.format(
-                        format_str,
-                        namespace,
-                    )
+                    msg = f'Format "{format_str}" already exists (namespace "{namespace}")'
                     raise ValueError(msg)
                 formats[format_str] = format_class
 
     if format_ in formats:
         return formats[format_]
 
-    msg = 'Format "{}" not implemented (namespace "{}")'.format(
-        original_format,
-        namespace,
-    )
+    msg = f'Format "{original_format}" not implemented (namespace "{namespace}")'
     raise NotImplementedError(msg)

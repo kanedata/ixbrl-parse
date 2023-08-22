@@ -139,7 +139,7 @@ def test_contexts(account, contexts, expected_key):
     assert len(x.contexts) == contexts
 
     # test that the context is correct class
-    assert isinstance(list(x.contexts.values())[0], ixbrlContext)
+    assert isinstance(next(iter(x.contexts.values())), ixbrlContext)
 
     # test an expected key is in the contexts
     assert expected_key in x.contexts

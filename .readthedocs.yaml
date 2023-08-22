@@ -19,6 +19,4 @@ python:
     - method: pip
       path: .
       extra_requirements:
-        - mkdocs
-        - mkdocs-material
-        - mkdocstrings[python]
+        - docs

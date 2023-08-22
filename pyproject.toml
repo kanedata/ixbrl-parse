@@ -9,26 +9,21 @@ description = "A python module for getting useful data out of ixbrl files."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.8"
-authors = [
-    { name = "David Kane", email = "david@dkane.net" },
-]
+authors = [{ name = "David Kane", email = "david@dkane.net" }]
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
 ]
-dependencies = [
-    "click",
-    "beautifulsoup4",
-    "lxml",
-    "word2number",
-    "pluggy",
-]
+dependencies = ["click", "beautifulsoup4", "lxml", "word2number", "pluggy"]
+
+[project.optional-dependencies]
+docs = ["mkdocs", "mkdocs-material", "mkdocstrings[python]"]
 
 [project.urls]
 Homepage = "https://github.com/drkane/ixbrl-parse"
@@ -43,26 +38,13 @@ ixbrlparse = "ixbrlparse.cli:ixbrlparse"
 path = "src/ixbrlparse/__about__.py"
 
 [tool.hatch.envs.default]
-dependencies = [
-  "coverage[toml]>=6.5",
-  "pytest",
-]
+dependencies = ["coverage[toml]>=6.5", "pytest"]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-]
-cov = [
-  "test-cov",
-  "cov-report",
-]
-cov-fail = [
-  "test-cov",
-  "- coverage combine",
-  "coverage report --fail-under=95",
-]
+cov-report = ["- coverage combine", "coverage report"]
+cov = ["test-cov", "cov-report"]
+cov-fail = ["test-cov", "- coverage combine", "coverage report --fail-under=95"]
 cov-html = [
   "test-cov",
   "- coverage combine",
@@ -75,11 +57,8 @@ cov-html = [
 python = ["3.8", "3.9", "3.10", "3.11"]
 
 [tool.hatch.envs.docs]
-dependencies = [
-  "mkdocs",
-  "mkdocs-material",
-  "mkdocstrings[python]",
-]
+features = ["docs"]
+
 [tool.hatch.envs.docs.scripts]
 serve = "mkdocs serve"
 build = "mkdocs build"
@@ -96,24 +75,14 @@ dependencies = [
 ]
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/ixbrlparse tests}"
-style = [
-  "ruff {args:.}",
-  "black --check --diff {args:.}",
-]
-fmt = [
-  "black {args:.}",
-  "ruff --fix {args:.}",
-  "style",
-]
-all = [
-  "style",
-  "typing",
-]
+style = ["ruff {args:.}", "black --check --diff {args:.}"]
+fmt = ["black {args:.}", "ruff --fix {args:.}", "style"]
+all = ["style", "typing"]
 
 [tool.mypy]
 ignore_missing_imports = true
 mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs/"
-files="./stubs/**.*"
+files = "./stubs/**.*"
 
 [tool.black]
 target-version = ["py37"]
@@ -156,9 +125,15 @@ ignore = [
   # Allow boolean positional values in function calls, like `dict.get(... True)`
   "FBT003",
   # Ignore checks for possible passwords
-  "S105", "S106", "S107",
+  "S105",
+  "S106",
+  "S107",
   # Ignore complexity
-  "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
 ]
 unfixable = [
   # Don't touch unused imports
@@ -179,22 +154,14 @@ ban-relative-imports = "all"
 source_pkgs = ["ixbrlparse", "tests"]
 branch = true
 parallel = true
-omit = [
-  "src/ixbrlparse/__about__.py",
-]
+omit = ["src/ixbrlparse/__about__.py"]
 
 [tool.coverage.paths]
 ixbrlparse = ["src/ixbrlparse", "*/ixbrlparse/src/ixbrlparse"]
 tests = ["tests", "*/ixbrlparse/tests"]
 
 [tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "/ixbrlparse",
-]
+include = ["/ixbrlparse"]

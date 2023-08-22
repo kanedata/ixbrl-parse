@@ -27,7 +27,7 @@ docs = ["mkdocs", "mkdocs-material", "mkdocstrings[python]"]
 
 [project.urls]
 Homepage = "https://github.com/drkane/ixbrl-parse"
-Documentation = "https://dkane.net/ixbrl-parse/"
+Documentation = "https://ixbrl-parse.readthedocs.io/"
 Issues = "https://github.com/drkane/ixbrl-parse/issues"
 Source = "https://github.com/drkane/ixbrl-parse"
 
@@ -39,6 +39,7 @@ path = "src/ixbrlparse/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = ["coverage[toml]>=6.5", "pytest"]
+
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "coverage run -m pytest {args:tests}"

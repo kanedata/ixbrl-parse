@@ -5,12 +5,13 @@
 [![PyPI version](https://img.shields.io/pypi/v/ixbrlparse)](https://pypi.org/project/ixbrlparse/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ixbrlparse)
 ![PyPI - License](https://img.shields.io/pypi/l/ixbrlparse)
+[![Documentation Status](https://readthedocs.org/projects/ixbrl-parse/badge/?version=latest)](https://ixbrl-parse.readthedocs.io/en/latest/?badge=latest)
 
 A python module for getting useful data out of ixbrl files. The library is at an early stage - feedback and improvements are very welcome.
 
-Full documentation is available at [dkane.net/ixbrl-parse/](https://dkane.net/ixbrl-parse/)
+Full documentation is available at [ixbrl-parse.readthedocs.io](https://ixbrl-parse.readthedocs.io/)
 
-**[Changelog](https://dkane.net/ixbrl-parse/changelog/)**
+**[Changelog](https://ixbrl-parse.readthedocs.io/en/latest/changelog/)**
 
 ## Requirements
 
@@ -50,7 +51,7 @@ python -m ixbrlparse -h
 #                         Which fields to output
 ```
 
-You can also use as a python module (see [the documentation](https://dkane.net/ixbrl-parse/python-module/) for more details)
+You can also use as a python module (see [the documentation](https://ixbrl-parse.readthedocs.io/en/latest/python-module/) for more details)
 
 ## Development
 
@@ -117,6 +118,15 @@ git push origin v<VERSION_NUMBER>
 
 ## Acknowledgements
 
+Developed by [David Kane](https://dkane.net/) of [Kane Data Ltd](https://kanedata.co.uk/)
+
 Originally developed for a project with 
 [Power to Change](https://www.powertochange.org.uk/) looking at how to extract data from 
 financial documents of community businesses.
+
+Thanks to the following users for their contributions:
+
+- [@avyfain](https://github.com/avyfain)
+- [@wcollinscw](https://github.com/wcollinscw)
+- [@ajmarks](https://github.com/ajmarks)
+- [@adobrinevski](https://github.com/adobrinevski)

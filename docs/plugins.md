@@ -37,6 +37,14 @@ def ixbrl_add_formats():
     return [ixtParseIsoDate]
 ```
 
+or
+
+```python
+@ixbrlparse.hookimpl(specname="ixbrl_add_formats")
+def add_new_ixbrl_formats():
+    return [ixtParseIsoDate]
+```
+
 You then need to add an entrypoint to `setup.py` or to `pyproject.toml` which will be activated when your project is installed. This should look something like (using an example `ixbrlparse-dateplugin/setup.py`):
 
 ```python

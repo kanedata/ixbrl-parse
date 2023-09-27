@@ -21,7 +21,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
 ]
-dependencies = ["click", "beautifulsoup4", "lxml", "word2number", "pluggy"]
+dependencies = ["click", "beautifulsoup4", "lxml", "word2number", "pluggy>=1"]
 
 [project.optional-dependencies]
 docs = ["mkdocs", "mkdocs-material", "mkdocstrings[python]"]

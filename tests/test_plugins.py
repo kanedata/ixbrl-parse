@@ -32,6 +32,29 @@ def test_using_test_plugin():
         pm.unregister(name="flurg")
 
 
+def test_using_test_plugin_alt_syntax():
+    class FlurgFormat(ixbrlFormat):
+        format_names = ("flurg",)
+
+        def parse_value(self, value: Union[str, int, float]) -> str:  # noqa: ARG002
+            return "flurg"
+
+    class TestPlugin:
+        @hookimpl(specname="ixbrl_add_formats")
+        def add_flurg_format(self) -> List[Type[ixbrlFormat]]:
+            return [FlurgFormat]
+
+    pm.register(TestPlugin(), name="flurg")
+    try:
+        # check new format is available
+        assert get_format("flurg") == FlurgFormat
+
+        # check existing formats are still available
+        assert get_format("ixt:zerodash") == ixtZeroDash
+    finally:
+        pm.unregister(name="flurg")
+
+
 def test_registering_duplicate_plugin():
     class FlurgFormat(ixbrlFormat):
         format_names = ("ixt:zerodash",)

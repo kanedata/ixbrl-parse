@@ -47,7 +47,7 @@ class ixbrlNonNumeric:  # noqa: N801
         self.context = context
         self.format: Optional[ixbrlFormat] = None
         self.text: Optional[str] = value
-        self.value: Optional[int | float | date | None | str] = value
+        self.value: Optional[Union[str, int, float, None, date]] = value
         if isinstance(format_, str) and format_ != "" and self.text is not None:
             try:
                 self.format = get_format(format_)(format_=format_)

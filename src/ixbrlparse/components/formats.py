@@ -119,7 +119,7 @@ DATE_ORDINAL_SUFFIX_REGEX = re.compile(r"([0-9]{1,2})(st|nd|rd|th)\b")
 
 class ixtDateFormat(ixbrlFormat):  # noqa: N801
     format_names: Tuple[str, ...] = ()
-    date_format: Tuple[str, ...] | str = "%Y-%m-%d"
+    date_format: Union[Tuple[str, ...], str] = "%Y-%m-%d"
 
     def _get_date_formats(self) -> Sequence[str]:
         if isinstance(self.date_format, str):

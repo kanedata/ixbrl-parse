@@ -1,6 +1,16 @@
 from copy import deepcopy
+from dataclasses import dataclass
 from datetime import date
 from typing import List, Optional, Tuple, Union
+
+from bs4 import Tag
+
+
+@dataclass
+class ixbrlError:  # noqa: N801
+    error: Exception
+    element: Optional[Tag] = None
+    context: Optional[str] = None
 
 
 class ixbrlFormat:  # noqa: N801

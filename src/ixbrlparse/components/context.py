@@ -28,15 +28,19 @@ class ixbrlContext:  # noqa: N801
         self.id = _id
         self.entity = entity
         self.segments = segments
-        self.instant: Optional[datetime.date] = (
-            datetime.datetime.strptime(instant.strip(), "%Y-%m-%d").astimezone().date() if instant else None
-        )
-        self.startdate: Optional[datetime.date] = (
-            datetime.datetime.strptime(startdate.strip(), "%Y-%m-%d").astimezone().date() if startdate else None
-        )
-        self.enddate: Optional[datetime.date] = (
-            datetime.datetime.strptime(enddate.strip(), "%Y-%m-%d").astimezone().date() if enddate else None
-        )
+        self.instant: Optional[datetime.date] = None
+        self.startdate: Optional[datetime.date] = None
+        self.enddate: Optional[datetime.date] = None
+
+        date_fields = {
+            "instant": instant,
+            "startdate": startdate,
+            "enddate": enddate,
+        }
+        for field, value in date_fields.items():
+            if value:
+                datevalue = datetime.datetime.strptime(value.strip(), "%Y-%m-%d").astimezone().date()
+                setattr(self, field, datevalue)
 
     def __repr__(self) -> str:
         if self.startdate and self.enddate:

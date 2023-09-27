@@ -4,6 +4,7 @@ from typing import IO, Dict, Generator, Iterable, List, Optional, Union
 from bs4 import BeautifulSoup, Tag
 
 from ixbrlparse.components import ixbrlContext, ixbrlNonNumeric, ixbrlNumeric
+from ixbrlparse.components._base import ixbrlError
 
 FILETYPE_IXBRL = "ixbrl"
 FILETYPE_XBRL = "xbrl"
@@ -101,20 +102,30 @@ class IXBRLParser(BaseParser):
             s_id = s["id"]
             if not isinstance(s_id, str):
                 continue  # pragma: no cover
-            self.contexts[s_id] = ixbrlContext(
-                _id=s_id,
-                entity={
-                    "scheme": self._get_tag_attribute(s, ["xbrli:identifier", "identifier"], "scheme"),
-                    "identifier": self._get_tag_text(s, ["xbrli:identifier", "identifier"]),
-                },
-                segments=[
-                    {"tag": x.name, "value": x.text.strip(), **x.attrs}
-                    for x in self._get_tag_children(s, ["xbrli:segment", "segment"])
-                ],
-                instant=self._get_tag_text(s, ["xbrli:instant", "instant"]),
-                startdate=self._get_tag_text(s, ["xbrli:startDate", "startDate"]),
-                enddate=self._get_tag_text(s, ["xbrli:endDate", "endDate"]),
-            )
+            try:
+                self.contexts[s_id] = ixbrlContext(
+                    _id=s_id,
+                    entity={
+                        "scheme": self._get_tag_attribute(s, ["xbrli:identifier", "identifier"], "scheme"),
+                        "identifier": self._get_tag_text(s, ["xbrli:identifier", "identifier"]),
+                    },
+                    segments=[
+                        {"tag": x.name, "value": x.text.strip(), **x.attrs}
+                        for x in self._get_tag_children(s, ["xbrli:segment", "segment"])
+                    ],
+                    instant=self._get_tag_text(s, ["xbrli:instant", "instant"]),
+                    startdate=self._get_tag_text(s, ["xbrli:startDate", "startDate"]),
+                    enddate=self._get_tag_text(s, ["xbrli:endDate", "endDate"]),
+                )
+            except Exception as e:
+                self.errors.append(
+                    ixbrlError(
+                        error=e,
+                        element=s,
+                    )
+                )
+                if self.raise_on_error:
+                    raise
 
     def _get_unit_elements(self) -> Generator[Tag, None, None]:
         resources = self.soup.find(["ix:resources", "resources"])
@@ -167,10 +178,10 @@ class IXBRLParser(BaseParser):
                 )
             except Exception as e:
                 self.errors.append(
-                    {
-                        "error": e,
-                        "element": s,
-                    }
+                    ixbrlError(
+                        error=e,
+                        element=s,
+                    )
                 )
                 if self.raise_on_error:
                     raise
@@ -190,10 +201,10 @@ class IXBRLParser(BaseParser):
                 )
             except Exception as e:
                 self.errors.append(
-                    {
-                        "error": e,
-                        "element": s,
-                    }
+                    ixbrlError(
+                        error=e,
+                        element=s,
+                    )
                 )
                 if self.raise_on_error:
                     raise

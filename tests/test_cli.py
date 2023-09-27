@@ -29,6 +29,17 @@ def test_cli_json():
     assert data["numeric"][2]["value"] == 2909.0
 
 
+def test_cli_unknown_format():
+    buffer = io.StringIO()
+    runner = CliRunner()
+    result = runner.invoke(
+        ixbrlparse_cli, ["--outfile", buffer, "--format", "flurg", "tests/test_accounts/account_1.html"]  # type: ignore
+    )
+    assert result.exit_code != 0
+    data = buffer.getvalue()
+    assert not data
+
+
 def test_cli_jsonl():
     buffer = io.StringIO()
     runner = CliRunner()

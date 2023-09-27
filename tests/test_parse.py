@@ -23,6 +23,7 @@ TEST_ACCOUNTS = [
     "tests/test_accounts/account_6.xhtml",
     "tests/test_accounts/account_errors.html",
     "tests/test_accounts/account_errors_nonnumeric.html",
+    "tests/test_accounts/account_errors_date.html",
 ]
 TEST_XML_ACCOUNTS = [
     "tests/test_accounts/account_1.xml",
@@ -411,6 +412,17 @@ def test_errors_raised_nonnumeric():
             IXBRL(a)
 
     with open(TEST_ACCOUNTS[7]) as a:
+        x = IXBRL(a, raise_on_error=False)
+        assert isinstance(x.soup, BeautifulSoup)
+        assert len(x.errors) == 2
+
+
+def test_errors_raised_date():
+    with open(TEST_ACCOUNTS[8]) as a:
+        with pytest.raises(OSError):
+            IXBRL(a)
+
+    with open(TEST_ACCOUNTS[8]) as a:
         x = IXBRL(a, raise_on_error=False)
         assert isinstance(x.soup, BeautifulSoup)
         assert len(x.errors) == 2

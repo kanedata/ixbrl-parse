@@ -84,13 +84,15 @@ with open('sample_ixbrl.html', encoding="utf8") as a:
   x = IXBRL(a, raise_on_error=False)
   print(x.errors) # populated with any exceptions found
   # [ eg...
-  #   {
-  #     "error": <NotImplementedError>,
-  #     "element": <BeautifulSoupElement>
-  #   }
+  #   ixbrlError(
+  #     error=<NotImplementedError>,
+  #     element=<BeautifulSoupElement>
+  #   )
   # ]
 ```
 
 Note that the error catching is only available for parsing of `.nonnumeric`
-and `numeric` items in the document. Any other errors with parsing will be
-thrown as normal no matter what `raise_on_error` is set to.
+and `numeric` items in the document, as well as context items.
+Any other errors with parsing will be thrown as normal no matter what
+`raise_on_error` is set to. Errors in `context` items may make it more difficult
+to use the resulting data. 

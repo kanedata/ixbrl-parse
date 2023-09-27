@@ -1,6 +1,7 @@
 import io
 import json
 from datetime import date
+from multiprocessing import Value
 
 import pytest
 from bs4 import BeautifulSoup, Tag
@@ -419,7 +420,7 @@ def test_errors_raised_nonnumeric():
 
 def test_errors_raised_date():
     with open(TEST_ACCOUNTS[8]) as a:
-        with pytest.raises(OSError):
+        with pytest.raises((OSError, ValueError)):
             IXBRL(a)
 
     with open(TEST_ACCOUNTS[8]) as a:

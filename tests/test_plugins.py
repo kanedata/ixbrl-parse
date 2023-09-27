@@ -13,7 +13,7 @@ def test_using_test_plugin():
     class FlurgFormat(ixbrlFormat):
         format_names = ("flurg",)
 
-        def parse_value(self, *_args, **_kwargs) -> str:
+        def parse_value(self, value: str | int | float) -> str:  # noqa: ARG002
             return "flurg"
 
     class TestPlugin:
@@ -36,7 +36,7 @@ def test_registering_duplicate_plugin():
     class FlurgFormat(ixbrlFormat):
         format_names = ("ixt:zerodash",)
 
-        def parse_value(self, *_args, **_kwargs) -> str:
+        def parse_value(self, value: str | int | float) -> str:  # noqa: ARG002
             return "flurg"
 
     class TestPlugin:

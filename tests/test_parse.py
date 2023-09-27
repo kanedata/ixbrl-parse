@@ -1,7 +1,6 @@
 import io
 import json
 from datetime import date
-from multiprocessing import Value
 
 import pytest
 from bs4 import BeautifulSoup, Tag

@@ -1,7 +1,7 @@
 import datetime
 import re
 import warnings
-from typing import List, Optional, Tuple, Type, Union
+from typing import List, Optional, Sequence, Tuple, Type, Union
 
 from ixbrlparse.components._base import ixbrlFormat
 from ixbrlparse.hookspecs import hookimpl
@@ -119,14 +119,29 @@ DATE_ORDINAL_SUFFIX_REGEX = re.compile(r"([0-9]{1,2})(st|nd|rd|th)\b")
 
 class ixtDateFormat(ixbrlFormat):  # noqa: N801
     format_names: Tuple[str, ...] = ()
-    date_format = "%Y-%m-%d"
+    date_format: Tuple[str, ...] | str = "%Y-%m-%d"
+
+    def _get_date_formats(self) -> Sequence[str]:
+        if isinstance(self.date_format, str):
+            return (self.date_format,)
+        return self.date_format
 
     def parse_value(self, value: Union[str, int, float]) -> Optional[datetime.date]:
         if isinstance(value, str):
             value = value.lower()
             # remove ordinal suffixes with regex
             value = DATE_ORDINAL_SUFFIX_REGEX.sub(r"\1", value)
-            return datetime.datetime.strptime(value, self.date_format).astimezone().date()
+            date_formats = self._get_date_formats()
+            error: Optional[Exception] = None
+            for date_format in date_formats:
+                try:
+                    return datetime.datetime.strptime(value, date_format).astimezone().date()
+                except ValueError as e:
+                    error = e
+                    continue
+            # if we get here, we couldn't parse the date. Raise the last error
+            if error:  # pragma: no cover
+                raise error
         msg = f"Could not parse value {value} as a date"
         warnings.warn(msg, stacklevel=2)
         return None
@@ -139,7 +154,31 @@ class ixtDateLongUK(ixtDateFormat):  # noqa: N801
         "ixt:datelonguk",
         "ixt:datedaymonthyearen",
     )
-    date_format = "%d %B %Y"
+    date_format = ("%d %B %Y", "%d %B %y")
+
+
+class ixtDateLongUS(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "datelongus",
+        "ixt:datelongus",
+    )
+    date_format = ("%B %d, %Y", "%B %d, %y")
+
+
+class ixtDateShortUK(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "dateshortuk",
+        "ixt:dateshortuk",
+    )
+    date_format = ("%d %b %Y", "%d %b %y")
+
+
+class ixtDateShortUS(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "dateshortus",
+        "ixt:dateshortus",
+    )
+    date_format = ("%b %d, %Y", "%b %d, %y")
 
 
 class ixtDateDayMonthYear(ixtDateFormat):  # noqa: N801
@@ -147,7 +186,39 @@ class ixtDateDayMonthYear(ixtDateFormat):  # noqa: N801
         "datedaymonthyear",
         "ixt:datedaymonthyear",
     )
-    date_format = "%d.%m.%y"
+    date_format = ("%d.%m.%Y", "%d.%m.%y")
+
+
+class ixtDateSlashEU(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "dateslasheu",
+        "ixt:dateslasheu",
+    )
+    date_format = ("%d/%m/%Y", "%d/%m/%y")
+
+
+class ixtDateSlashUS(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "dateslashus",
+        "ixt:dateslashus",
+    )
+    date_format = ("%m/%d/%Y", "%m/%d/%y")
+
+
+class ixtDateDotEU(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "datedoteu",
+        "ixt:datedoteu",
+    )
+    date_format = ("%d.%m.%y", "%d.%m.%Y")
+
+
+class ixtDateDotUS(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "datedotus",
+        "ixt:datedotus",
+    )
+    date_format = ("%m.%d.%y", "%m.%d.%Y")
 
 
 @hookimpl
@@ -161,5 +232,12 @@ def ixbrl_add_formats() -> List[Type[ixbrlFormat]]:
         ixtNumComma,
         ixtNumWordsEn,
         ixtDateLongUK,
+        ixtDateLongUS,
+        ixtDateShortUK,
+        ixtDateShortUS,
         ixtDateDayMonthYear,
+        ixtDateSlashEU,
+        ixtDateSlashUS,
+        ixtDateDotEU,
+        ixtDateDotUS,
     ]

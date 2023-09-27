@@ -64,7 +64,7 @@ class ixbrlFormat:  # noqa: N801
         """Convert the object to a JSON serialisable dictionary."""
         return deepcopy(self.__dict__)
 
-    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float, bool, date]]:
+    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float, bool, date, str]]:
         """Parse a value using the format.
 
         Parameters:

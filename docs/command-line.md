@@ -1,12 +1,15 @@
 # Command line
 
-You can run the module directly to extract data from an IXBRL file.
+You can run the module directly to extract data from an iXBRL™ file.
 
 ```bash
 ixbrlparse example_file.html
 # or
 python -m ixbrlparse example_file.html
 ```
+
+While primarily designed for iXBRL™ files, the parser should also work
+for XBRL™ files.
 
 The various options for using this can be found through:
 

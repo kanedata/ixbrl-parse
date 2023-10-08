@@ -2,9 +2,9 @@
 
 The module allows for plugins to customize functionality, using the [pluggy](https://pluggy.readthedocs.io/en/stable/) framework.
 
-The only current plugin endpoint is to add more Formatters. A formatter takes a value from a ixbrl item and converts it into the appropriate python value. For example, the `ixtNumWordsEn` formatter would take a value like "eighty-five" and turn it into 85.
+The only current plugin endpoint is to add more Formatters. A formatter takes a value from a iXBRL™ item and converts it into the appropriate python value. For example, the `ixtNumWordsEn` formatter would take a value like "eighty-five" and turn it into 85.
 
-The formats used within ixbrl files can vary between schemas and countries. Rather than try to cover everything in this module, you can write a plugin to support the format that you need.
+The formats used within iXBRL™ files can vary between schemas and countries. Rather than try to cover everything in this module, you can write a plugin to support the format that you need.
 
 ## Creating a plugin
 
@@ -12,7 +12,7 @@ The formats used within ixbrl files can vary between schemas and countries. Rath
 
 To create a plugin, you first need to create a new format class that subclasses `ixbrlparse.ixbrlFormat`. This has two key components:
 
-- a `format_names` attribute which consists of a tuple of possible names for the format. These are the values that will be checked against the ixbrl items. These names must not clash with other formats that have already been defined.
+- a `format_names` attribute which consists of a tuple of possible names for the format. These are the values that will be checked against the iXBRL™ items. These names must not clash with other formats that have already been defined.
 - a `parse_value` function which takes the original text value and returns the processed value.
 
 An example class might look like (in the file `ixbrlparse-dateplugin/ixbrlparse_dateplugin.py`):

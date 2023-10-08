@@ -1,5 +1,5 @@
 site_name: ixbrlParse
-repo_url: https://github.com/drkane/ixbrl-parse
+repo_url: https://github.com/kanedata/ixbrl-parse
 site_description: A python module for getting useful data out of ixbrl files.
 site_author: David Kane
 theme:

@@ -27,10 +27,10 @@ dependencies = ["click", "beautifulsoup4", "lxml", "word2number", "pluggy>=1"]
 docs = ["mkdocs", "mkdocs-material", "mkdocstrings[python]"]
 
 [project.urls]
-Homepage = "https://github.com/drkane/ixbrl-parse"
+Homepage = "https://github.com/kanedata/ixbrl-parse"
 Documentation = "https://ixbrl-parse.readthedocs.io/"
-Issues = "https://github.com/drkane/ixbrl-parse/issues"
-Source = "https://github.com/drkane/ixbrl-parse"
+Issues = "https://github.com/kanedata/ixbrl-parse/issues"
+Source = "https://github.com/kanedata/ixbrl-parse"
 
 [project.scripts]
 ixbrlparse = "ixbrlparse.cli:ixbrlparse"

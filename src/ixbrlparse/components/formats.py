@@ -115,6 +115,7 @@ class ixtNumDotDecimal(ixbrlFormat):  # noqa: N801
 
 
 DATE_ORDINAL_SUFFIX_REGEX = re.compile(r"([0-9]{1,2})(st|nd|rd|th)\b")
+DATE_NON_ALPHANUMERIC_REGEX = re.compile(r"[\/\.\-\\–— ]")  # noqa: RUF001
 
 
 class ixtDateFormat(ixbrlFormat):  # noqa: N801
@@ -131,6 +132,9 @@ class ixtDateFormat(ixbrlFormat):  # noqa: N801
             value = value.lower()
             # remove ordinal suffixes with regex
             value = DATE_ORDINAL_SUFFIX_REGEX.sub(r"\1", value)
+            # replace non-alphanumeric characters with dashes
+            value = DATE_NON_ALPHANUMERIC_REGEX.sub("-", value)
+
             date_formats = self._get_date_formats()
             error: Optional[Exception] = None
             for date_format in date_formats:
@@ -154,7 +158,7 @@ class ixtDateLongUK(ixtDateFormat):  # noqa: N801
         "ixt:datelonguk",
         "ixt:datedaymonthyearen",
     )
-    date_format = ("%d %B %Y", "%d %B %y")
+    date_format = ("%d-%B-%Y", "%d-%B-%y")
 
 
 class ixtDateLongUS(ixtDateFormat):  # noqa: N801
@@ -162,7 +166,7 @@ class ixtDateLongUS(ixtDateFormat):  # noqa: N801
         "datelongus",
         "ixt:datelongus",
     )
-    date_format = ("%B %d, %Y", "%B %d, %y")
+    date_format = ("%B-%d,-%Y", "%B-%d,-%y")
 
 
 class ixtDateShortUK(ixtDateFormat):  # noqa: N801
@@ -170,7 +174,7 @@ class ixtDateShortUK(ixtDateFormat):  # noqa: N801
         "dateshortuk",
         "ixt:dateshortuk",
     )
-    date_format = ("%d %b %Y", "%d %b %y")
+    date_format = ("%d-%b-%Y", "%d-%b-%y")
 
 
 class ixtDateShortUS(ixtDateFormat):  # noqa: N801
@@ -178,47 +182,41 @@ class ixtDateShortUS(ixtDateFormat):  # noqa: N801
         "dateshortus",
         "ixt:dateshortus",
     )
-    date_format = ("%b %d, %Y", "%b %d, %y")
+    date_format = ("%b-%d,-%Y", "%b-%d,-%y")
 
 
 class ixtDateDayMonthYear(ixtDateFormat):  # noqa: N801
     format_names = (
         "datedaymonthyear",
         "ixt:datedaymonthyear",
-    )
-    date_format = ("%d.%m.%Y", "%d.%m.%y")
-
-
-class ixtDateSlashEU(ixtDateFormat):  # noqa: N801
-    format_names = (
         "dateslasheu",
         "ixt:dateslasheu",
+        "datedoteu",
+        "ixt:datedoteu",
     )
-    date_format = ("%d/%m/%Y", "%d/%m/%y")
+    date_format = ("%d-%m-%Y", "%d-%m-%y")
 
 
 class ixtDateSlashUS(ixtDateFormat):  # noqa: N801
     format_names = (
         "dateslashus",
         "ixt:dateslashus",
-    )
-    date_format = ("%m/%d/%Y", "%m/%d/%y")
-
-
-class ixtDateDotEU(ixtDateFormat):  # noqa: N801
-    format_names = (
-        "datedoteu",
-        "ixt:datedoteu",
-    )
-    date_format = ("%d.%m.%y", "%d.%m.%Y")
-
-
-class ixtDateDotUS(ixtDateFormat):  # noqa: N801
-    format_names = (
         "datedotus",
         "ixt:datedotus",
     )
-    date_format = ("%m.%d.%y", "%m.%d.%Y")
+    date_format = ("%m-%d-%Y", "%m-%d-%y")
+
+
+class ixtDateDotEU(ixtDateDayMonthYear):  # noqa: N801
+    pass
+
+
+class ixtDateSlashEU(ixtDateDayMonthYear):  # noqa: N801
+    pass
+
+
+class ixtDateDotUS(ixtDateSlashUS):  # noqa: N801
+    pass
 
 
 @hookimpl
@@ -236,8 +234,5 @@ def ixbrl_add_formats() -> List[Type[ixbrlFormat]]:
         ixtDateShortUK,
         ixtDateShortUS,
         ixtDateDayMonthYear,
-        ixtDateSlashEU,
         ixtDateSlashUS,
-        ixtDateDotEU,
-        ixtDateDotUS,
     ]

@@ -21,7 +21,8 @@ def test_cli_json():
     buffer = io.StringIO()
     runner = CliRunner()
     result = runner.invoke(
-        ixbrlparse_cli, ["--outfile", buffer, "--format", "json", "tests/test_accounts/account_1.html"]  # type: ignore
+        ixbrlparse_cli,  # type: ignore
+        ["--outfile", buffer, "--format", "json", "tests/test_accounts/account_1.html"],  # type: ignore
     )
     assert result.exit_code == 0
     data = json.loads(buffer.getvalue())
@@ -33,7 +34,8 @@ def test_cli_unknown_format():
     buffer = io.StringIO()
     runner = CliRunner()
     result = runner.invoke(
-        ixbrlparse_cli, ["--outfile", buffer, "--format", "flurg", "tests/test_accounts/account_1.html"]  # type: ignore
+        ixbrlparse_cli,  # type: ignore
+        ["--outfile", buffer, "--format", "flurg", "tests/test_accounts/account_1.html"],  # type: ignore
     )
     assert result.exit_code != 0
     data = buffer.getvalue()
@@ -44,7 +46,8 @@ def test_cli_jsonl():
     buffer = io.StringIO()
     runner = CliRunner()
     result = runner.invoke(
-        ixbrlparse_cli, ["--outfile", buffer, "--format", "jsonl", "tests/test_accounts/account_1.html"]  # type: ignore
+        ixbrlparse_cli,  # type: ignore
+        ["--outfile", buffer, "--format", "jsonl", "tests/test_accounts/account_1.html"],  # type: ignore
     )
     assert result.exit_code == 0
     lines = buffer.getvalue().splitlines()

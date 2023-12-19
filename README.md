@@ -92,7 +92,7 @@ hatch run lint:typing
 
 ### Linting
 
-Black and ruff should be run before committing any changes.
+Ruff should be run before committing any changes.
 
 To check for any changes needed:
 

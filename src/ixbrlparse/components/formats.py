@@ -158,15 +158,7 @@ class ixtDateLongUK(ixtDateFormat):  # noqa: N801
         "ixt:datelonguk",
         "ixt:datedaymonthyearen",
     )
-    date_format = ("%d-%B-%Y", "%d-%B-%y")
-
-
-class ixtDateLongUS(ixtDateFormat):  # noqa: N801
-    format_names = (
-        "datelongus",
-        "ixt:datelongus",
-    )
-    date_format = ("%B-%d,-%Y", "%B-%d,-%y")
+    date_format = ("%d-%B-%Y", "%d-%B-%y", "%d-%b-%Y", "%d-%b-%y")
 
 
 class ixtDateShortUK(ixtDateFormat):  # noqa: N801
@@ -174,7 +166,15 @@ class ixtDateShortUK(ixtDateFormat):  # noqa: N801
         "dateshortuk",
         "ixt:dateshortuk",
     )
-    date_format = ("%d-%b-%Y", "%d-%b-%y")
+    date_format = ("%d-%b-%Y", "%d-%b-%y", "%d-%B-%Y", "%d-%B-%y")
+
+
+class ixtDateLongUS(ixtDateFormat):  # noqa: N801
+    format_names = (
+        "datelongus",
+        "ixt:datelongus",
+    )
+    date_format = ("%B-%d,-%Y", "%B-%d,-%y", "%b-%d,-%Y", "%b-%d,-%y")
 
 
 class ixtDateShortUS(ixtDateFormat):  # noqa: N801
@@ -182,7 +182,7 @@ class ixtDateShortUS(ixtDateFormat):  # noqa: N801
         "dateshortus",
         "ixt:dateshortus",
     )
-    date_format = ("%b-%d,-%Y", "%b-%d,-%y")
+    date_format = ("%b-%d,-%Y", "%b-%d,-%y", "%B-%d,-%Y", "%B-%d,-%y")
 
 
 class ixtDateDayMonthYear(ixtDateFormat):  # noqa: N801

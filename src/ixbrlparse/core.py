@@ -263,27 +263,37 @@ class XBRLParser(IXBRLParser):
     def _get_nonnumeric(self) -> None:
         self.nonnumeric = []
         for s in self._get_elements():
-            if not s.get("contextRef") or s.get("unitRef"):
-                continue
-            context_ref = s["contextRef"]
-            if not isinstance(context_ref, str):
-                continue  # pragma: no cover
-            context = self.contexts.get(context_ref, context_ref)
-            format_ = s.get("format")
-            if not isinstance(format_, str):
-                format_ = None
+            try:
+                if not s.get("contextRef") or s.get("unitRef"):
+                    continue
+                context_ref = s["contextRef"]
+                if not isinstance(context_ref, str):
+                    continue  # pragma: no cover
+                context = self.contexts.get(context_ref, context_ref)
+                format_ = s.get("format")
+                if not isinstance(format_, str):
+                    format_ = None
 
-            text = s.text
+                text = s.text
 
-            self.nonnumeric.append(
-                ixbrlNonNumeric(
-                    context=context,
-                    name=s.name if isinstance(s.name, str) else "",
-                    format_=format_,
-                    value=text.strip().replace("\n", "") if isinstance(text, str) else "",
-                    soup_tag=s,
+                self.nonnumeric.append(
+                    ixbrlNonNumeric(
+                        context=context,
+                        name=s.name if isinstance(s.name, str) else "",
+                        format_=format_,
+                        value=text.strip().replace("\n", "") if isinstance(text, str) else "",
+                        soup_tag=s,
+                    )
                 )
-            )
+            except Exception as e:
+                self.errors.append(
+                    ixbrlError(
+                        error=e,
+                        element=s,
+                    )
+                )
+                if self.raise_on_error:
+                    raise
 
 
 class IXBRL:

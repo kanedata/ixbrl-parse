@@ -13,7 +13,7 @@
 			DEMO XML LIMITED
 		</EntityCurrentLegalName>
 	</EntityNames>
-	<BalanceSheetDate contextRef="e1">
+	<BalanceSheetDate contextRef="e1" format="ixt2:numdotdecimalblahblah">
 		2020-12-31
 	</BalanceSheetDate>
 	<CashBankInHand decimals="2" contextRef="e1" unitRef="GBP">

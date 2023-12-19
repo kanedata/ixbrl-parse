@@ -139,7 +139,7 @@ class ixtDateFormat(ixbrlFormat):  # noqa: N801
             error: Optional[Exception] = None
             for date_format in date_formats:
                 try:
-                    return datetime.datetime.strptime(value, date_format).astimezone().date()
+                    return datetime.datetime.strptime(value, date_format).date()  # noqa: DTZ007
                 except ValueError as e:
                     error = e
                     continue
@@ -219,7 +219,7 @@ class ixtDateDotUS(ixtDateSlashUS):  # noqa: N801
     pass
 
 
-@hookimpl
+@hookimpl(tryfirst=True)
 def ixbrl_add_formats() -> List[Type[ixbrlFormat]]:
     return [
         ixtZeroDash,

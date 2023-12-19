@@ -24,9 +24,6 @@ def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
     for additional_formats in pm.hook.ixbrl_add_formats():
         for format_class in additional_formats:
             for format_str in format_class.format_names:
-                if format_str in formats:
-                    msg = f'Format "{format_str}" already exists (namespace "{namespace}")'
-                    raise ValueError(msg)
                 formats[format_str] = format_class
 
     if format_ in formats:

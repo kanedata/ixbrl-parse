@@ -12,7 +12,7 @@ The formats used within iXBRL™ files can vary between schemas and countries. R
 
 To create a plugin, you first need to create a new format class that subclasses `ixbrlparse.ixbrlFormat`. This has two key components:
 
-- a `format_names` attribute which consists of a tuple of possible names for the format. These are the values that will be checked against the iXBRL™ items. These names must not clash with other formats that have already been defined.
+- a `format_names` attribute which consists of a tuple of possible names for the format. These are the values that will be checked against the iXBRL™ items. These names will override any already defined by the ixbrlparse, so it is possible to override the default implementation.
 - a `parse_value` function which takes the original text value and returns the processed value.
 
 An example class might look like (in the file `ixbrlparse-dateplugin/ixbrlparse_dateplugin.py`):
@@ -37,7 +37,7 @@ def ixbrl_add_formats():
     return [ixtParseIsoDate]
 ```
 
-or
+or you can specify the specname if you don't want to call the function `ixbrl_add_formats`
 
 ```python
 @ixbrlparse.hookimpl(specname="ixbrl_add_formats")
@@ -57,6 +57,34 @@ setup(
     py_modules=["ixbrlparse_dateplugin"],
 )
 ```
+
+Or to use `pyproject.toml` you would add
+
+```toml
+[project.entry-points.ixbrlparse]
+dateplugin = "ixbrlparse_dateplugin"
+```
+
+### Override an existing format
+
+By default, formats from plugins are loaded after the default formats included with the module. This means it is possible to override
+them by subclassing the format class.
+
+For example, if you wanted to add additional date formats to a format class:
+
+```python
+from ixbrlparse.components.formats import ixtDateDayMonthYear
+
+class ixtDateDayMonthYearExtended(ixtDateDayMonthYear):
+    date_format = (*ixtDateDayMonthYear.date_format, "%d-%b-%Y", "%d-%b-%y")
+
+@hookimpl
+def ixbrl_add_formats(self) -> List[Type[ixbrlFormat]]:
+    return [ixtDateDayMonthYearExtended]
+```
+
+After installation, this new format class would override the existing formats for `ixtDateDayMonthYear` and
+allow for dates like "29 aug 2022" to be parsed as well as dates like "29/08/2022".
 
 ### Install the plugin
 

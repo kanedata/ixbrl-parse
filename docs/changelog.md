@@ -1,5 +1,11 @@
 # Changelog
 
+**New in version 0.9.0**: Change plugin loading to allow for overriding existing format specifiers.
+
+**New in version 0.8.2**: More permissive date format acceptance
+
+**New in version 0.8.1**: Add full support for python 3.12
+
 **New in version 0.8.0**: Add `raise_on_error` support if context parsing fails. This release also introduces the `ixbrlError` class if an error is found, instead of a dict - this is a minor breaking change compared to how errors were stored before. Add provisional support for python 3.12.
 
 **New in version 0.7.1**: Allow for case-insensitive schema tags

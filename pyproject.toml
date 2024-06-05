@@ -70,14 +70,14 @@ deploy = "mkdocs gh-deploy --force"
 detached = true
 dependencies = [
   "mypy>=1.0.0",
-  "ruff>=0.1.8",
+  "ruff>=0.4.7",
   "types-beautifulsoup4",
   "types-click",
 ]
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/ixbrlparse tests}"
-style = ["ruff {args:.}", "ruff format --check --diff {args:.}"]
-fmt = ["ruff format {args:.}", "ruff --fix {args:.}", "style"]
+style = ["ruff check {args:.}", "ruff format --check --diff {args:.}"]
+fmt = ["ruff format {args:.}", "ruff check --fix {args:.}", "style"]
 all = ["style", "typing"]
 
 [tool.mypy]
@@ -88,6 +88,8 @@ files = "./stubs/**.*"
 [tool.ruff]
 target-version = "py38"
 line-length = 120
+
+[tool.ruff.lint]
 select = [
   "A",
   "ARG",
@@ -137,13 +139,13 @@ unfixable = [
   "F401",
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["ixbrlparse"]
 
-[tool.ruff.flake8-tidy-imports]
+[tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 

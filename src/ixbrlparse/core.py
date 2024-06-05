@@ -318,7 +318,7 @@ class IXBRL:
         self.parser._get_numeric()
 
     @classmethod
-    def open(cls, filename: Union[str, Path], raise_on_error: bool = True):  # noqa: FBT001, FBT002, A003
+    def open(cls, filename: Union[str, Path], raise_on_error: bool = True):  # noqa: FBT001, FBT002
         """Open an iXBRL file.
 
         Parameters:

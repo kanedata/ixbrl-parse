@@ -19,6 +19,8 @@ and [XBRL International](https://www.xbrl.org/). This tool is not affiliated wit
 
 The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) and [lxml](https://lxml.de/) to parse the documents.
 
+If you're using Python 3.13 you may need to ensure that the `libxml2-dev` and `libxslt-dev` packages have been installed.
+
 [word2number](https://github.com/akshaynagpal/w2n) is used to process the
 numeric items with the `numsenwords` format.
 
@@ -60,7 +62,7 @@ You can also use as a python module (see [the documentation](https://ixbrl-parse
 
 ## Development
 
-The module is setup for development using [hatch](https://hatch.pypa.io/latest/).
+The module is setup for development using [hatch](https://hatch.pypa.io/latest/). It should be possible to run tests and linting without needed hatch, however.
 
 ### Run tests
 
@@ -68,6 +70,13 @@ Tests can be run with `pytest`:
 
 ```bash
 hatch run test
+```
+
+Without hatch, you'll need to run:
+
+```bash
+pip install -e .[test]
+python -m pytest tests
 ```
 
 ### Test coverage
@@ -78,16 +87,41 @@ Run tests then report on coverage
 hatch run cov
 ```
 
+Without hatch, you'll need to run:
+
+```bash
+pip install -e .[test]
+coverage run -m pytest tests
+coverage report
+```
+
 Run tests then run a server showing where coverage is missing
 
 ```bash
 hatch run cov-html
 ```
 
+Without hatch, you'll need to run:
+
+```bash
+pip install -e .[test]
+coverage run -m pytest tests
+coverage report
+coverage html
+python -m http.server -d htmlcov
+```
+
 ### Run typing checks
 
 ```bash
 hatch run lint:typing
+```
+
+Without hatch, you'll need to run:
+
+```bash
+pip install -e .[lint]
+mypy --install-types --non-interactive src/ixbrlparse tests
 ```
 
 ### Linting
@@ -100,16 +134,41 @@ To check for any changes needed:
 hatch run lint:style
 ```
 
+Without hatch, you'll need to run:
+
+```bash
+pip install -e .[lint]
+ruff check .
+ruff format --check --diff .
+```
+
 To run any autoformatting possible:
 
 ```sh
 hatch run lint:fmt
 ```
 
+Without hatch, you'll need to run:
+
+```bash
+pip install -e .[lint]
+ruff format .
+ruff check --fix .
+```
+
 ### Run all checks at once
 
 ```sh
 hatch run lint:all
+```
+
+Without hatch, you'll need to run:
+
+```bash
+pip install -e .[lint]
+ruff check .
+ruff format --check --diff .
+mypy --install-types --non-interactive src/ixbrlparse tests
 ```
 
 ## Publish to pypi

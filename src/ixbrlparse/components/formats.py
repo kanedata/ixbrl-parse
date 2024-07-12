@@ -89,7 +89,7 @@ class ixtNumWordsEn(ixbrlFormat):  # noqa: N801
 
     def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
         if isinstance(value, str):
-            value = value.lower()
+            value = value.strip().lower()
             if value in ("no", "none"):
                 return 0
             from word2number import w2n

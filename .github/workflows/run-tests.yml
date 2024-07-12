@@ -8,7 +8,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13.0-beta.3"]
 
     steps:
       - uses: actions/checkout@v4
@@ -17,9 +17,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
+      - name: Install libraries for LXML
+        run: |
+          sudo apt-get install -y libxml2-dev libxslt-dev
       - name: Install dependencies
         run: |
-          pip install -e .
-          pip install hatch
+          pip install -e .[test]
       - name: Run tests
-        run: hatch run cov-fail
+        run: |
+          coverage run -m pytest tests
+          coverage combine
+          coverage report --fail-under=95

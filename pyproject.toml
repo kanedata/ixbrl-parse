@@ -31,6 +31,8 @@ dependencies = [
 
 [project.optional-dependencies]
 docs = ["mkdocs", "mkdocs-material", "mkdocstrings[python]"]
+test = ["coverage[toml]>=6.5", "pytest"]
+lint = ["mypy>=1.0.0", "ruff>=0.4.7", "types-beautifulsoup4", "types-click"]
 
 [project.urls]
 Homepage = "https://github.com/kanedata/ixbrl-parse"
@@ -45,7 +47,7 @@ ixbrlparse = "ixbrlparse.cli:ixbrlparse"
 path = "src/ixbrlparse/__about__.py"
 
 [tool.hatch.envs.default]
-dependencies = ["coverage[toml]>=6.5", "pytest"]
+features = ["test"]
 
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
@@ -74,12 +76,8 @@ deploy = "mkdocs gh-deploy --force"
 
 [tool.hatch.envs.lint]
 detached = true
-dependencies = [
-  "mypy>=1.0.0",
-  "ruff>=0.4.7",
-  "types-beautifulsoup4",
-  "types-click",
-]
+features = ["lint"]
+
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/ixbrlparse tests}"
 style = ["ruff check {args:.}", "ruff format --check --diff {args:.}"]

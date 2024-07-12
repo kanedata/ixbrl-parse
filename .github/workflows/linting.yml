@@ -19,7 +19,9 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: |
-          pip install -e .
-          pip install hatch
+          pip install -e .[lint]
       - name: Lint
-        run: hatch run lint:all
+        run: |
+          ruff check .
+          ruff format --check --diff .
+          mypy --install-types --non-interactive src/ixbrlparse tests

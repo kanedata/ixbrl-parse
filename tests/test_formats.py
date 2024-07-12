@@ -61,7 +61,10 @@ def test_date_formats(dateclass, datestring, expecteddate, errordate):
 def test_ixtnumwordsen():
     f = ixtNumWordsEn("format")
     assert f.parse_value("no") == 0
+    assert f.parse_value("none") == 0
+    assert f.parse_value("none ") == 0
     assert f.parse_value("eighty-five") == 85.0
+    assert f.parse_value("seven hundred and eighty-five") == 785.0
 
     with pytest.raises(ValueError):
         assert f.parse_value("blurdy-burg") is None

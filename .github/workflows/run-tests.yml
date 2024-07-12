@@ -26,5 +26,5 @@ jobs:
       - name: Run tests
         run: |
           coverage run -m pytest tests
-          - coverage combine
+          coverage combine
           coverage report --fail-under=95

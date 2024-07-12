@@ -17,12 +17,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - name: Install needed libraries
+      - name: Install libraries for LXML
         run: |
           sudo apt-get install -y libxml2-dev libxslt-dev
       - name: Install dependencies
         run: |
-          pip install -e .
-          pip install hatch
+          pip install -e .[test]
       - name: Run tests
-        run: hatch run cov-fail
+        run: |
+          coverage run -m pytest tests
+          - coverage combine
+          coverage report --fail-under=95

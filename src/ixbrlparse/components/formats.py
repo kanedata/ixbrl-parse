@@ -1,7 +1,8 @@
 import datetime
 import re
 import warnings
-from typing import List, Optional, Sequence, Tuple, Type, Union
+from collections.abc import Sequence
+from typing import Optional, Union
 
 from ixbrlparse.components._base import ixbrlFormat
 from ixbrlparse.hookspecs import hookimpl
@@ -119,8 +120,8 @@ DATE_NON_ALPHANUMERIC_REGEX = re.compile(r"[\/\.\-\\–— ]")  # noqa: RUF001
 
 
 class ixtDateFormat(ixbrlFormat):  # noqa: N801
-    format_names: Tuple[str, ...] = ()
-    date_format: Union[Tuple[str, ...], str] = "%Y-%m-%d"
+    format_names: tuple[str, ...] = ()
+    date_format: Union[tuple[str, ...], str] = "%Y-%m-%d"
 
     def _get_date_formats(self) -> Sequence[str]:
         if isinstance(self.date_format, str):
@@ -220,7 +221,7 @@ class ixtDateDotUS(ixtDateSlashUS):  # noqa: N801
 
 
 @hookimpl(tryfirst=True)
-def ixbrl_add_formats() -> List[Type[ixbrlFormat]]:
+def ixbrl_add_formats() -> list[type[ixbrlFormat]]:
     return [
         ixtZeroDash,
         ixtNoContent,

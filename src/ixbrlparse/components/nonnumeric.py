@@ -1,7 +1,7 @@
 import warnings
 from copy import deepcopy
 from datetime import date
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from bs4 import Tag
 
@@ -36,7 +36,7 @@ class ixbrlNonNumeric:  # noqa: N801
             soup_tag (Tag): The source tag in beautiful soup
         """
         if isinstance(name, str):
-            name_split: List[str] = name.split(":", maxsplit=1)
+            name_split: list[str] = name.split(":", maxsplit=1)
             if len(name_split) == NAME_SPLIT_EXPECTED:
                 self.schema = name_split[0]
                 self.name = name_split[1]
@@ -57,7 +57,7 @@ class ixbrlNonNumeric:  # noqa: N801
                 warnings.warn(msg, stacklevel=2)
         self.soup_tag = soup_tag
 
-    def to_json(self) -> Dict[str, Any]:
+    def to_json(self) -> dict[str, Any]:
         values = {k: deepcopy(v) for k, v in self.__dict__.items() if k != "soup_tag"}
         if isinstance(self.value, date):
             values["value"] = self.value.isoformat()

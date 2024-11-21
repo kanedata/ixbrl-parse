@@ -1,6 +1,6 @@
 import datetime
 from copy import deepcopy
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 class ixbrlContext:  # noqa: N801
@@ -19,8 +19,8 @@ class ixbrlContext:  # noqa: N801
     def __init__(
         self,
         _id: str,
-        entity: Dict[str, Optional[str]],
-        segments: Optional[List[Dict]],
+        entity: dict[str, Optional[str]],
+        segments: Optional[list[dict]],
         instant: Optional[str],
         startdate: Optional[str],
         enddate: Optional[str],
@@ -52,7 +52,7 @@ class ixbrlContext:  # noqa: N801
 
         return f"<IXBRLContext {self.id} [{datestr}]{segmentstr}>"
 
-    def to_json(self) -> Dict[str, List[Dict[str, Any]]]:
+    def to_json(self) -> dict[str, list[dict[str, Any]]]:
         """Convert the object to a JSON serialisable dictionary."""
         values = deepcopy(self.__dict__)
         for i in ["startdate", "enddate", "instant"]:

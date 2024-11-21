@@ -1,5 +1,5 @@
 from datetime import date
-from typing import List, Type, Union
+from typing import Union
 
 import pytest
 
@@ -19,7 +19,7 @@ def test_using_test_plugin():
 
     class TestPlugin:
         @hookimpl
-        def ixbrl_add_formats(self) -> List[Type[ixbrlFormat]]:
+        def ixbrl_add_formats(self) -> list[type[ixbrlFormat]]:
             return [FlurgFormat]
 
     pm.register(TestPlugin(), name="flurg")
@@ -42,7 +42,7 @@ def test_using_test_plugin_alt_syntax():
 
     class TestPlugin:
         @hookimpl(specname="ixbrl_add_formats")
-        def add_flurg_format(self) -> List[Type[ixbrlFormat]]:
+        def add_flurg_format(self) -> list[type[ixbrlFormat]]:
             return [FlurgFormat]
 
     pm.register(TestPlugin(), name="flurg")
@@ -65,7 +65,7 @@ def test_registering_duplicate_plugin():
 
     class TestPlugin:
         @hookimpl()
-        def ixbrl_add_formats(self) -> List[Type[ixbrlFormat]]:
+        def ixbrl_add_formats(self) -> list[type[ixbrlFormat]]:
             return [FlurgFormat]
 
     pm.register(TestPlugin(), name="flurg")
@@ -86,7 +86,7 @@ def test_registering_duplicate_plugin_last():
 
     class TestPlugin:
         @hookimpl(trylast=True)
-        def ixbrl_add_formats(self) -> List[Type[ixbrlFormat]]:
+        def ixbrl_add_formats(self) -> list[type[ixbrlFormat]]:
             return [FlurgFormat]
 
     pm.register(TestPlugin(), name="flurg")
@@ -107,7 +107,7 @@ def test_registering_duplicate_plugin_first():
 
     class TestPlugin:
         @hookimpl(tryfirst=True)
-        def ixbrl_add_formats(self) -> List[Type[ixbrlFormat]]:
+        def ixbrl_add_formats(self) -> list[type[ixbrlFormat]]:
             return [FlurgFormat]
 
     pm.register(TestPlugin(), name="flurg")
@@ -138,7 +138,7 @@ def test_plugin_override_date(datestring, expecteddate):
 
     class TestPlugin:
         @hookimpl
-        def ixbrl_add_formats(self) -> List[Type[ixbrlFormat]]:
+        def ixbrl_add_formats(self) -> list[type[ixbrlFormat]]:
             return [FlurgFormat]
 
     pm.register(TestPlugin(), name="flurg")

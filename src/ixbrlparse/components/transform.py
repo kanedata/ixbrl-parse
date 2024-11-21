@@ -1,16 +1,16 @@
-from typing import List, Optional, Type
+from typing import Optional
 
 from ixbrlparse.components._base import ixbrlFormat
 from ixbrlparse.plugins import pm
 
 
-def get_format(format_: Optional[str]) -> Type[ixbrlFormat]:
+def get_format(format_: Optional[str]) -> type[ixbrlFormat]:
     if not isinstance(format_, str):
         return ixbrlFormat
 
     original_format: str = format_
 
-    format_list: List = format_.split(":")
+    format_list: list[str] = format_.split(":")
     if len(format_list) > 1:
         namespace = format_list[0]
         format_ = ":".join(format_list[1:])

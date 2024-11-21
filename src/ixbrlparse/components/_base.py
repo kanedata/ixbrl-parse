@@ -1,7 +1,7 @@
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import date
-from typing import List, Optional, Tuple, Union
+from typing import Optional, Union
 
 from bs4 import Tag
 
@@ -21,7 +21,7 @@ class ixbrlFormat:  # noqa: N801
     Attributes:
         format_names: A tuple of format names that this class should be used for."""
 
-    format_names: Tuple[str, ...] = ()
+    format_names: tuple[str, ...] = ()
 
     def __init__(
         self,
@@ -49,7 +49,7 @@ class ixbrlFormat:  # noqa: N801
         self.format: Optional[str] = None
         self.namespace: Optional[str] = None
         if format_:
-            format_array: List[str] = format_.split(":")
+            format_array: list[str] = format_.split(":")
             if len(format_array) > 1:
                 self.format = ":".join(format_array[1:])
                 self.namespace = format_array[0]

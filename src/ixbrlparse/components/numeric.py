@@ -1,6 +1,6 @@
 import logging
 from copy import deepcopy
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
 from bs4 import Tag
 
@@ -71,7 +71,7 @@ class ixbrlNumeric:  # noqa: N801
             logging.info(attrs)
             raise
 
-    def to_json(self) -> Dict:
+    def to_json(self) -> dict:
         values = {k: deepcopy(v) for k, v in self.__dict__.items() if k != "soup_tag"}
         if isinstance(self.format, ixbrlFormat):
             values["format"] = self.format.to_json()

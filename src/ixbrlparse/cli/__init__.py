@@ -3,7 +3,7 @@ import json
 import logging
 import sys
 from datetime import date
-from typing import Any, Dict
+from typing import Any
 
 import click
 
@@ -36,7 +36,7 @@ def ixbrlparse_cli(output_format: str, fields: str, outfile, infile):
 
     if output_format == "csv":
         values = x.to_table(fields)
-        columns: Dict[str, Any] = {}
+        columns: dict[str, Any] = {}
         for r in values:
             columns = {**dict.fromkeys(r.keys()), **columns}
         writer = csv.DictWriter(outfile, columns.keys())

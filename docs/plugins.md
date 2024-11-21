@@ -79,7 +79,7 @@ class ixtDateDayMonthYearExtended(ixtDateDayMonthYear):
     date_format = (*ixtDateDayMonthYear.date_format, "%d-%b-%Y", "%d-%b-%y")
 
 @hookimpl
-def ixbrl_add_formats(self) -> List[Type[ixbrlFormat]]:
+def ixbrl_add_formats(self) -> list[type[ixbrlFormat]]:
     return [ixtDateDayMonthYearExtended]
 ```
 

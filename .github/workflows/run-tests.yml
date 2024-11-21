@@ -17,6 +17,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
+          cache-dependency-path: pyproject.toml
       - name: Install libraries for LXML
         run: |
           sudo apt-get install -y libxml2-dev libxslt-dev

@@ -1,7 +1,7 @@
 import warnings
 from copy import deepcopy
 from datetime import date
-from typing import Any, Optional, Union
+from typing import Any
 
 from bs4 import Tag
 
@@ -20,11 +20,11 @@ class ixbrlNonNumeric:  # noqa: N801
 
     def __init__(
         self,
-        context: Optional[Union[ixbrlContext, str]] = None,
-        name: Optional[str] = None,
-        format_: Optional[str] = None,
-        value: Optional[str] = None,
-        soup_tag: Optional[Tag] = None,
+        context: ixbrlContext | str | None = None,
+        name: str | None = None,
+        format_: str | None = None,
+        value: str | None = None,
+        soup_tag: Tag | None = None,
     ) -> None:
         """Constructor for the ixbrlNonNumeric class.
 
@@ -45,9 +45,9 @@ class ixbrlNonNumeric:  # noqa: N801
                 self.name = name_split[0]
 
         self.context = context
-        self.format: Optional[ixbrlFormat] = None
-        self.text: Optional[str] = value
-        self.value: Optional[Union[str, int, float, None, date]] = value
+        self.format: ixbrlFormat | None = None
+        self.text: str | None = value
+        self.value: str | int | float | None | date | None = value
         if isinstance(format_, str) and format_ != "" and self.text is not None:
             try:
                 self.format = get_format(format_)(format_=format_)

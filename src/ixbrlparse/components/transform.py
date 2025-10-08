@@ -1,10 +1,8 @@
-from typing import Optional
-
 from ixbrlparse.components._base import ixbrlFormat
 from ixbrlparse.plugins import pm
 
 
-def get_format(format_: Optional[str]) -> type[ixbrlFormat]:
+def get_format(format_: str | None) -> type[ixbrlFormat]:
     if not isinstance(format_, str):
         return ixbrlFormat
 

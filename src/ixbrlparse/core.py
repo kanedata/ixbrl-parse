@@ -1,6 +1,6 @@
 from collections.abc import Generator, Iterable
 from pathlib import Path
-from typing import IO, Optional, Union
+from typing import IO
 
 from bs4 import BeautifulSoup, Tag
 
@@ -16,9 +16,7 @@ class IXBRLParseError(Exception):
 
 
 class BaseParser:
-    def _get_tag_attribute(
-        self, s: Union[BeautifulSoup, Tag], tag: Union[str, list[str]], attribute: str
-    ) -> Optional[str]:
+    def _get_tag_attribute(self, s: BeautifulSoup | Tag, tag: str | list[str], attribute: str) -> str | None:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
             attribute_value = tag_contents.get(attribute)
@@ -26,7 +24,7 @@ class BaseParser:
                 return attribute_value.strip()
         return None  # pragma: no cover
 
-    def _get_tag_text(self, s: Union[BeautifulSoup, Tag], tag: Union[str, list[str]]) -> Optional[str]:
+    def _get_tag_text(self, s: BeautifulSoup | Tag, tag: str | list[str]) -> str | None:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
             text_value = tag_contents.text
@@ -34,7 +32,7 @@ class BaseParser:
                 return text_value.strip()
         return None  # pragma: no cover
 
-    def _get_tag_children(self, s: Union[BeautifulSoup, Tag], tag: Union[str, list[str]]) -> Iterable[Tag]:
+    def _get_tag_children(self, s: BeautifulSoup | Tag, tag: str | list[str]) -> Iterable[Tag]:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
             return tag_contents.findChildren()
@@ -64,8 +62,8 @@ class IXBRLParser(BaseParser):
         self.raise_on_error = raise_on_error
         self.errors: list = []
         self.contexts: dict[str, ixbrlContext] = {}
-        self.schema: Optional[str] = None
-        self.namespaces: dict[str, Union[str, list[str]]] = {}
+        self.schema: str | None = None
+        self.namespaces: dict[str, str | list[str]] = {}
         self.nonnumeric: list[ixbrlNonNumeric] = []
         self.numeric: list[ixbrlNumeric] = []
 
@@ -136,13 +134,13 @@ class IXBRLParser(BaseParser):
                     yield s
 
     def _get_units(self) -> None:
-        self.units: dict[str, Optional[str]] = {}
+        self.units: dict[str, str | None] = {}
         for s in self._get_unit_elements():
             s_id = s.get("id")
             if isinstance(s_id, str):
                 self.units[s_id] = self._get_tag_text(s, ["xbrli:measure", "measure"])
 
-    def _get_tag_continuation(self, s: Union[BeautifulSoup, Tag], start_str: str = "") -> str:
+    def _get_tag_continuation(self, s: BeautifulSoup | Tag, start_str: str = "") -> str:
         if not isinstance(s, Tag):
             return start_str
         start_str += s.text
@@ -319,7 +317,7 @@ class IXBRL:
         self.parser._get_numeric()
 
     @classmethod
-    def open(cls, filename: Union[str, Path], raise_on_error: bool = True):  # noqa: FBT001, FBT002
+    def open(cls, filename: str | Path, raise_on_error: bool = True):  # noqa: FBT001, FBT002
         """Open an iXBRL file.
 
         Parameters:

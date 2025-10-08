@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Union
 
 import pytest
 
@@ -14,7 +13,7 @@ def test_using_test_plugin():
     class FlurgFormat(ixbrlFormat):
         format_names = ("flurg",)
 
-        def parse_value(self, value: Union[str, int, float]) -> str:  # noqa: ARG002
+        def parse_value(self, value: str | int | float) -> str:  # noqa: ARG002
             return "flurg"
 
     class TestPlugin:
@@ -37,7 +36,7 @@ def test_using_test_plugin_alt_syntax():
     class FlurgFormat(ixbrlFormat):
         format_names = ("flurg",)
 
-        def parse_value(self, value: Union[str, int, float]) -> str:  # noqa: ARG002
+        def parse_value(self, value: str | int | float) -> str:  # noqa: ARG002
             return "flurg"
 
     class TestPlugin:
@@ -60,7 +59,7 @@ def test_registering_duplicate_plugin():
     class FlurgFormat(ixbrlFormat):
         format_names = ("zerodash",)
 
-        def parse_value(self, value: Union[str, int, float]) -> str:  # noqa: ARG002
+        def parse_value(self, value: str | int | float) -> str:  # noqa: ARG002
             return "flurg"
 
     class TestPlugin:
@@ -81,7 +80,7 @@ def test_registering_duplicate_plugin_last():
     class FlurgFormat(ixbrlFormat):
         format_names = ("zerodash",)
 
-        def parse_value(self, value: Union[str, int, float]) -> str:  # noqa: ARG002
+        def parse_value(self, value: str | int | float) -> str:  # noqa: ARG002
             return "flurg"
 
     class TestPlugin:
@@ -102,7 +101,7 @@ def test_registering_duplicate_plugin_first():
     class FlurgFormat(ixbrlFormat):
         format_names = ("zerodash",)
 
-        def parse_value(self, value: Union[str, int, float]) -> str:  # noqa: ARG002
+        def parse_value(self, value: str | int | float) -> str:  # noqa: ARG002
             return "flurg"
 
     class TestPlugin:

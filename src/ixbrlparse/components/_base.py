@@ -1,7 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import date
-from typing import Optional, Union
 
 from bs4 import Tag
 
@@ -9,8 +8,8 @@ from bs4 import Tag
 @dataclass
 class ixbrlError:  # noqa: N801
     error: Exception
-    element: Optional[Tag] = None
-    context: Optional[str] = None
+    element: Tag | None = None
+    context: str | None = None
 
 
 class ixbrlFormat:  # noqa: N801
@@ -26,9 +25,9 @@ class ixbrlFormat:  # noqa: N801
     def __init__(
         self,
         format_: str,
-        decimals: Optional[Union[int, str]] = None,
-        scale: Union[int, str] = 0,
-        sign: Optional[str] = None,
+        decimals: int | str | None = None,
+        scale: int | str = 0,
+        sign: str | None = None,
     ) -> None:
         """Initialise the ixbrl format object.
 
@@ -46,8 +45,8 @@ class ixbrlFormat:  # noqa: N801
             else:
                 self.decimals = int(decimals)
 
-        self.format: Optional[str] = None
-        self.namespace: Optional[str] = None
+        self.format: str | None = None
+        self.namespace: str | None = None
         if format_:
             format_array: list[str] = format_.split(":")
             if len(format_array) > 1:
@@ -64,7 +63,7 @@ class ixbrlFormat:  # noqa: N801
         """Convert the object to a JSON serialisable dictionary."""
         return deepcopy(self.__dict__)
 
-    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float, bool, date, str]]:
+    def parse_value(self, value: str | int | float) -> int | float | bool | date | str | None:
         """Parse a value using the format.
 
         Parameters:
@@ -73,7 +72,7 @@ class ixbrlFormat:  # noqa: N801
         Returns:
             The parsed value in the appropriate python type.
         """
-        if isinstance(value, (int, float)):
+        if isinstance(value, int | float):
             return value
 
         if isinstance(value, str):

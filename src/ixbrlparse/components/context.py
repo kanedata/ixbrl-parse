@@ -1,6 +1,6 @@
 import datetime
 from copy import deepcopy
-from typing import Any, Optional
+from typing import Any
 
 
 class ixbrlContext:  # noqa: N801
@@ -19,18 +19,18 @@ class ixbrlContext:  # noqa: N801
     def __init__(
         self,
         _id: str,
-        entity: dict[str, Optional[str]],
-        segments: Optional[list[dict]],
-        instant: Optional[str],
-        startdate: Optional[str],
-        enddate: Optional[str],
+        entity: dict[str, str | None],
+        segments: list[dict] | None,
+        instant: str | None,
+        startdate: str | None,
+        enddate: str | None,
     ):
         self.id = _id
         self.entity = entity
         self.segments = segments
-        self.instant: Optional[datetime.date] = None
-        self.startdate: Optional[datetime.date] = None
-        self.enddate: Optional[datetime.date] = None
+        self.instant: datetime.date | None = None
+        self.startdate: datetime.date | None = None
+        self.enddate: datetime.date | None = None
 
         date_fields = {
             "instant": instant,

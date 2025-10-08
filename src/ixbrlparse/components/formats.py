@@ -2,7 +2,8 @@ import datetime
 import re
 import warnings
 from collections.abc import Sequence
-from typing import Optional, Union
+
+from word2number import w2n
 
 from ixbrlparse.components._base import ixbrlFormat
 from ixbrlparse.hookspecs import hookimpl
@@ -18,7 +19,7 @@ class ixtZeroDash(ixbrlFormat):  # noqa: N801
         "ixt:fixedzero",
     )
 
-    def parse_value(self, *_args, **_kwargs) -> Union[int, float]:
+    def parse_value(self, *_args, **_kwargs) -> int | float:
         return 0
 
 
@@ -70,12 +71,12 @@ class ixtNumComma(ixbrlFormat):  # noqa: N801
         "ixt:numcommadecimal",
     )
 
-    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
+    def parse_value(self, value: str | int | float) -> int | float | None:
         if isinstance(value, str):
             value = value.replace(".", "")
             value = value.replace(",", ".")
         parsed_value = super().parse_value(value)
-        if isinstance(parsed_value, (float, int)):
+        if isinstance(parsed_value, float | int):
             return parsed_value
         msg = f"Could not parse value {value} as a number"  # pragma: no cover
         warnings.warn(msg, stacklevel=2)  # pragma: no cover
@@ -88,16 +89,15 @@ class ixtNumWordsEn(ixbrlFormat):  # noqa: N801
         "ixt:numwordsen",
     )
 
-    def parse_value(self, value: Union[str, int, float]) -> Optional[Union[int, float]]:
+    def parse_value(self, value: str | int | float) -> int | float | None:
         if isinstance(value, str):
             value = value.strip().lower()
             if value in ("no", "none"):
                 return 0
-            from word2number import w2n
 
             return w2n.word_to_num(value)
         parsed_value = super().parse_value(value)
-        if isinstance(parsed_value, (float, int)):
+        if isinstance(parsed_value, float | int):
             return parsed_value
         msg = f"Could not parse value {value} as a number"  # pragma: no cover
         warnings.warn(msg, stacklevel=2)  # pragma: no cover
@@ -121,14 +121,14 @@ DATE_NON_ALPHANUMERIC_REGEX = re.compile(r"[\/\.\-\\–— ]")  # noqa: RUF001
 
 class ixtDateFormat(ixbrlFormat):  # noqa: N801
     format_names: tuple[str, ...] = ()
-    date_format: Union[tuple[str, ...], str] = "%Y-%m-%d"
+    date_format: tuple[str, ...] | str = "%Y-%m-%d"
 
     def _get_date_formats(self) -> Sequence[str]:
         if isinstance(self.date_format, str):
             return (self.date_format,)
         return self.date_format
 
-    def parse_value(self, value: Union[str, int, float]) -> Optional[datetime.date]:
+    def parse_value(self, value: str | int | float) -> datetime.date | None:
         if isinstance(value, str):
             value = value.lower()
             # remove ordinal suffixes with regex
@@ -137,7 +137,7 @@ class ixtDateFormat(ixbrlFormat):  # noqa: N801
             value = DATE_NON_ALPHANUMERIC_REGEX.sub("-", value)
 
             date_formats = self._get_date_formats()
-            error: Optional[Exception] = None
+            error: Exception | None = None
             for date_format in date_formats:
                 try:
                     return datetime.datetime.strptime(value, date_format).date()  # noqa: DTZ007

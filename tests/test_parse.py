@@ -120,7 +120,8 @@ def test_open_xml_str():
             38,
             19,
             10,
-        ],  # type: ignore
+        ],
+        strict=False,  # type: ignore
     ),
 )
 def test_schema(account, schema, namespaces):

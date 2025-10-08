@@ -1,6 +1,5 @@
 import logging
 from copy import deepcopy
-from typing import Optional, Union
 
 from bs4 import Tag
 
@@ -14,12 +13,12 @@ class ixbrlNumeric:  # noqa: N801
 
     def __init__(
         self,
-        name: Optional[str] = None,
-        unit: Optional[str] = None,
-        value: Optional[Union[str, int, float]] = None,
-        text: Optional[Union[str, int, float]] = None,
-        context: Union[ixbrlContext, str, None] = None,
-        soup_tag: Optional[Tag] = None,
+        name: str | None = None,
+        unit: str | None = None,
+        value: str | int | float | None = None,
+        text: str | int | float | None = None,
+        context: ixbrlContext | str | None = None,
+        soup_tag: Tag | None = None,
         **attrs,
     ) -> None:
         """Constructor for the ixbrlNumeric class.
@@ -32,7 +31,7 @@ class ixbrlNumeric:  # noqa: N801
             context (ixbrlContext): The context of the numeric element
             soup_tag (Tag): The source tag in beautiful soup
         """
-        self.name: Optional[str] = name
+        self.name: str | None = name
         self.schema: str = "unknown"
         if isinstance(name, str):
             name_value = name.split(":", maxsplit=1)
@@ -43,15 +42,15 @@ class ixbrlNumeric:  # noqa: N801
                 self.schema = "unknown"
                 self.name = name_value[0]
 
-        if not isinstance(value, (str, int, float)):
+        if not isinstance(value, str | int | float):
             value = text
-        if not isinstance(value, (str, int, float)):
+        if not isinstance(value, str | int | float):
             msg = "Must provide either value or text"
             raise ValueError(msg)
-        self.text: Union[str, int, float] = value
-        self.context: Union[ixbrlContext, str, None] = context
-        self.unit: Optional[str] = unit
-        self.value: Optional[Union[int, float]] = None
+        self.text: str | int | float = value
+        self.context: ixbrlContext | str | None = context
+        self.unit: str | None = unit
+        self.value: int | float | None = None
         self.soup_tag = soup_tag
 
         format_ = {
@@ -60,12 +59,12 @@ class ixbrlNumeric:  # noqa: N801
             "scale": attrs.get("scale", 0),
             "sign": attrs.get("sign", ""),
         }
-        self.format: Optional[ixbrlFormat] = get_format(format_["format_"])(**format_)
+        self.format: ixbrlFormat | None = get_format(format_["format_"])(**format_)
 
         try:
             if isinstance(self.format, ixbrlFormat):
                 parsed_value = self.format.parse_value(self.text)
-                if isinstance(parsed_value, (int, float)):
+                if isinstance(parsed_value, int | float):
                     self.value = parsed_value
         except ValueError:
             logging.info(attrs)

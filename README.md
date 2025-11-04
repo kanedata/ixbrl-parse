@@ -196,6 +196,7 @@ Thanks to the following users for their contributions:
 - [@adobrinevski](https://github.com/adobrinevski)
 - [@JWFB](https://github.com/JWFB)
 - [@vin0110](https://github.com/vin0110)
+- [@daizutabi](https://github.com/daizutabi)
 
 XBRL™ and iXBRL™ are trademarks of XBRL International, Inc. All rights reserved.
 

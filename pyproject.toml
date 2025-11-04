@@ -44,7 +44,7 @@ Issues = "https://github.com/kanedata/ixbrl-parse/issues"
 Source = "https://github.com/kanedata/ixbrl-parse"
 
 [project.scripts]
-ixbrlparse = "ixbrlparse.cli:ixbrlparse"
+ixbrlparse = "ixbrlparse.cli:ixbrlparse_cli"
 
 [tool.hatch.version]
 path = "src/ixbrlparse/__about__.py"

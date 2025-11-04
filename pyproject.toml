@@ -170,5 +170,5 @@ tests = ["tests", "*/ixbrlparse/tests"]
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
-[tool.hatch.build.targets.sdist]
-include = ["/ixbrlparse"]
+[tool.hatch.build]
+packages = ["src/ixbrlparse"]

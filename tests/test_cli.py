@@ -1,5 +1,7 @@
 import io
 import json
+import subprocess
+import sys
 
 from click.testing import CliRunner
 
@@ -12,9 +14,32 @@ _ = ixmain
 def test_cli():
     buffer = io.StringIO()
     runner = CliRunner()
-    result = runner.invoke(ixbrlparse_cli, ["--outfile", buffer, "tests/test_accounts/account_1.html"])  # type: ignore
+    result = runner.invoke(
+        ixbrlparse_cli,
+        ["--outfile", buffer, "tests/test_accounts/account_1.html"],
+    )  # type: ignore
     assert result.exit_code == 0
     assert ",CurrentAssets,2909.0," in buffer.getvalue()
+
+
+def test_cli_raw(tmp_path):
+    f = tmp_path / "output.csv"
+    result = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "-m",
+            "ixbrlparse",
+            "--outfile",
+            str(f),
+            "tests/test_accounts/account_1.html",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )  # type: ignore
+    assert result.returncode == 0
+    with open(f) as file:
+        assert ",CurrentAssets,2909.0," in file.read()
 
 
 def test_cli_json():
@@ -22,7 +47,13 @@ def test_cli_json():
     runner = CliRunner()
     result = runner.invoke(
         ixbrlparse_cli,  # type: ignore
-        ["--outfile", buffer, "--format", "json", "tests/test_accounts/account_1.html"],  # type: ignore
+        [
+            "--outfile",
+            buffer,
+            "--format",
+            "json",
+            "tests/test_accounts/account_1.html",
+        ],  # type: ignore
     )
     assert result.exit_code == 0
     data = json.loads(buffer.getvalue())
@@ -30,16 +61,67 @@ def test_cli_json():
     assert data["numeric"][2]["value"] == 2909.0
 
 
+def test_cli_json_raw(tmp_path):
+    f = tmp_path / "output.json"
+    result = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "-m",
+            "ixbrlparse",
+            "--outfile",
+            str(f),
+            "--format",
+            "json",
+            "tests/test_accounts/account_1.html",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )  # type: ignore
+    assert result.returncode == 0
+    with open(f) as file:
+        data = json.load(file)
+        assert data["numeric"][2]["name"] == "CurrentAssets"
+        assert data["numeric"][2]["value"] == 2909.0
+
+
 def test_cli_unknown_format():
     buffer = io.StringIO()
     runner = CliRunner()
     result = runner.invoke(
         ixbrlparse_cli,  # type: ignore
-        ["--outfile", buffer, "--format", "flurg", "tests/test_accounts/account_1.html"],  # type: ignore
+        [
+            "--outfile",
+            buffer,
+            "--format",
+            "flurg",
+            "tests/test_accounts/account_1.html",
+        ],  # type: ignore
     )
     assert result.exit_code != 0
     data = buffer.getvalue()
     assert not data
+
+
+def test_cli_unknown_format_raw(tmp_path):
+    f = tmp_path / "output.txt"
+    result = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "-m",
+            "ixbrlparse",
+            "--outfile",
+            str(f),
+            "--format",
+            "flurg",
+            "tests/test_accounts/account_1.html",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )  # type: ignore
+    assert result.returncode != 0
+    assert not f.exists()
 
 
 def test_cli_jsonl():
@@ -47,7 +129,13 @@ def test_cli_jsonl():
     runner = CliRunner()
     result = runner.invoke(
         ixbrlparse_cli,  # type: ignore
-        ["--outfile", buffer, "--format", "jsonl", "tests/test_accounts/account_1.html"],  # type: ignore
+        [
+            "--outfile",
+            buffer,
+            "--format",
+            "jsonl",
+            "tests/test_accounts/account_1.html",
+        ],  # type: ignore
     )
     assert result.exit_code == 0
     lines = buffer.getvalue().splitlines()
@@ -59,3 +147,33 @@ def test_cli_jsonl():
     else:
         msg = "CurrentAssets not found"
         raise AssertionError(msg)
+
+
+def test_cli_jsonl_raw(tmp_path):
+    f = tmp_path / "output.jsonl"
+    result = subprocess.run(  # noqa: S603
+        [
+            sys.executable,
+            "-m",
+            "ixbrlparse",
+            "--outfile",
+            str(f),
+            "--format",
+            "jsonl",
+            "tests/test_accounts/account_1.html",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )  # type: ignore
+    assert result.returncode == 0
+    with open(f) as file:
+        lines = file.readlines()
+        for line in lines:
+            data = json.loads(line)
+            if data["name"] == "CurrentAssets":
+                assert data["value"] == 2909.0
+                break
+        else:
+            msg = "CurrentAssets not found"
+            raise AssertionError(msg)

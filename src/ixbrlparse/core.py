@@ -16,7 +16,9 @@ class IXBRLParseError(Exception):
 
 
 class BaseParser:
-    def _get_tag_attribute(self, s: BeautifulSoup | Tag, tag: str | list[str], attribute: str) -> str | None:
+    def _get_tag_attribute(
+        self, s: BeautifulSoup | Tag, tag: str | list[str], attribute: str
+    ) -> str | None:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
             attribute_value = tag_contents.get(attribute)
@@ -32,7 +34,9 @@ class BaseParser:
                 return text_value.strip()
         return None  # pragma: no cover
 
-    def _get_tag_children(self, s: BeautifulSoup | Tag, tag: str | list[str]) -> Iterable[Tag]:
+    def _get_tag_children(
+        self, s: BeautifulSoup | Tag, tag: str | list[str]
+    ) -> Iterable[Tag]:
         tag_contents = s.find(tag)
         if isinstance(tag_contents, Tag):
             return tag_contents.findChildren()
@@ -69,7 +73,9 @@ class IXBRLParser(BaseParser):
 
     def _get_schema(self) -> None:
         self.schema = None
-        schema_tag = self.soup.find(["link:schemaRef", "schemaRef", "link:schemaref", "schemaref"])
+        schema_tag = self.soup.find(
+            ["link:schemaRef", "schemaRef", "link:schemaref", "schemaref"]
+        )
         if isinstance(schema_tag, Tag) and schema_tag.get("xlink:href"):
             schema = schema_tag["xlink:href"]
             if isinstance(schema, str):
@@ -105,8 +111,12 @@ class IXBRLParser(BaseParser):
                 self.contexts[s_id] = ixbrlContext(
                     _id=s_id,
                     entity={
-                        "scheme": self._get_tag_attribute(s, ["xbrli:identifier", "identifier"], "scheme"),
-                        "identifier": self._get_tag_text(s, ["xbrli:identifier", "identifier"]),
+                        "scheme": self._get_tag_attribute(
+                            s, ["xbrli:identifier", "identifier"], "scheme"
+                        ),
+                        "identifier": self._get_tag_text(
+                            s, ["xbrli:identifier", "identifier"]
+                        ),
                     },
                     segments=[
                         {"tag": x.name, "value": x.text.strip(), **x.attrs}
@@ -146,7 +156,10 @@ class IXBRLParser(BaseParser):
         start_str += s.text
         if s.attrs.get("continuedAt"):
             continuation_tag = self.soup.find(id=s.attrs.get("continuedAt"))
-            if isinstance(continuation_tag, Tag) and continuation_tag.name == "continuation":
+            if (
+                isinstance(continuation_tag, Tag)
+                and continuation_tag.name == "continuation"
+            ):
                 return self._get_tag_continuation(continuation_tag, start_str)
         return start_str
 
@@ -171,7 +184,9 @@ class IXBRLParser(BaseParser):
                         context=context,
                         name=s["name"] if isinstance(s["name"], str) else "",
                         format_=format_,
-                        value=text.strip().replace("\n", "") if isinstance(text, str) else "",
+                        value=text.strip().replace("\n", "")
+                        if isinstance(text, str)
+                        else "",
                         soup_tag=s,
                     )
                 )
@@ -280,7 +295,9 @@ class XBRLParser(IXBRLParser):
                         context=context,
                         name=s.name if isinstance(s.name, str) else "",
                         format_=format_,
-                        value=text.strip().replace("\n", "") if isinstance(text, str) else "",
+                        value=text.strip().replace("\n", "")
+                        if isinstance(text, str)
+                        else "",
                         soup_tag=s,
                     )
                 )
@@ -372,7 +389,8 @@ class IXBRL:
         This is suitable for passing to pandas.DataFrame.from_records().
 
         Parameters:
-            fields:  Which fields to include in the output.  Can be "numeric", "nonnumeric" or "all".
+            fields:  Which fields to include in the output.  Can be "numeric",
+                "nonnumeric" or "all".
 
         Returns:
             A list of dictionaries representing the iXBRL file.
@@ -386,11 +404,14 @@ class IXBRL:
         - instant (date) -- the instant date of the element context if present
         - startdate (date) -- the start date of the element context if present
         - enddate (date) -- the end date of the element context if present
-        - segment:N (str) -- the Nth segment of the element context if present (can be repeated)
+        - segment:N (str) -- the Nth segment of the element context if present
+             (can be repeated)
 
         Examples:
             >>> import pandas as pd
-            >>> i = IXBRL.open("tests/fixtures/ixbrl/uk-gaap/2009-12-31/Company-Accounts-Data.xml")
+            >>> i = IXBRL.open(
+            >>>    "tests/fixtures/ixbrl/uk-gaap/2009-12-31/Company-Accounts-Data.xml"
+            >>> )
             >>> df = pd.DataFrame.from_records(i.to_table(fields="numeric"))
             >>> df.head()
         """
@@ -405,7 +426,9 @@ class IXBRL:
         for v in values:
             if isinstance(v.context, ixbrlContext) and v.context.segments:
                 segments = {
-                    f"segment:{i}": "{} {} {}".format(s.get("tag", ""), s.get("dimension"), s.get("value")).strip()
+                    f"segment:{i}": "{} {} {}".format(
+                        s.get("tag", ""), s.get("dimension"), s.get("value")
+                    ).strip()
                     for i, s in enumerate(v.context.segments)
                 }
             else:
@@ -413,7 +436,9 @@ class IXBRL:
 
             ret.append(
                 {
-                    "schema": " ".join(self.namespaces.get(f"xmlns:{v.schema}", [v.schema])),
+                    "schema": " ".join(
+                        self.namespaces.get(f"xmlns:{v.schema}", [v.schema])
+                    ),
                     "name": v.name,
                     "value": v.value,
                     "unit": v.unit if hasattr(v, "unit") else None,

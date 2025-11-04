@@ -35,9 +35,11 @@ class ixbrlFormat:  # noqa: N801
             format_: The name of the format.
             decimals: The number of decimal places (only used for numeric formats).
             scale: The scale of the format (only for numeric formats).
-                If more than 0 this value is used as the exponent for a value, so for example with a scale of
-                4 and a value of 20, the parsed value is 20 * (10 ^ 4) == 200000.
-            sign: The sign of the format (only for numeric formats). The sign given is usually "-" or empty.
+                If more than 0 this value is used as the exponent for a value, so
+                for example with a scale of 4 and a value of 20, the parsed value
+                is 20 * (10 ^ 4) == 200000.
+            sign: The sign of the format (only for numeric formats). The sign given
+                is usually "-" or empty.
         """
         if isinstance(decimals, str):
             if decimals.lower() == "inf":
@@ -63,7 +65,9 @@ class ixbrlFormat:  # noqa: N801
         """Convert the object to a JSON serialisable dictionary."""
         return deepcopy(self.__dict__)
 
-    def parse_value(self, value: str | int | float) -> int | float | bool | date | str | None:
+    def parse_value(
+        self, value: str | int | float
+    ) -> int | float | bool | date | str | None:
         """Parse a value using the format.
 
         Parameters:

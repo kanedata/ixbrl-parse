@@ -10,7 +10,9 @@ import click
 from ixbrlparse.__about__ import __version__
 from ixbrlparse.core import IXBRL
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s:%(name)s:%(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s %(levelname)s:%(name)s:%(message)s"
+)
 
 
 @click.group(
@@ -27,9 +29,17 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s:%(name
     type=click.Choice(["csv", "json", "jsonlines", "jsonl"]),
 )
 @click.option(
-    "--fields", default="all", type=click.Choice(["numeric", "nonnumeric", "all"]), help="Which fields to output"
+    "--fields",
+    default="all",
+    type=click.Choice(["numeric", "nonnumeric", "all"]),
+    help="Which fields to output",
 )
-@click.option("--outfile", default=sys.stdout, help="Where to output the file", type=click.File("w", encoding="UTF-8"))
+@click.option(
+    "--outfile",
+    default=sys.stdout,
+    help="Where to output the file",
+    type=click.File("w", encoding="UTF-8"),
+)
 @click.argument("infile", type=click.File("rb"), default=sys.stdin, nargs=1)
 def ixbrlparse_cli(output_format: str, fields: str, outfile, infile):
     x = IXBRL(infile)

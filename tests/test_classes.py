@@ -269,14 +269,23 @@ def test_format_numwordsen():
 
 
 def test_format_dates():
-    assert ixbrlNonNumeric(value="20 September 2020", format_="datelonguk").value == datetime.date(2020, 9, 20)
-    assert ixbrlNonNumeric(value="20 September 2020", format_="datedaymonthyearen").value == datetime.date(2020, 9, 20)
-    assert ixbrlNonNumeric(value="20th September 2020", format_="datedaymonthyearen").value == datetime.date(
-        2020, 9, 20
-    )
-    assert ixbrlNonNumeric(value="20.9.20", format_="datedaymonthyear").value == datetime.date(2020, 9, 20)
+    assert ixbrlNonNumeric(
+        value="20 September 2020", format_="datelonguk"
+    ).value == datetime.date(2020, 9, 20)
+    assert ixbrlNonNumeric(
+        value="20 September 2020", format_="datedaymonthyearen"
+    ).value == datetime.date(2020, 9, 20)
+    assert ixbrlNonNumeric(
+        value="20th September 2020", format_="datedaymonthyearen"
+    ).value == datetime.date(2020, 9, 20)
+    assert ixbrlNonNumeric(
+        value="20.9.20", format_="datedaymonthyear"
+    ).value == datetime.date(2020, 9, 20)
 
 
 def test_format_notimplemented():
     with pytest.warns():
-        assert ixbrlNonNumeric(value="blahdeblah", format_="blahdeblah").value == "blahdeblah"
+        assert (
+            ixbrlNonNumeric(value="blahdeblah", format_="blahdeblah").value
+            == "blahdeblah"
+        )

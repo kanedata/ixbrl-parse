@@ -164,7 +164,10 @@ def test_contexts_segments():
     assert len(x.contexts["dcur6"].segments) == 1
     assert x.contexts["dcur6"].segments[0]["tag"] in "xbrldi:explicitMember"
     assert x.contexts["dcur6"].segments[0]["value"] == "uk-bus:FullAccounts"
-    assert x.contexts["dcur6"].segments[0].get("dimension") == "uk-bus:AccountsTypeDimension"
+    assert (
+        x.contexts["dcur6"].segments[0].get("dimension")
+        == "uk-bus:AccountsTypeDimension"
+    )
 
 
 def test_contexts_values_xml():
@@ -198,7 +201,10 @@ def test_contexts_no_prefix():
     assert x.contexts["current-period-director2"].startdate == date(2016, 4, 1)
     assert x.contexts["current-period-director2"].enddate == date(2017, 3, 31)
     assert x.contexts["current-period-director2"].entity["identifier"] == "12345678"
-    assert x.contexts["current-period-director2"].entity["scheme"] == "http://www.companieshouse.gov.uk/"
+    assert (
+        x.contexts["current-period-director2"].entity["scheme"]
+        == "http://www.companieshouse.gov.uk/"
+    )
 
 
 @pytest.mark.parametrize("account", [a for a in TEST_ACCOUNTS if "error" not in a])
@@ -232,7 +238,10 @@ def test_nonnumeric():
     assert "FAKETEST TECHNOLOGIES LIMITED" in [n.value for n in x.nonnumeric]
     value_seen = False
     for n in x.nonnumeric:
-        if n.schema == "uk-gaap-cd-bus" and n.name == "UKCompaniesHouseRegisteredNumber":
+        if (
+            n.schema == "uk-gaap-cd-bus"
+            and n.name == "UKCompaniesHouseRegisteredNumber"
+        ):
             assert n.value == "03456789"
             assert isinstance(n.context, ixbrlContext)
             value_seen = True
@@ -292,7 +301,11 @@ def test_numeric_xml():
     for n in x.numeric:
         assert isinstance(n, ixbrlNumeric)
 
-        if n.name == "NumberOrdinarySharesAllotted" and isinstance(n.context, ixbrlContext) and n.context.id == "e2":
+        if (
+            n.name == "NumberOrdinarySharesAllotted"
+            and isinstance(n.context, ixbrlContext)
+            and n.context.id == "e2"
+        ):
             assert n.format is not None and n.format.sign == ""
             assert n.value == 1
             value_seen = True

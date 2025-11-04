@@ -39,7 +39,11 @@ class ixbrlContext:  # noqa: N801
         }
         for field, value in date_fields.items():
             if value:
-                datevalue = datetime.datetime.strptime(value.strip(), "%Y-%m-%d").astimezone().date()
+                datevalue = (
+                    datetime.datetime.strptime(value.strip(), "%Y-%m-%d")
+                    .astimezone()
+                    .date()
+                )
                 setattr(self, field, datevalue)
 
     def __repr__(self) -> str:

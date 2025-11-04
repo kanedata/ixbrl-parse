@@ -3,12 +3,18 @@ import json
 import subprocess
 import sys
 
+import pytest
 from click.testing import CliRunner
 
 import ixbrlparse.__main__ as ixmain
 from ixbrlparse.cli import ixbrlparse_cli
 
 _ = ixmain
+
+cli_options = [
+    [sys.executable, "-m", "ixbrlparse"],
+    ["ixbrlparse"],
+]
 
 
 def test_cli():
@@ -22,13 +28,12 @@ def test_cli():
     assert ",CurrentAssets,2909.0," in buffer.getvalue()
 
 
-def test_cli_raw(tmp_path):
+@pytest.mark.parametrize("cli_command", cli_options)
+def test_cli_raw(tmp_path, cli_command):
     f = tmp_path / "output.csv"
     result = subprocess.run(  # noqa: S603
         [
-            sys.executable,
-            "-m",
-            "ixbrlparse",
+            *cli_command,
             "--outfile",
             str(f),
             "tests/test_accounts/account_1.html",
@@ -61,13 +66,12 @@ def test_cli_json():
     assert data["numeric"][2]["value"] == 2909.0
 
 
-def test_cli_json_raw(tmp_path):
+@pytest.mark.parametrize("cli_command", cli_options)
+def test_cli_json_raw(tmp_path, cli_command):
     f = tmp_path / "output.json"
     result = subprocess.run(  # noqa: S603
         [
-            sys.executable,
-            "-m",
-            "ixbrlparse",
+            *cli_command,
             "--outfile",
             str(f),
             "--format",
@@ -103,13 +107,12 @@ def test_cli_unknown_format():
     assert not data
 
 
-def test_cli_unknown_format_raw(tmp_path):
+@pytest.mark.parametrize("cli_command", cli_options)
+def test_cli_unknown_format_raw(tmp_path, cli_command):
     f = tmp_path / "output.txt"
     result = subprocess.run(  # noqa: S603
         [
-            sys.executable,
-            "-m",
-            "ixbrlparse",
+            *cli_command,
             "--outfile",
             str(f),
             "--format",
@@ -149,13 +152,12 @@ def test_cli_jsonl():
         raise AssertionError(msg)
 
 
-def test_cli_jsonl_raw(tmp_path):
+@pytest.mark.parametrize("cli_command", cli_options)
+def test_cli_jsonl_raw(tmp_path, cli_command):
     f = tmp_path / "output.jsonl"
     result = subprocess.run(  # noqa: S603
         [
-            sys.executable,
-            "-m",
-            "ixbrlparse",
+            *cli_command,
             "--outfile",
             str(f),
             "--format",

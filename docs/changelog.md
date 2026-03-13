@@ -1,5 +1,17 @@
 # Changelog
 
+**New in version 0.11.2**: Correct script entry point for ixbrlparse. Change line length for ruff.
+
+**New in version 0.11.1**: Add py.typed file for type hinting support
+
+**New in version 0.11.0**: Add python 3.14 support. Drop support for python 3.9
+
+**New in version 0.10.0**: Add python 3.13 support. Drop support for python 3.8
+
+**New in version 0.9.2**: remove white space from value before parsing
+
+**New in version 0.9.1**: Additional fallback date formats
+
 **New in version 0.9.0**: Change plugin loading to allow for overriding existing format specifiers.
 
 **New in version 0.8.2**: More permissive date format acceptance

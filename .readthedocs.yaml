@@ -12,7 +12,7 @@ build:
 
   jobs:
     install:
-      - pip install zensical
+      - pip install zensical mkdocstrings-python
     build:
       html:
         - zensical build

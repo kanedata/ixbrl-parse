@@ -1,17 +1,15 @@
 <div class="md-copyright">
     {% if config.copyright %}
     <div class="md-copyright__highlight">
-        {{ config.copyright.replace("%%NOW%%", build_date_utc.year|string) }}
-        &middot;
-        Last updated {{ build_date_utc.strftime("%d %B %Y") }}
+        {{ config.copyright }}
+        {# &middot;
+        Last updated { build_date_utc.strftime("%d %B %Y") }#}
     </div>
     {% endif %}
     <div class="md-copyright__highlight">
         {% if not config.extra.generator == false %}
         Made with
-        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-            Material for MkDocs
-        </a>
+        <a href="https://zensical.org/docs/" target="_blank" rel="noopener">Zensical</a>
         &middot;
         {% endif %}
         XBRL™ and iXBRL™ are trademarks of XBRL International, Inc. All rights reserved.

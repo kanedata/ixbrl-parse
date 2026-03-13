@@ -1,0 +1,38 @@
+[project]
+site_name = "ixbrlParse"
+site_description = "A python module for getting useful data out of ixbrl files."
+site_author = "Kane Data Limited"
+copyright = "Copyright &copy; 2018 - 2026 Kane Data Limited <year> "
+repo_url = "https://github.com/kanedata/ixbrl-parse"
+language = "en-GB"
+nav = [
+    { "Home" = "index.md" },
+    { "Changelog" = "changelog.md" },
+    { "Usage" = [
+        { "Command Line" = "command-line.md" },
+        { "Python Module" = "python-module.md" },
+        { "API documentation" = "reference.md" },
+    ] },
+    { "Development" = [
+        { "Development" = "development.md" },
+        { "Plugins" = "plugins.md" },
+    ] },
+    { "See also" = [
+        { "Code repository" = "https://github.com/kanedata/ixbrl-parse" },
+        { "Kane Data" = "https://kanedata.co.uk" },
+    ] },
+]
+
+[project.theme]
+custom_dir = "docs_theme"
+features = ["navigation.sections", "navigation.path"]
+
+[project.theme.icon]
+logo = "lucide/code-xml"
+
+[project.plugins.mkdocstrings]
+enabled = true
+default_handler = "python"
+
+[project.plugins.mkdocstrings.handlers.python.options]
+heading_level = 3

@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-docs = ["mkdocs", "mkdocs-material", "mkdocstrings[python]"]
+docs = ["zensical>=0.0.26", "mkdocstrings-python"]
 test = ["coverage[toml]>=6.5", "pytest"]
 lint = ["mypy>=1.0.0", "ruff>=0.4.7", "types-beautifulsoup4", "types-click"]
 
@@ -74,8 +74,8 @@ python = ["3.10", "3.11", "3.12", "3.13", "3.14"]
 features = ["docs"]
 
 [tool.hatch.envs.docs.scripts]
-serve = "mkdocs serve"
-build = "mkdocs build"
+serve = "zensical serve"
+build = "zensical build"
 deploy = "mkdocs gh-deploy --force"
 
 [tool.hatch.envs.lint]

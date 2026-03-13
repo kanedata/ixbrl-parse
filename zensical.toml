@@ -2,6 +2,7 @@
 site_name = "ixbrlParse"
 site_description = "A python module for getting useful data out of ixbrl files."
 site_author = "Kane Data Limited"
+site_url = "https://https://ixbrl-parse.readthedocs.io/"
 copyright = "Copyright &copy; 2018 - 2026 Kane Data Limited <year> "
 repo_url = "https://github.com/kanedata/ixbrl-parse"
 language = "en-GB"

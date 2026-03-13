@@ -10,12 +10,12 @@ build:
   tools:
     python: "latest"
 
-jobs:
-  install:
-    - pip install zensical
-  build:
-    html:
-      - zensical build
-  post_build:
-    - mkdir -p $READTHEDOCS_OUTPUT/html/
-    - cp --recursive site/* $READTHEDOCS_OUTPUT/html/
+  jobs:
+    install:
+      - pip install zensical
+    build:
+      html:
+        - zensical build
+    post_build:
+      - mkdir -p $READTHEDOCS_OUTPUT/html/
+      - cp --recursive site/* $READTHEDOCS_OUTPUT/html/

@@ -6,7 +6,7 @@
 ![PyPI - License](https://img.shields.io/pypi/l/ixbrlparse)
 [![Documentation Status](https://readthedocs.org/projects/ixbrl-parse/badge/?version=latest)](https://ixbrl-parse.readthedocs.io/en/latest/?badge=latest)
 
-A python module for getting useful data out of iXBRL™ and XBRL™ files. The library is at an early stage - feedback and improvements are very welcome.
+A lightweight python module for getting useful data out of iXBRL™ and XBRL™ files. The library is at an early stage - feedback and improvements are very welcome.
 
 For more about the iXBRL™ and XBRL™ standards, see the [specification site](https://specifications.xbrl.org/)
 and [XBRL International](https://www.xbrl.org/). This tool is not affiliated with XBRL International.

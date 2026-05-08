@@ -11,6 +11,17 @@ A lightweight python module for getting useful data out of iXBRL™ and XBRL™ 
 For more about the iXBRL™ and XBRL™ standards, see the [specification site](https://specifications.xbrl.org/)
 and [XBRL International](https://www.xbrl.org/). This tool is not affiliated with XBRL International.
 
+## Quickstart
+
+If you use [uv](https://docs.astral.sh/uv/guides/tools/) you can run the tool against an iXBRL™ file
+without installing it by running:
+
+```bash
+uvx ixbrlparse example_file.html
+```
+
+This will output a CSV file containing items from the account.
+
 ## Requirements
 
 The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) and [lxml](https://lxml.de/) to parse the documents.

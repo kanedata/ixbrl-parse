@@ -15,6 +15,17 @@ and [XBRL International](https://www.xbrl.org/). This tool is not affiliated wit
 
 **[Changelog](https://ixbrl-parse.readthedocs.io/en/latest/changelog/)**
 
+## Quickstart
+
+If you use [uv](https://docs.astral.sh/uv/guides/tools/) you can run the tool against an iXBRL™ file
+without installing it by running:
+
+```bash
+uvx ixbrlparse example_file.html
+```
+
+This will output a CSV file containing items from the account.
+
 ## Requirements
 
 The module requires [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) and [lxml](https://lxml.de/) to parse the documents.

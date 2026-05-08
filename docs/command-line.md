@@ -8,6 +8,13 @@ ixbrlparse example_file.html
 python -m ixbrlparse example_file.html
 ```
 
+If you use [uv](https://docs.astral.sh/uv/guides/tools/) it can also be run without 
+installation by running:
+
+```bash
+uvx ixbrlparse example_file.html
+```
+
 While primarily designed for iXBRL™ files, the parser should also work
 for XBRL™ files.
 

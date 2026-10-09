@@ -1,5 +1,7 @@
 # Changelog
 
+**New in version 0.12.0**: Add python 3.15 support. Drop support for python 3.10. Move documentation to Zensical.
+
 **New in version 0.11.2**: Correct script entry point for ixbrlparse. Change line length for ruff.
 
 **New in version 0.11.1**: Add py.typed file for type hinting support

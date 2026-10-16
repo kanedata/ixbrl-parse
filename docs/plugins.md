@@ -20,8 +20,9 @@ An example class might look like (in the file `ixbrlparse-dateplugin/ixbrlparse_
 ```python
 import ixbrlparse
 
+
 class ixtParseIsoDate(ixbrlparse.ixbrlFormat):
-    format_names = ("isodateformat")
+    format_names = "isodateformat"
 
     def parse_value(self, value):
         return datetime.datetime.strptime(value, "%Y-%m-%d").astimezone().date()
@@ -75,8 +76,10 @@ For example, if you wanted to add additional date formats to a format class:
 ```python
 from ixbrlparse.components.formats import ixtDateDayMonthYear
 
+
 class ixtDateDayMonthYearExtended(ixtDateDayMonthYear):
     date_format = (*ixtDateDayMonthYear.date_format, "%d-%b-%Y", "%d-%b-%y")
+
 
 @hookimpl
 def ixbrl_add_formats(self) -> list[type[ixbrlFormat]]:

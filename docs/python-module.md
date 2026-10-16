@@ -11,8 +11,8 @@ from ixbrlparse import IXBRL
 You need to pass a file handle or other object with a `.read()` method.
 
 ```python
-with open('sample_ixbrl.html', encoding="utf8") as a:
-  x = IXBRL(a)
+with open("sample_ixbrl.html", encoding="utf8") as a:
+    x = IXBRL(a)
 ```
 
 If your iXBRL™ data comes as a string then use a `io.StringIO` wrapper to
@@ -22,7 +22,7 @@ pass it to the class:
 import io
 from ixbrlparse import IXBRL
 
-content = '''<some ixbrl content>'''
+content = """<some ixbrl content>"""
 x = IXBRL(io.StringIO(content))
 ```
 
@@ -80,15 +80,15 @@ these exceptions. You can then access a list of the errors (and the element)
 that created them through the `.errors` attribute. For example:
 
 ```python
-with open('sample_ixbrl.html', encoding="utf8") as a:
-  x = IXBRL(a, raise_on_error=False)
-  print(x.errors) # populated with any exceptions found
-  # [ eg...
-  #   ixbrlError(
-  #     error=<NotImplementedError>,
-  #     element=<BeautifulSoupElement>
-  #   )
-  # ]
+with open("sample_ixbrl.html", encoding="utf8") as a:
+    x = IXBRL(a, raise_on_error=False)
+    print(x.errors)  # populated with any exceptions found
+    # [ eg...
+    #   ixbrlError(
+    #     error=<NotImplementedError>,
+    #     element=<BeautifulSoupElement>
+    #   )
+    # ]
 ```
 
 Note that the error catching is only available for parsing of `.nonnumeric`

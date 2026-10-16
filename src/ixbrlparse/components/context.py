@@ -19,6 +19,7 @@ class ixbrlContext:  # noqa: N801
     def __init__(
         self,
         _id: str,
+        *,
         entity: dict[str, str | None],
         segments: list[dict] | None,
         instant: str | None,

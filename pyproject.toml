@@ -32,7 +32,7 @@ dependencies = [
   "pluggy>=1",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 docs = ["zensical>=0.0.26", "mkdocstrings-python"]
 test = ["coverage[toml]>=6.5", "pytest"]
 lint = ["mypy>=1.0.0", "ruff>=0.4.7", "types-beautifulsoup4", "types-click"]
@@ -46,11 +46,14 @@ Source = "https://github.com/kanedata/ixbrl-parse"
 [project.scripts]
 ixbrlparse = "ixbrlparse.cli:ixbrlparse_cli"
 
+[tool.uv]
+default-groups = ["docs", "test", "lint"]
+
 [tool.hatch.version]
 path = "src/ixbrlparse/__about__.py"
 
 [tool.hatch.envs.default]
-features = ["test"]
+dependency-groups = ["test"]
 installer = "uv"
 
 [tool.hatch.envs.default.scripts]
@@ -71,7 +74,7 @@ cov-html = [
 python = ["3.11", "3.12", "3.13", "3.14", "3.15"]
 
 [tool.hatch.envs.docs]
-features = ["docs"]
+dependency-groups = ["docs"]
 
 [tool.hatch.envs.docs.scripts]
 serve = "zensical serve"
@@ -80,7 +83,7 @@ deploy = "mkdocs gh-deploy --force"
 
 [tool.hatch.envs.lint]
 detached = true
-features = ["lint"]
+dependency-groups = ["lint"]
 
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/ixbrlparse tests}"

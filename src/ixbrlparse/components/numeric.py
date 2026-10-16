@@ -13,6 +13,7 @@ class ixbrlNumeric:  # noqa: N801
 
     def __init__(
         self,
+        *,
         name: str | None = None,
         unit: str | None = None,
         value: str | int | float | None = None,

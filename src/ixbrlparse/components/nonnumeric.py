@@ -20,6 +20,7 @@ class ixbrlNonNumeric:  # noqa: N801
 
     def __init__(
         self,
+        *,
         context: ixbrlContext | str | None = None,
         name: str | None = None,
         format_: str | None = None,

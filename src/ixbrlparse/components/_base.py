@@ -25,6 +25,7 @@ class ixbrlFormat:  # noqa: N801
     def __init__(
         self,
         format_: str,
+        *,
         decimals: int | str | None = None,
         scale: int | str = 0,
         sign: str | None = None,

@@ -1,6 +1,6 @@
 # Changelog
 
-**New in version 0.12.0**: Add python 3.15 support. Drop support for python 3.10. Move documentation to Zensical.
+**New in version 0.12.0**: Add python 3.15 support. Drop support for python 3.10. Move documentation to Zensical. Utility classes now only accept positional arguments (`ixbrlFormat` and subclasses, `ixbrlContext` after `_id`, `ixbrlNonNumeric` and `ixbrlNumeric`)
 
 **New in version 0.11.2**: Correct script entry point for ixbrlparse. Change line length for ruff.
 

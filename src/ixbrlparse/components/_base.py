@@ -1,6 +1,6 @@
+import datetime as dt
 from copy import deepcopy
 from dataclasses import dataclass
-from datetime import date
 
 from bs4 import Tag
 
@@ -67,7 +67,7 @@ class ixbrlFormat:  # noqa: N801
 
     def parse_value(
         self, value: str | int | float
-    ) -> int | float | bool | date | str | None:
+    ) -> int | float | bool | dt.date | str | None:
         """Parse a value using the format.
 
         Parameters:

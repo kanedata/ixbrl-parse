@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import re
 import warnings
 from collections.abc import Sequence
@@ -128,7 +128,7 @@ class ixtDateFormat(ixbrlFormat):  # noqa: N801
             return (self.date_format,)
         return self.date_format
 
-    def parse_value(self, value: str | int | float) -> datetime.date | None:
+    def parse_value(self, value: str | int | float) -> dt.date | None:
         if isinstance(value, str):
             value = value.lower()
             # remove ordinal suffixes with regex
@@ -140,7 +140,7 @@ class ixtDateFormat(ixbrlFormat):  # noqa: N801
             error: Exception | None = None
             for date_format in date_formats:
                 try:
-                    return datetime.datetime.strptime(value, date_format).date()  # noqa: DTZ007
+                    return dt.datetime.strptime(value, date_format).date()  # noqa: DTZ007
                 except ValueError as e:
                     error = e
                     continue

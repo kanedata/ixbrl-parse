@@ -1,6 +1,6 @@
+import datetime as dt
 import warnings
 from copy import deepcopy
-from datetime import date
 from typing import Any
 
 from bs4 import Tag
@@ -47,7 +47,7 @@ class ixbrlNonNumeric:  # noqa: N801
         self.context = context
         self.format: ixbrlFormat | None = None
         self.text: str | None = value
-        self.value: str | int | float | None | date | None = value
+        self.value: str | int | float | None | dt.date | None = value
         if isinstance(format_, str) and format_ != "" and self.text is not None:
             try:
                 self.format = get_format(format_)(format_=format_)
@@ -59,7 +59,7 @@ class ixbrlNonNumeric:  # noqa: N801
 
     def to_json(self) -> dict[str, Any]:
         values = {k: deepcopy(v) for k, v in self.__dict__.items() if k != "soup_tag"}
-        if isinstance(self.value, date):
+        if isinstance(self.value, dt.date):
             values["value"] = self.value.isoformat()
         if isinstance(self.format, ixbrlFormat):
             values["format"] = self.format.to_json()

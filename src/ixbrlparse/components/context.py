@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from copy import deepcopy
 from typing import Any
 
@@ -28,9 +28,9 @@ class ixbrlContext:  # noqa: N801
         self.id = _id
         self.entity = entity
         self.segments = segments
-        self.instant: datetime.date | None = None
-        self.startdate: datetime.date | None = None
-        self.enddate: datetime.date | None = None
+        self.instant: dt.date | None = None
+        self.startdate: dt.date | None = None
+        self.enddate: dt.date | None = None
 
         date_fields = {
             "instant": instant,
@@ -40,9 +40,7 @@ class ixbrlContext:  # noqa: N801
         for field, value in date_fields.items():
             if value:
                 datevalue = (
-                    datetime.datetime.strptime(value.strip(), "%Y-%m-%d")
-                    .astimezone()
-                    .date()
+                    dt.datetime.strptime(value.strip(), "%Y-%m-%d").astimezone().date()
                 )
                 setattr(self, field, datevalue)
 
@@ -60,6 +58,6 @@ class ixbrlContext:  # noqa: N801
         """Convert the object to a JSON serialisable dictionary."""
         values = deepcopy(self.__dict__)
         for i in ["startdate", "enddate", "instant"]:
-            if isinstance(values[i], datetime.date):
+            if isinstance(values[i], dt.date):
                 values[i] = str(values[i])
         return values

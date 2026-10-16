@@ -1,6 +1,6 @@
+import datetime as dt
 import io
 import json
-from datetime import date
 
 import pytest
 from bs4 import BeautifulSoup, Tag
@@ -151,9 +151,9 @@ def test_contexts_values():
     x = IXBRL.open(TEST_ACCOUNTS[0])
 
     # test values have been correctly parsed
-    assert x.contexts["icur1"].instant == date(2017, 10, 31)
-    assert x.contexts["dcur1"].startdate == date(2016, 11, 1)
-    assert x.contexts["dcur1"].enddate == date(2017, 10, 31)
+    assert x.contexts["icur1"].instant == dt.date(2017, 10, 31)
+    assert x.contexts["dcur1"].startdate == dt.date(2016, 11, 1)
+    assert x.contexts["dcur1"].enddate == dt.date(2017, 10, 31)
     assert x.contexts["dcur1"].entity["identifier"] == "02345678"
     assert x.contexts["dcur1"].entity["scheme"] == "http://www.companieshouse.gov.uk/"
 
@@ -174,9 +174,9 @@ def test_contexts_values_xml():
     x = IXBRL.open(TEST_XML_ACCOUNTS[0])
 
     # test values have been correctly parsed
-    assert x.contexts["s1"].instant == date(2020, 1, 1)
-    assert x.contexts["y1"].startdate == date(2020, 1, 1)
-    assert x.contexts["y1"].enddate == date(2020, 12, 31)
+    assert x.contexts["s1"].instant == dt.date(2020, 1, 1)
+    assert x.contexts["y1"].startdate == dt.date(2020, 1, 1)
+    assert x.contexts["y1"].enddate == dt.date(2020, 12, 31)
     assert x.contexts["y1"].entity["identifier"].strip() == "DEMO XML LIMITED"
     assert x.contexts["y1"].entity["scheme"] == "gee-lawson-/results"
 
@@ -198,8 +198,8 @@ def test_contexts_no_prefix():
     x = IXBRL.open(TEST_ACCOUNTS[1])
 
     # test values have been correctly parsed
-    assert x.contexts["current-period-director2"].startdate == date(2016, 4, 1)
-    assert x.contexts["current-period-director2"].enddate == date(2017, 3, 31)
+    assert x.contexts["current-period-director2"].startdate == dt.date(2016, 4, 1)
+    assert x.contexts["current-period-director2"].enddate == dt.date(2017, 3, 31)
     assert x.contexts["current-period-director2"].entity["identifier"] == "12345678"
     assert (
         x.contexts["current-period-director2"].entity["scheme"]
@@ -327,7 +327,7 @@ def test_exclude():
     value_seen = False
     for n in x.nonnumeric:
         if n.name == "BalanceSheetDate":
-            assert n.value == date(2022, 7, 31)
+            assert n.value == dt.date(2022, 7, 31)
             value_seen = True
 
     assert value_seen

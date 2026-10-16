@@ -1,4 +1,4 @@
-from datetime import date
+import datetime as dt
 
 import pytest
 
@@ -24,27 +24,27 @@ from ixbrlparse.components.formats import (
 @pytest.mark.parametrize(
     "dateclass, datestring, expecteddate, errordate",
     (
-        (ixtDateFormat, "2019-01-05", date(2019, 1, 5), "0400502019"),
-        (ixtDateLongUK, "05 January 2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateLongUK, "05 January 19", date(2019, 1, 5), "0400502019"),
-        (ixtDateLongUK, "10 July 1023", date(1023, 7, 10), "2019005004"),
-        (ixtDateLongUS, "January 05, 2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateLongUS, "January 05, 19", date(2019, 1, 5), "0400502019"),
-        (ixtDateShortUK, "05 Jan 2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateShortUK, "05 Jan 19", date(2019, 1, 5), "0400502019"),
-        (ixtDateShortUS, "Jan 05, 2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateShortUS, "Jan 05, 19", date(2019, 1, 5), "0400502019"),
-        (ixtDateDayMonthYear, "05/01/2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateDayMonthYear, "05.01.2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateDayMonthYear, "05.01.19", date(2019, 1, 5), "0400502019"),
-        (ixtDateDayMonthYear, "05/01/2019", date(2019, 1, 5), "2019005004"),
-        (ixtDateDayMonthYear, "05/01/19", date(2019, 1, 5), "2019005004"),
-        (ixtDateDayMonthYear, "05.01.2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateDayMonthYear, "05.01.19", date(2019, 1, 5), "0400502019"),
-        (ixtDateSlashUS, "01/05/2019", date(2019, 1, 5), "2019005004"),
-        (ixtDateSlashUS, "01/05/19", date(2019, 1, 5), "2019005004"),
-        (ixtDateSlashUS, "01.05.2019", date(2019, 1, 5), "0400502019"),
-        (ixtDateSlashUS, "01.05.19", date(2019, 1, 5), "0400502019"),
+        (ixtDateFormat, "2019-01-05", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateLongUK, "05 January 2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateLongUK, "05 January 19", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateLongUK, "10 July 1023", dt.date(1023, 7, 10), "2019005004"),
+        (ixtDateLongUS, "January 05, 2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateLongUS, "January 05, 19", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateShortUK, "05 Jan 2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateShortUK, "05 Jan 19", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateShortUS, "Jan 05, 2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateShortUS, "Jan 05, 19", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateDayMonthYear, "05/01/2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateDayMonthYear, "05.01.2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateDayMonthYear, "05.01.19", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateDayMonthYear, "05/01/2019", dt.date(2019, 1, 5), "2019005004"),
+        (ixtDateDayMonthYear, "05/01/19", dt.date(2019, 1, 5), "2019005004"),
+        (ixtDateDayMonthYear, "05.01.2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateDayMonthYear, "05.01.19", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateSlashUS, "01/05/2019", dt.date(2019, 1, 5), "2019005004"),
+        (ixtDateSlashUS, "01/05/19", dt.date(2019, 1, 5), "2019005004"),
+        (ixtDateSlashUS, "01.05.2019", dt.date(2019, 1, 5), "0400502019"),
+        (ixtDateSlashUS, "01.05.19", dt.date(2019, 1, 5), "0400502019"),
     ),
 )
 def test_date_formats(dateclass, datestring, expecteddate, errordate):

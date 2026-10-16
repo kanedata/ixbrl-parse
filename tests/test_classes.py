@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 import pytest
 
@@ -16,7 +16,7 @@ def test_context():
             "enddate": None,
         }
     )
-    assert isinstance(instant_context.instant, datetime.date)
+    assert isinstance(instant_context.instant, dt.date)
     assert "2011-01-01" in str(instant_context)
 
     interval = ixbrlContext(
@@ -29,8 +29,8 @@ def test_context():
             "enddate": "2011-12-31",
         }
     )
-    assert isinstance(interval.startdate, datetime.date)
-    assert isinstance(interval.enddate, datetime.date)
+    assert isinstance(interval.startdate, dt.date)
+    assert isinstance(interval.enddate, dt.date)
     assert interval.startdate.year == 2011
     assert interval.enddate.month == 12
 
@@ -271,16 +271,16 @@ def test_format_numwordsen():
 def test_format_dates():
     assert ixbrlNonNumeric(
         value="20 September 2020", format_="datelonguk"
-    ).value == datetime.date(2020, 9, 20)
+    ).value == dt.date(2020, 9, 20)
     assert ixbrlNonNumeric(
         value="20 September 2020", format_="datedaymonthyearen"
-    ).value == datetime.date(2020, 9, 20)
+    ).value == dt.date(2020, 9, 20)
     assert ixbrlNonNumeric(
         value="20th September 2020", format_="datedaymonthyearen"
-    ).value == datetime.date(2020, 9, 20)
+    ).value == dt.date(2020, 9, 20)
     assert ixbrlNonNumeric(
         value="20.9.20", format_="datedaymonthyear"
-    ).value == datetime.date(2020, 9, 20)
+    ).value == dt.date(2020, 9, 20)
 
 
 def test_format_notimplemented():

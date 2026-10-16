@@ -1,4 +1,4 @@
-from datetime import date
+import datetime as dt
 
 import pytest
 
@@ -121,14 +121,14 @@ def test_registering_duplicate_plugin_first():
 @pytest.mark.parametrize(
     "datestring, expecteddate",
     (
-        ("05/01/2019", date(2019, 1, 5)),
-        ("05.01.2019", date(2019, 1, 5)),
-        ("05.01.19", date(2019, 1, 5)),
-        ("05/01/2019", date(2019, 1, 5)),
-        ("05/01/19", date(2019, 1, 5)),
-        ("05.01.2019", date(2019, 1, 5)),
-        ("05.01.19", date(2019, 1, 5)),
-        ("29 aug 2022", date(2022, 8, 29)),
+        ("05/01/2019", dt.date(2019, 1, 5)),
+        ("05.01.2019", dt.date(2019, 1, 5)),
+        ("05.01.19", dt.date(2019, 1, 5)),
+        ("05/01/2019", dt.date(2019, 1, 5)),
+        ("05/01/19", dt.date(2019, 1, 5)),
+        ("05.01.2019", dt.date(2019, 1, 5)),
+        ("05.01.19", dt.date(2019, 1, 5)),
+        ("29 aug 2022", dt.date(2022, 8, 29)),
     ),
 )
 def test_plugin_override_date(datestring, expecteddate):
